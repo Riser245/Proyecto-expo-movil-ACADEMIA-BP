@@ -1,6 +1,6 @@
 import React from "react";
 import { SafeAreaView, Text } from "react-native";
-const Anuncio1Screen = () => {
+const LoginScreen = () => {
     return (
     <SafeAreaView
         style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -9,4 +9,4 @@ const Anuncio1Screen = () => {
  );
 };
 
-export default Anuncio1Screen;
+export default LoginScreen;

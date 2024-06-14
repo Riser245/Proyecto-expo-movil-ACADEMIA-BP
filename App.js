@@ -3,7 +3,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import OnboardingScreen from './src/screens/OnboardingScreen';
-import Anuncio1Screen from './src/screens/Anuncio1Screen';
+import LoginScreen from './src/screens/Login';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const Stack = createStackNavigator();
 
@@ -33,7 +33,7 @@ const App = () => {
               component={OnboardingScreen}
             />
           )}
-          <Stack.Screen name="Anuncio1Screen" component={Anuncio1Screen} />
+          <Stack.Screen name="LoginScreen" component={LoginScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     )
