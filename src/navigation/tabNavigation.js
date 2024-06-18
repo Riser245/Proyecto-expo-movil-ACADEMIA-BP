@@ -4,6 +4,9 @@ import Home from '../screens/Home';
 import ProfileScreen from '../screens/ProfileScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import { Ionicons } from '@expo/vector-icons';
+import Login from '../screens/Login';
+import SignUp from '../screens/SignUp';
+
 
 const Tab = createBottomTabNavigator();
 
@@ -19,7 +22,11 @@ const TabNavigation = () => {
             iconName = focused ? 'person' : 'person-outline';
           } else if (route.name === 'Settings') {
             iconName = focused ? 'settings' : 'settings-outline';
-          }
+          }else if (route.name === 'Login') {
+            iconName = focused ? 'person' : 'person-outline';
+        }else if (route.name === 'SignUp') {
+            iconName = focused ? 'person' : 'person-outline';
+        }
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: 'tomato',
