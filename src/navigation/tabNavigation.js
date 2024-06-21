@@ -40,14 +40,14 @@ const TabNavigation = () => {
         options={{ title: 'Inicio' }} // Ajusta el título de la pestaña según sea necesario
       />
       <Tab.Screen 
+        name="Settings" 
+        component={SettingsScreen} 
+        options={{ title: 'Productos' }} 
+      />
+      <Tab.Screen 
         name="Profile" 
         component={ProfileScreen} 
         options={{ title: 'Perfil' }} 
-      />
-      <Tab.Screen 
-        name="Settings" 
-        component={SettingsScreen} 
-        options={{ title: 'Configuración' }} 
       />
     </Tab.Navigator>
   );
