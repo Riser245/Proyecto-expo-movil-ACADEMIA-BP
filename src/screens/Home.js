@@ -25,7 +25,7 @@ export default function Home({ navigation }) {
   };
 
   const irActualizar = () => {
-    navigation.navigate('ProfileScreen');
+    navigation.navigate('productScreen');
   };
 
   const EditUser = () => {
