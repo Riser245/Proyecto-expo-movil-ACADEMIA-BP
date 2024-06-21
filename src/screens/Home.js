@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Alert, ScrollView, FlatList, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Alert, FlatList, Dimensions, Image } from 'react-native';
 import Buttons from '../components/Buttons/Button';
 import * as Constantes from '../utils/constantes';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 export default function Home({ navigation }) {
   const [nombre, setNombre] = useState(null);
@@ -45,12 +45,17 @@ export default function Home({ navigation }) {
     getUser();
   }, []);
 
-  const data1 = [{ key: 'Item 1' }, { key: 'Item 2' }, { key: 'Item 3' }];
-  const data2 = [{ key: 'Item A' }, { key: 'Item B' }, { key: 'Item C' }];
+  const data = [
+    { key: '1', title: 'Monumental Estadio Cuscatlán', description: "Martes y jueves: 4:00 P.M - 6:00 P.M. Sábado: 9:00 A.M. - 12:00 P.M.", image: require('../imagenes/cusca.png') },
+    { key: '2', title: 'Complejo deportivo UCA', description: "Martes y jueves: 4:00 P.M - 6:00 P.M. Sábado: 9:00 A.M. - 12:00 P.M.", image: require('../imagenes/cusca.png') },
+    { key: '3', title: 'Cumbres de Cuscatlán', description: "Martes y jueves: 4:00 P.M - 6:00 P.M. Sábado: 9:00 A.M. - 12:00 P.M.", image: require('../imagenes/cusca.png') }
+  ];
 
   const renderItem = ({ item }) => (
     <View style={styles.item}>
-      <Text>{item.key}</Text>
+      <Image source={item.image} style={styles.image} />
+      <Text style={styles.itemTitle}>{item.title}</Text>
+      <Text style={styles.description}>{item.description}</Text>
     </View>
   );
 
@@ -66,25 +71,16 @@ export default function Home({ navigation }) {
             accionBoton={handleLogout}
           />
         </View>
-        <Text style={styles.title}>Bienvenid@</Text>
+        <Text style={styles.titleHeader}>Bienvenid@</Text>
+        <Text>Información sobre nosotros</Text>
       </View>
       
-      <ScrollView horizontal style={styles.scrollView}>
-        <FlatList
-          data={data1}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.key}
-          style={styles.flatList}
-          horizontal
-        />
-        <FlatList
-          data={data2}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.key}
-          style={styles.flatList}
-          horizontal
-        />
-      </ScrollView>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.key}
+        style={styles.flatList}
+      />
     </View>
   );
 }
@@ -97,7 +93,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   header: {
-    
     top: 10,
     left: 10,
   },
@@ -120,22 +115,36 @@ const styles = StyleSheet.create({
     color: '#000',
     textAlign: 'center',
   },
-  scrollView: {
-    width: '100%',
-    marginTop: 20,
-  },
   flatList: {
-    width: '90%',
+    width: '100%',
+    height: '100%',
+    marginVertical: 10,
   },
   item: {
     width: width * 0.9,
-    padding: 20,
+    height: 300,
+    padding: 10,
     marginVertical: 8,
     marginHorizontal: 16,
     borderWidth: 1,
     borderColor: '#ddd',
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderRadius: 10,
+    overflow: 'hidden',
+    backgroundColor: '#fff',
+  },
+  image: {
+    width: '100%',
+    height: '70%',
+    borderRadius: 10,
+  },
+  itemTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginVertical: 5,
+  },
+  description: {
+    fontSize: 14,
+    color: '#666',
   },
   button: {
     borderWidth: 2,
@@ -148,7 +157,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: "white",
   },
-  title: {
+  titleHeader: {
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',

@@ -21,9 +21,10 @@ const ProfileScreen = () => {
             <TextInput style={styles.input} label="Apellido" />
           </Card.Content>
           <Card.Content>
-          <TextInput style={styles.inputss}  label="Nombre" />
-          <TextInput style={styles.inputss} label="Apellido" /> 
-          <TextInput style={styles.inputss}  label="Nombre" />
+          <TextInput style={styles.inputss}  label="DUI" />
+          <TextInput style={styles.inputss} label="Correo" /> 
+          <TextInput style={styles.inputss}  label="Telefono" />
+          <TextInput style={styles.inputss}  label="Direccion" />
           </Card.Content>
         </Card>
 

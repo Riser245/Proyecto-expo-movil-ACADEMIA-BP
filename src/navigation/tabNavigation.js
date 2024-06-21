@@ -19,8 +19,11 @@ const TabNavigation = () => {
           let iconName;
           if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline';
+            
           } else if (route.name === 'Profile') {
             iconName = focused ? 'person' : 'person-outline';
+          } else if (route.name === 'Productos') {
+            iconName = focused ? 'cart' : 'cart-outline';
           } else if (route.name === 'Settings') {
             iconName = focused ? 'settings' : 'settings-outline';
           }else if (route.name === 'Login') {
@@ -53,7 +56,7 @@ const TabNavigation = () => {
       <Tab.Screen 
         name="Settings" 
         component={SettingsScreen} 
-        options={{ title: 'Ajustes' }} 
+        options={{ title: 'Mis compras' }} 
       />
     </Tab.Navigator>
   );
