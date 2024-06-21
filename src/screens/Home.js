@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet, Alert, ScrollView, FlatList, Dimensions } from 'react-native';
 import Buttons from '../components/Buttons/Button';
 import * as Constantes from '../utils/constantes';
 
+const { width } = Dimensions.get('window');
 
 export default function Home({ navigation }) {
   const [nombre, setNombre] = useState(null);
@@ -24,14 +25,6 @@ export default function Home({ navigation }) {
     }
   };
 
-  const irActualizar = () => {
-    navigation.navigate('productScreen');
-  };
-
-  const EditUser = () => {
-    navigation.navigate('SettingsScreen');
-  };
-
   const getUser = async () => {
     try {
       const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=getUser`, {
@@ -39,7 +32,7 @@ export default function Home({ navigation }) {
       });
       const data = await response.json();
       if (data.status) {
-        setNombre(data.username); // Aqui accedemos al correo registrado y lo mostramos en pantalla.
+        setNombre(data.username);
       } else {
         Alert.alert('Error', data.error);
       }
@@ -52,27 +45,46 @@ export default function Home({ navigation }) {
     getUser();
   }, []);
 
+  const data1 = [{ key: 'Item 1' }, { key: 'Item 2' }, { key: 'Item 3' }];
+  const data2 = [{ key: 'Item A' }, { key: 'Item B' }, { key: 'Item C' }];
+
+  const renderItem = ({ item }) => (
+    <View style={styles.item}>
+      <Text>{item.key}</Text>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
-
-      <Text style={styles.title}>Bienvenid@</Text>
-      <Text style={styles.subtitle}>
-        { /*correo ? correo : 'No hay correo para mostrar'*/}
-        {nombre ? nombre : 'No hay correo para mostrar'}
-      </Text>
-      <Buttons
-        textoBoton='Cerrar Sesión'
-        accionBoton={handleLogout}
-      />
-
-      <Buttons
-        textoBoton='Ver Productos'
-        accionBoton={irActualizar}
-      />
-      <Buttons
-        textoBoton='Editar Usuario'
-        accionBoton={EditUser}
-      />
+      <View style={styles.header}>
+        <View style={styles.row}>
+          <View style={styles.circle}>
+            <Text style={styles.emailText}>{nombre ? nombre : 'No hay correo para mostrar'}</Text>
+          </View>
+          <Buttons
+            textoBoton='Cerrar Sesión'
+            accionBoton={handleLogout}
+          />
+        </View>
+        <Text style={styles.title}>Bienvenid@</Text>
+      </View>
+      
+      <ScrollView horizontal style={styles.scrollView}>
+        <FlatList
+          data={data1}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.key}
+          style={styles.flatList}
+          horizontal
+        />
+        <FlatList
+          data={data2}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.key}
+          style={styles.flatList}
+          horizontal
+        />
+      </ScrollView>
     </View>
   );
 }
@@ -82,24 +94,59 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFF',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
-  image: {
-    width: 250,
-    height: 100,
-    marginBottom: 10,
-    marginRight: 40
+  header: {
+    
+    top: 10,
+    left: 10,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  circle: {
+    width: 130,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#FFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#000',
+    marginRight: 10,
+  },
+  emailText: {
+    color: '#000',
+    textAlign: 'center',
+  },
+  scrollView: {
+    width: '100%',
+    marginTop: 20,
+  },
+  flatList: {
+    width: '90%',
+  },
+  item: {
+    width: width * 0.9,
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   button: {
     borderWidth: 2,
     borderColor: "black",
     width: 100,
     borderRadius: 10,
-    backgroundColor: "darkblue"
+    backgroundColor: "darkblue",
   },
   buttonText: {
     textAlign: 'center',
-    color: "white"
+    color: "white",
   },
   title: {
     fontSize: 24,
