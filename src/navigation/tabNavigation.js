@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/Home';
 import ProfileScreen from '../screens/ProfileScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import ProductsScreen from '../screens/productScreen';
 import { Ionicons } from '@expo/vector-icons';
 import Login from '../screens/Login';
 import SignUp from '../screens/SignUp';
@@ -40,14 +41,19 @@ const TabNavigation = () => {
         options={{ title: 'Inicio' }} // Ajusta el título de la pestaña según sea necesario
       />
       <Tab.Screen 
-        name="Settings" 
-        component={SettingsScreen} 
+        name="Productos" 
+        component={ProductsScreen} 
         options={{ title: 'Productos' }} 
       />
       <Tab.Screen 
         name="Profile" 
         component={ProfileScreen} 
         options={{ title: 'Perfil' }} 
+      />
+      <Tab.Screen 
+        name="Settings" 
+        component={SettingsScreen} 
+        options={{ title: 'Ajustes' }} 
       />
     </Tab.Navigator>
   );
