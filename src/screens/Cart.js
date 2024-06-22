@@ -9,46 +9,39 @@ const MyComponent = () => {
 
   return (
     <View style={styles.ovelay}>
-      <Text style={styles.texto}>Productos</Text>
-      <Button style={styles.btn3}><MaterialIcons name="add-shopping-cart" size={22} color="black" /></Button>
+      <Text style={styles.texto}>Carrito</Text>
       <Searchbar style={styles.search}
-        placeholder="Search"
+        placeholder="Buscar"
         onChangeText={setSearchQuery}
         value={searchQuery}
       />
       
 
       <View style={styles.container1}>
-      <Button style={styles.btn} >todos</Button>
 
-      <Button style={styles.btn} >camisetas</Button>
-
-      <Button style={styles.btn} >botellas</Button>
-
-      <Button style={styles.btn} >balones</Button>
       </View>
 
       <View style={styles.container}>
 
-        <Card style={{ width: 180, height: 200, marginTop: 30 }}>
+        <Card style={{ width: 180, height: 250, marginTop: 50 }}>
             <Card.Cover style={styles.image} source={require('../imagenes/pelota.png')} />
           <Card.Content>
             <Text style={styles.texto2} variant="titleLarge">Balón de fútbol</Text>
           </Card.Content>
           <Card.Actions>
-            <Button style={styles.btn1} >$894</Button>
-            <Button style={styles.btn2}><MaterialIcons name="add-shopping-cart" size={22} color="black" /></Button>
+          <Text style={styles.btn1}>$894</Text>
+            <Button style={styles.btn2}><MaterialIcons name="remove-shopping-cart" size={22} color="red" /></Button>
           </Card.Actions>
         </Card>
 
-        <Card style={{ width: 180, height: 200, marginTop: 30 }}>
+        <Card style={{ width: 180, height: 250, marginTop: 50 }}>
           <Card.Cover style={styles.image} source={require('../imagenes/camisa.png')} />
           <Card.Content>
             <Text style={styles.texto2} variant="titleLarge">Camisa deportiva</Text>
           </Card.Content>
           <Card.Actions>
-            <Button style={styles.btn1} >$894</Button>
-            <Button style={styles.btn2}><MaterialIcons name="add-shopping-cart" size={22} color="black" /></Button>
+          <Text style={styles.btn1}>$894</Text>
+            <Button style={styles.btn2}><MaterialIcons name="remove-shopping-cart" size={22} color="red" /></Button>
           </Card.Actions>
         </Card>
 
@@ -56,25 +49,25 @@ const MyComponent = () => {
 
       <View style={styles.container}>
 
-        <Card style={{ width: 180, height: 200, marginTop: 30 }}>
+        <Card style={{ width: 180, height: 250, marginTop: 50 }}>
           <Card.Cover style={styles.image} source={require('../imagenes/botella.png')} />
           <Card.Content>
             <Text style={styles.texto2} variant="titleLarge">Botella con agua</Text>
           </Card.Content>
           <Card.Actions>
-            <Button style={styles.btn1} >$894</Button>
-            <Button style={styles.btn2}><MaterialIcons name="add-shopping-cart" size={22} color="black" /></Button>
+          <Text style={styles.btn1}>$894</Text>
+            <Button style={styles.btn2}><MaterialIcons name="remove-shopping-cart" size={22} color="red" /></Button>
           </Card.Actions>
         </Card>
 
-        <Card style={{ width: 180, height: 200, marginTop: 30 }}>
+        <Card style={{ width: 180, height: 250, marginTop: 50 }}>
           <Card.Cover style={styles.image} source={require('../imagenes/camisa2.png')} />
           <Card.Content>
             <Text style={styles.texto2} variant="titleLarge">camisa deportiva 2</Text>
           </Card.Content>
           <Card.Actions>
-            <Button style={styles.btn1} >$894</Button>
-            <Button style={styles.btn2}><MaterialIcons name="add-shopping-cart" size={22} color="black" /></Button>
+          <Text style={styles.btn1}>$894</Text>
+            <Button style={styles.btn2}><MaterialIcons name="remove-shopping-cart" size={22} color="red" /></Button>
           </Card.Actions>
         </Card>
 
@@ -101,17 +94,19 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   search: {
-    marginTop: 10,
+    marginTop: 20,
+    paddingHorizontal: 20,
 
   },
   texto: {
     textAlign: 'center',
     fontSize: 20,
-    marginTop: 80
+    marginTop: 80,
   },
   texto2: {
     textAlign: 'center',
     fontSize: 16,
+    marginTop: 10,
   },
   card: {
     flex: 1,
@@ -123,7 +118,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 120,
+    height: 160,
   },
   textContainer: {
     padding: 10,
@@ -138,9 +133,10 @@ const styles = StyleSheet.create({
     color: '#555',
   },
   btn1: {
-    fontSize: 20,
+    fontSize: 15,
     alignItems: 'flex-start',
     borderColor: 'transparent',
+    fontColor: 'black',
   },
   btn2: {
     alignItems: 'flex-start',
@@ -155,7 +151,7 @@ const styles = StyleSheet.create({
   btn:{
     borderColor:'black',
     backgroundColor: '#040457',
-    marginTop:20
+    marginTop:20,
   }
 });
 

@@ -4,6 +4,7 @@ import Home from '../screens/Home';
 import ProfileScreen from '../screens/ProfileScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import ProductsScreen from '../screens/productScreen';
+import CartScreen from '../screens/Cart';
 import { Ionicons } from '@expo/vector-icons';
 import Login from '../screens/Login';
 import SignUp from '../screens/SignUp';
@@ -25,6 +26,10 @@ const TabNavigation = () => {
           } else if (route.name === 'Productos') {
             iconName = focused ? 'cart' : 'cart-outline';
           } else if (route.name === 'Settings') {
+            iconName = focused ? 'cart' : 'cart-outline';
+          } else if (route.name === 'Cart') {
+            iconName = focused ? 'cart' : 'cart-outline';
+          } else if (route.name === 'Cart') {
             iconName = focused ? 'settings' : 'settings-outline';
           }else if (route.name === 'Login') {
             iconName = focused ? 'person' : 'person-outline';
@@ -57,6 +62,11 @@ const TabNavigation = () => {
         name="Settings" 
         component={SettingsScreen} 
         options={{ title: 'Mis compras' }} 
+      />
+      <Tab.Screen 
+        name="Cart" 
+        component={CartScreen} 
+        options={{ title: 'Carrito' }} 
       />
     </Tab.Navigator>
   );
