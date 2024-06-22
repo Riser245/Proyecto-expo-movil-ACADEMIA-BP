@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Alert, FlatList, Dimensions, Image } from 'react-native';
-import Buttons from '../components/Buttons/Button';
+import { View, Text, StyleSheet, Alert, FlatList, Dimensions, SafeAreaView, Image, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import * as Constantes from '../utils/constantes';
+import EntrenamientoView from '../components/EntrenamientoViews/EntrenamientosView';
+import Modal from 'react-native-modal';
 
 const { width, height } = Dimensions.get('window');
 
 export default function Home({ navigation }) {
   const [nombre, setNombre] = useState(null);
   const ip = Constantes.IP;
+  const [dataEntrenamientos, setDataEntrenamientos] = useState([]);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -41,46 +44,91 @@ export default function Home({ navigation }) {
     }
   };
 
+  const getEntrenamientos = async () => {
+    try {
+      const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/entrenamiento.php?action=readAllHorariosLugares`, {
+        method: 'GET',
+      });
+      
+      const data = await response.json();
+      console.log(data); // Agrega este console.log para ver la estructura de `data`
+      
+      if (data.status) {
+        setDataEntrenamientos(data.dataset);
+      } else {
+        Alert.alert('Error al cargar los entrenamientos', data.error);
+      }
+      
+    } catch (error) {
+      Alert.alert('Error', 'Ocurrió un error al cargar los entrenamientos');
+    }
+  };
+
   useEffect(() => {
     getUser();
+    getEntrenamientos();
   }, []);
 
-  const data = [
-    { key: '1', title: 'Monumental Estadio Cuscatlán', description: "Martes y jueves: 4:00 P.M - 6:00 P.M. Sábado: 9:00 A.M. - 12:00 P.M.", image: require('../imagenes/cusca.png') },
-    { key: '2', title: 'Complejo deportivo UCA', description: "Martes y jueves: 4:00 P.M - 6:00 P.M. Sábado: 9:00 A.M. - 12:00 P.M.", image: require('../imagenes/cusca.png') },
-    { key: '3', title: 'Cumbres de Cuscatlán', description: "Martes y jueves: 4:00 P.M - 6:00 P.M. Sábado: 9:00 A.M. - 12:00 P.M.", image: require('../imagenes/cusca.png') }
-  ];
+  const formatUsername = (username) => {
+    if (!username) return 'No hay correo para mostrar';
+    const localPart = username.split('@')[0];
+    if (localPart.length < 2) return localPart; // En caso de que el nombre de usuario sea de una sola letra
+    return localPart.charAt(0) + localPart.charAt(localPart.length - 1);
+  };
 
-  const renderItem = ({ item }) => (
-    <View style={styles.item}>
-      <Image source={item.image} style={styles.image} />
-      <Text style={styles.itemTitle}>{item.title}</Text>
-      <Text style={styles.description}>{item.description}</Text>
-    </View>
-  );
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.row}>
           <View style={styles.circle}>
-            <Text style={styles.emailText}>{nombre ? nombre : 'No hay correo para mostrar'}</Text>
+            <Text style={styles.emailText}>{formatUsername(nombre)}</Text>
           </View>
-          <Buttons
-            textoBoton='Cerrar Sesión'
-            accionBoton={handleLogout}
-          />
+          <TouchableOpacity 
+            onPress={handleLogout}
+            onLongPress={toggleModal}
+          >
+            <Image
+              source={require('../imagenes/logoAcademiaBP.png')}
+              style={styles.image}
+            />
+          </TouchableOpacity>
         </View>
         <Text style={styles.titleHeader}>Bienvenid@</Text>
-        <Text>Información sobre nosotros</Text>
+        <Text style={styles.titleHeader2}>Información sobre nosotros</Text>
       </View>
-      
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.key}
-        style={styles.flatList}
-      />
+
+      <SafeAreaView style={styles.containerFlat}>
+        <FlatList
+          data={dataEntrenamientos}
+          keyExtractor={(item) => item.id_lugar.toString()} // Asegúrate de tener una propiedad única para keyExtractor
+          renderItem={({ item }) => (
+            <EntrenamientoView
+              ip={ip}
+              idLugar={item.id_lugar}
+              imagenLugar={item.imagen_lugar} // Asegúrate de que estas propiedades coincidan con las que espera EntrenamientoView
+              nombrelugar={item.nombre_lugar}
+              horariosE={item.horarios}
+            />
+          )}
+          ListHeaderComponent={<></>}
+        />
+      </SafeAreaView>
+
+      <Modal isVisible={isModalVisible}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalText}>Cerrar sesión</Text>
+          <TouchableOpacity onPress={handleLogout} style={styles.modalButton}>
+            <Text style={styles.modalButtonText}>Sí</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={toggleModal} style={[styles.modalButton, { backgroundColor: '#ddd' }]}>
+            <Text style={[styles.modalButtonText, { color: '#000' }]}>No</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -89,36 +137,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   header: {
-    top: 10,
-    left: 10,
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between', // Asegurar que los elementos se distribuyen a lo largo de la fila
+    marginBottom: 10,
   },
   circle: {
-    width: 130,
-    height: 80,
+    width: 40,
+    height: 40,
     borderRadius: 40,
     backgroundColor: '#FFF',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
+    marginTop: 20,
     borderColor: '#000',
-    marginRight: 10,
   },
   emailText: {
     color: '#000',
     textAlign: 'center',
-  },
-  flatList: {
-    width: '100%',
-    height: '100%',
-    marginVertical: 10,
   },
   item: {
     width: width * 0.9,
@@ -133,9 +177,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   image: {
-    width: '100%',
-    height: '70%',
-    borderRadius: 10,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginTop: 20,
   },
   itemTitle: {
     fontSize: 18,
@@ -157,6 +202,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: "white",
   },
+  buttonContainer: {
+    marginLeft: 'auto', // Asegurar que el botón de cerrar sesión se coloque a la derecha
+  },
   titleHeader: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -164,11 +212,43 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     color: '#5C3D2E', // Brown color for the title
   },
+  titleHeader2: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginVertical: 5,
+  },
   subtitle: {
     fontSize: 20,
     fontWeight: '600',
     textAlign: 'center',
     marginVertical: 5,
     color: '#5C3D2E', // Brown color for the title
+  },
+  containerFlat: {
+    flex: 1,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  modalButton: {
+    marginTop: 10,
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: 'darkblue',
+    width: 100,
+    alignItems: 'center',
+  },
+  modalButtonText: {
+    color: 'white',
   },
 });
