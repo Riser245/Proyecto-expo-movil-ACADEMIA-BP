@@ -4,4 +4,9 @@
 //utilizar la direccion IP del servidor y no localhost
 export const IP = 'http://192.168.0.13';
 
-//192.168.0.13
+//Direcciones IP de todos
+
+//192.168.1.13
+//192.168.1.20
+//192.168.0.14
+//192.168.0.12
