@@ -16,7 +16,7 @@ const MyComponent = () => {
         value={searchQuery}
       />
 
-      <Card style={{ width: 300, height: 430, marginTop: 30, marginLeft:60 }}>
+      <Card style={{ width: 300, height: 430, marginTop: 30, marginLeft:40 }}>
         <Text style={styles.text} variant="bodyMedium">Botella con agua</Text>
         <Card.Cover style={styles.image} source={require('../imagenes/botella.png')} />
         <Card.Content>
