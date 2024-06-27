@@ -29,7 +29,7 @@ const SplashScreen = ({ navigation }) => {
     </View>
   );
 };
-
+//
 const App = () => {
   return (
     <NavigationContainer>
@@ -37,7 +37,7 @@ const App = () => {
         <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="Home" component={TabNavigation} />
+        <Stack.Screen name="Home" component={TabNavigation} /> 
       </Stack.Navigator>
     </NavigationContainer>
   );
