@@ -19,6 +19,7 @@ export default function SignUp({ navigation }) {
   const [telefono, setTelefono] = useState('');
   const [clave, setClave] = useState('');
   const [confirmarClave, setConfirmarClave] = useState('');
+  const [estado, setEstado] = useState('');
 
   const handleLogout = async () => {
     navigation.navigate('Login');
@@ -45,12 +46,14 @@ export default function SignUp({ navigation }) {
       formData.append('claveCliente', clave);
       formData.append('confirmarClave', confirmarClave);
 
+
       const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=signUpMovil`, {
         method: 'POST',
         body: formData
       });
 
       const data = await response.json();
+      console.log(data)
       if (data.status) {
         Alert.alert('Datos Guardados correctamente');
         navigation.navigate('Login');
@@ -117,6 +120,7 @@ export default function SignUp({ navigation }) {
             setTextChange={setConfirmarClave}
             style={styles.inputSpacing}
           />
+          
           
         </ScrollView>
         <Buttons

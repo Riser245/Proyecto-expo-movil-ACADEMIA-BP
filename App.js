@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -8,10 +9,31 @@ import TabNavigation from './src/navigation/tabNavigation'; // Asegúrate de que
 
 const Stack = createStackNavigator();
 
+const SplashScreen = ({ navigation }) => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigation.replace('Login');
+    }, 3000); // 3 segundos
+
+    return () => clearTimeout(timer);
+  }, [navigation]);
+
+  return (
+    <View style={styles.splashContainer}>
+      <Text style={styles.splashText}>WELCOME</Text>
+      <Image 
+        source={require('./src/imagenes/equipo.png')}
+        style={styles.splashImage}
+      />
+    </View>
+  );
+};
+
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Splash">
+        <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="Home" component={TabNavigation} />
@@ -19,5 +41,18 @@ const App = () => {
     </NavigationContainer>
   );
 };
+
+const styles = StyleSheet.create({
+  splashContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+  },
+  splashText: {
+    color: 'white',
+    fontSize: 24,
+  },
+});
 
 export default App;
