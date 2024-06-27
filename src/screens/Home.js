@@ -35,7 +35,7 @@ export default function Home({ navigation }) {
       });
       const data = await response.json();
       if (data.status) {
-        setNombre(data.username);
+        setNombre(data.username); //Aqui asignamos el correo del usuario que ha iniciado sesion
       } else {
         Alert.alert('Error', data.error);
       }
@@ -47,11 +47,11 @@ export default function Home({ navigation }) {
   const getEntrenamientos = async () => {
     try {
       const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/entrenamiento.php?action=readAllHorariosLugares`, {
-        method: 'GET',
+        method: 'GET', //Obtenemos la información extra de La Academia
       });
       
       const data = await response.json();
-      console.log(data); // Agrega este console.log para ver la estructura de `data`
+      console.log(data); 
       
       if (data.status) {
         setDataEntrenamientos(data.dataset);
@@ -64,12 +64,12 @@ export default function Home({ navigation }) {
     }
   };
 
-  useEffect(() => {
+  useEffect(() => { //Se cargan los metodos
     getUser();
-    getEntrenamientos();
+    getEntrenamientos(); 
   }, []);
 
-  const formatUsername = (username) => {
+  const formatUsername = (username) => { //Formateamos el correo a mostrar, para que unicamente se muestre la primer y ultima letra antes del @
     if (!username) return 'No hay correo para mostrar';
     const localPart = username.split('@')[0];
     if (localPart.length < 2) return localPart; // En caso de que el nombre de usuario sea de una sola letra
@@ -77,7 +77,7 @@ export default function Home({ navigation }) {
   };
 
   const toggleModal = () => {
-    setModalVisible(!isModalVisible);
+    setModalVisible(!isModalVisible); //Mostramos una modal para cerrar sesion
   };
 
   return (
@@ -89,7 +89,7 @@ export default function Home({ navigation }) {
           </View>
           <TouchableOpacity 
             onPress={handleLogout}
-            onLongPress={toggleModal}
+            onLongPress={toggleModal} //Cuando se mantenfa presionado el boton con el logo de la academia, se mostrará una modal para cerrar sesió
           >
             <Image
               source={require('../imagenes/logoAcademiaBP.png')}
@@ -104,12 +104,12 @@ export default function Home({ navigation }) {
       <SafeAreaView style={styles.containerFlat}>
         <FlatList
           data={dataEntrenamientos}
-          keyExtractor={(item) => item.id_lugar.toString()} // Asegúrate de tener una propiedad única para keyExtractor
+          keyExtractor={(item) => item.id_lugar.toString()} // Id por el que se cargan las cards
           renderItem={({ item }) => (
             <EntrenamientoView
               ip={ip}
               idLugar={item.id_lugar}
-              imagenLugar={item.imagen_lugar} // Asegúrate de que estas propiedades coincidan con las que espera EntrenamientoView
+              imagenLugar={item.imagen_lugar}
               nombrelugar={item.nombre_lugar}
               horariosE={item.horarios}
             />

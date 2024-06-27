@@ -21,7 +21,7 @@ const Onboard = () => {
       setIsAppFirstLaunched(false);
     }
 
-    // AsyncStorage.removeItem('isAppFirstLaunched');
+    
   }, []);
   isAppFirstLaunched != null && (
     <NavigationContainer>

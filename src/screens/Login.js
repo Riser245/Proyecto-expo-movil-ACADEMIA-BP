@@ -12,7 +12,7 @@ export default function Login({ navigation }) {
 
   const validarSesion = async () => {
     try {
-      const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=getUser`, {
+      const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=getUser`, { //Obtenemos el usuario que ha iniciado sesion
         method: 'GET'
       });
       const data = await response.json();
@@ -31,7 +31,7 @@ export default function Login({ navigation }) {
 
   const cerrarSesion = async () => {
     try {
-      const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=logOut`, {
+      const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=logOut`, { //Metodo para cerrar sesion
         method: 'GET'
       });
       const data = await response.json();
@@ -52,7 +52,7 @@ export default function Login({ navigation }) {
       formData.append('correoCliente', usuario);
       formData.append('claveCliente', contrasenia);
 
-      const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=logIn`, {
+      const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=logIn`, { //Metodo del login
         method: 'POST',
         body: formData
       });
@@ -72,7 +72,7 @@ export default function Login({ navigation }) {
   };
 
   const irRegistrar = () => {
-    navigation.navigate('SignUp'); // Asegúrate de que el nombre coincide
+    navigation.navigate('SignUp');
   };
 
   useEffect(() => {

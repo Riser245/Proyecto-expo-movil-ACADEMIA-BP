@@ -5,8 +5,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Login from './src/screens/Login';
 import SignUp from './src/screens/SignUp';
-import TabNavigation from './src/navigation/tabNavigation'; // Asegúrate de que esta ruta es correcta
+import TabNavigation from './src/navigation/tabNavigation';
 
+//Pantalla que se va a cargar deespues del splash screen
 const Stack = createStackNavigator();
 
 const SplashScreen = ({ navigation }) => {
@@ -16,7 +17,7 @@ const SplashScreen = ({ navigation }) => {
     }, 3000); // 3 segundos
 
     return () => clearTimeout(timer);
-  }, [navigation]);
+  }, [navigation]); //Luego de los tres segundos se enviará al login
 
   return (
     <View style={styles.splashContainer}>
