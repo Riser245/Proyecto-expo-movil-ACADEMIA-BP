@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Button, Card, Searchbar } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 
-const MyComponent = () => {
+const Carrito = () => {
   const [searchQuery, setSearchQuery] = React.useState('');
 
   return (
@@ -113,4 +113,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyComponent;
+export default Carrito;
