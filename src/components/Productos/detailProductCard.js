@@ -22,7 +22,7 @@ export default function detailProductCard({ ip, imagenProducto, idProducto, nomb
           resizeMode="contain" // Ajustar la imagen al contenedor
         />
       </View>
-      
+      <Text style={styles.textTitle}>{idProducto}</Text>
       <Text style={styles.textTitle}>{nombreProducto}</Text>
       <Text style={styles.text}>{descripcionProducto}</Text>
       <Text style={styles.text}>{precioProducto}</Text>

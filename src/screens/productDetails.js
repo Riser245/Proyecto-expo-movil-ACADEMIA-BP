@@ -7,7 +7,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import Constants from 'expo-constants';
 import detailProductCard from '../components/Productos/detailProductCard';
 
-const Detalles = () => {
+const Detalles = (idCategoriaSelect, idproducto) => {
     const ip = Constantes.IP;
     const [dataProductos, setDataProductos] = useState([]);
     const [dataCategorias, setDataCategorias] = useState([]);
@@ -28,19 +28,20 @@ const Detalles = () => {
         setNombreProductoModal(nombre);
     };
 
-    const getProductos = async (idCategoriaSelect = 1) => {
+    const getProductos = async (idCategoriaSelect, idproducto) => {
         try {
             if (idCategoriaSelect <= 0) {
                 return;
             }
             const formData = new FormData();
             formData.append('idCategoria', idCategoriaSelect);
+            formData.append('idProducto', idproducto);
             const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/productos.php?action=readProductosCategoria`, {
                 method: 'POST',
                 body: formData
             });
-
-            
+            console.log(idCategoriaSelect)
+            console.log(idproducto)
 
             const data = await response.json();
             
@@ -56,7 +57,7 @@ const Detalles = () => {
     };
 
     useEffect(() => {
-        //getProductos();
+        getProductos();
     }, []);
 
 

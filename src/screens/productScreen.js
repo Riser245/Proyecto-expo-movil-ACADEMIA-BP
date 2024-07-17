@@ -15,7 +15,8 @@ export default function MyComponent({ navigation }) {
     const [cantidad, setCantidad] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [drawerVisible, setDrawerVisible] = useState(false);
-    const [idProductoModal, setIdProductoModal] = useState('');
+    const [idProducto, setIdProducto] = useState('');
+    const [idCategoria, setIdCategoria] = useState('');
     const [nombreProductoModal, setNombreProductoModal] = useState('');
     const [currentIndex, setCurrentIndex] = useState(0); // Índice de la imagen actual
 
@@ -25,7 +26,7 @@ export default function MyComponent({ navigation }) {
     };
     
 
-    const handleVerDetalle = () => {
+    const handleVerDetalle = (idCategoriaSelect = 1, idProducto) => {
         navigation.navigate('Detalles');
     };
 
@@ -56,6 +57,8 @@ export default function MyComponent({ navigation }) {
         }
     };
 
+
+
     const getCategorias = async () => {
         try {
             const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/categorias.php?action=readAll`, {
@@ -83,17 +86,10 @@ export default function MyComponent({ navigation }) {
     };
 
     return (
+        
         <View style={styles.container}>
             <Text style={styles.pageTitle}>Nuestros productos</Text>
             
-            <ModalCompra
-                visible={modalVisible}
-                cerrarModal={setModalVisible}
-                nombreProductoModal={nombreProductoModal}
-                idProductoModal={idProductoModal}
-                cantidad={cantidad}
-                setCantidad={setCantidad}
-            />
 
             <SafeAreaView style={styles.containerFlat}>
                 <FlatList
@@ -102,14 +98,16 @@ export default function MyComponent({ navigation }) {
                     renderItem={({ item }) => (
                         <ProductoCard
                             ip={ip}
+                            idProducto={item.id_producto}
                             imagenProducto={item.imagen_producto}
                             nombreProducto={item.nombre_producto}
                             descripcionProducto={item.descripcion_producto}
-                            precioProducto={item.precio_producto}
-                            descuentoProducto={item.descuento_producto}
-                            accionBotonProducto={() => handleVerDetalle()}
+                            accionBotonProducto={() => handleVerDetalle(item.id_producto, item.id_categoria_producto)}
                         />
+                        
                     )}
+
+                    
                     ListHeaderComponent={
                         <>
                             <View style={styles.categoryContainer}>

@@ -22,7 +22,7 @@ export default function ProductoCard({ ip, imagenProducto, idProducto, nombrePro
           resizeMode="contain" // Ajustar la imagen al contenedor
         />
       </View>
-      
+      <Text style={styles.textTitle}>{idProducto}</Text>
       <Text style={styles.textTitle}>{nombreProducto}</Text>
       <Text style={styles.text}>{descripcionProducto}</Text>
       
@@ -32,8 +32,9 @@ export default function ProductoCard({ ip, imagenProducto, idProducto, nombrePro
         <FontAwesome name="plus-circle" size={24} color="white" />
         <Text style={styles.cartButtonText}>Ver más</Text>
       </TouchableOpacity>
+      
     </View>
-
+    
   );
 }
 
