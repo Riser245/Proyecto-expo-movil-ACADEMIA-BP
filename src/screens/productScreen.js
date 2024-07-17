@@ -25,7 +25,7 @@ export default function MyComponent({ navigation }) {
     };
     
 
-    const handleVerDetalle = (nombre, id) => {
+    const handleVerDetalle = () => {
         navigation.navigate('Detalles');
     };
 
@@ -107,7 +107,7 @@ export default function MyComponent({ navigation }) {
                             descripcionProducto={item.descripcion_producto}
                             precioProducto={item.precio_producto}
                             descuentoProducto={item.descuento_producto}
-                            accionBotonProducto={() => handleCompra(item.nombre_producto, item.id_producto)}
+                            accionBotonProducto={() => handleVerDetalle()}
                         />
                     )}
                     ListHeaderComponent={
