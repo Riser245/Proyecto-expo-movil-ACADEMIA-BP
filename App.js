@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Login from './src/screens/Login';
 import SignUp from './src/screens/SignUp';
 import TabNavigation from './src/navigation/tabNavigation';
+import Detalles from './src/screens/productDetails';
 
 //Pantalla que se va a cargar deespues del splash screen
 const Stack = createStackNavigator();
@@ -38,6 +39,7 @@ const App = () => {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="Home" component={TabNavigation} /> 
+        <Stack.Screen name="Detalles" component={Detalles} />
       </Stack.Navigator>
     </NavigationContainer>
   );

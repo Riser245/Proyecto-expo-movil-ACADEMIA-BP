@@ -19,13 +19,14 @@ export default function MyComponent({ navigation }) {
     const [nombreProductoModal, setNombreProductoModal] = useState('');
     const [currentIndex, setCurrentIndex] = useState(0); // Índice de la imagen actual
 
+
     const volverInicio = () => {
         setDrawerVisible(true);
     };
-    const handleCompra = (nombre, id) => {
-        setModalVisible(true);
-        setIdProductoModal(id);
-        setNombreProductoModal(nombre);
+    
+
+    const handleVerDetalle = (nombre, id) => {
+        navigation.navigate('Detalles');
     };
 
     const getProductos = async (idCategoriaSelect = 1) => {
@@ -35,12 +36,15 @@ export default function MyComponent({ navigation }) {
             }
             const formData = new FormData();
             formData.append('idCategoria', idCategoriaSelect);
-            const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/productos.php?action=readProductosCategoria`, {
+            const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/productos.php?action=readProductosCategorias`, {
                 method: 'POST',
                 body: formData
             });
 
+            
+
             const data = await response.json();
+            
             if (data.status) {
                 setDataProductos(data.dataset);
             } else {
@@ -102,7 +106,6 @@ export default function MyComponent({ navigation }) {
                             nombreProducto={item.nombre_producto}
                             descripcionProducto={item.descripcion_producto}
                             precioProducto={item.precio_producto}
-                            existenciasProducto={item.existencias_producto}
                             descuentoProducto={item.descuento_producto}
                             accionBotonProducto={() => handleCompra(item.nombre_producto, item.id_producto)}
                         />

@@ -8,8 +8,8 @@ import * as Constantes from '../../utils/constantes';
 //productoCard
 const ip = Constantes.IP;
 
-export default function ProductoCard({ ip, imagenProducto, idProducto, nombreProducto, descripcionProducto
-  , precioProducto, existenciasProducto, descuentoProducto, accionBotonProducto
+export default function detailProductCard({ ip, imagenProducto, idProducto, nombreProducto, descripcionProducto
+  , precioProducto, existenciasProducto, descuentoProducto, talla, color, accionBotonProducto
 }) {
 
   return (
@@ -25,6 +25,11 @@ export default function ProductoCard({ ip, imagenProducto, idProducto, nombrePro
       
       <Text style={styles.textTitle}>{nombreProducto}</Text>
       <Text style={styles.text}>{descripcionProducto}</Text>
+      <Text style={styles.text}>{precioProducto}</Text>
+      <Text style={styles.text}>{existenciasProducto}</Text>
+      <Text style={styles.text}>{descuentoProducto}</Text>
+      <Text style={styles.text}>{talla}</Text>
+      <Text style={styles.text}>{color}</Text>
       
       <TouchableOpacity
         style={styles.cartButton}
