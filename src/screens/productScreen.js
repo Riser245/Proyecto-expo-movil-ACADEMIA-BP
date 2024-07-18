@@ -6,6 +6,7 @@ import * as Constantes from '../utils/constantes';
 import RNPickerSelect from 'react-native-picker-select';
 import Constants from 'expo-constants';
 import ProductoCard from '../components/Productos/ProductoCard';
+import { useRoute } from '@react-navigation/native';
 
 export default function MyComponent({ navigation }) {
     const ip = Constantes.IP;
@@ -26,8 +27,8 @@ export default function MyComponent({ navigation }) {
     };
     
 
-    const handleVerDetalle = (idCategoriaSelect = 1, idProducto) => {
-        navigation.navigate('Detalles');
+    const handleVerDetalle = (idCategoriaSelect, idProducto) => {
+        navigation.navigate('Detalles', {idCategoria: idCategoriaSelect, idProducto});
     };
 
     const getProductos = async (idCategoriaSelect = 1) => {
@@ -102,7 +103,7 @@ export default function MyComponent({ navigation }) {
                             imagenProducto={item.imagen_producto}
                             nombreProducto={item.nombre_producto}
                             descripcionProducto={item.descripcion_producto}
-                            accionBotonProducto={() => handleVerDetalle(item.id_producto, item.id_categoria_producto)}
+                            accionBotonProducto={() => handleVerDetalle(item.id_categoria_producto, item.id_producto)}
                         />
                         
                     )}

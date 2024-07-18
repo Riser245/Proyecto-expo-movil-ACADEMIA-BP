@@ -5,9 +5,10 @@ import ModalCompra from '../components/Modales/ModalCompra';
 import * as Constantes from '../utils/constantes';
 import RNPickerSelect from 'react-native-picker-select';
 import Constants from 'expo-constants';
-import detailProductCard from '../components/Productos/detailProductCard';
+import DetailProductCard from '../components/Productos/DetailProductoCard';
+import { useRoute } from '@react-navigation/native';
 
-const Detalles = (idCategoriaSelect, idproducto) => {
+const Detalles = () => {
     const ip = Constantes.IP;
     const [dataProductos, setDataProductos] = useState([]);
     const [dataCategorias, setDataCategorias] = useState([]);
@@ -19,9 +20,13 @@ const Detalles = (idCategoriaSelect, idproducto) => {
     const [nombreProductoModal, setNombreProductoModal] = useState('');
     const [currentIndex, setCurrentIndex] = useState(0); // Índice de la imagen actual
 
+    const route = useRoute();
+    const { idCategoria, idProducto } = route.params;
+
     const volverInicio = () => {
         setDrawerVisible(true);
     };
+
     const handleCompra = (nombre, id) => {
         setModalVisible(true);
         setIdProductoModal(id);
@@ -40,8 +45,8 @@ const Detalles = (idCategoriaSelect, idproducto) => {
                 method: 'POST',
                 body: formData
             });
-            console.log(idCategoriaSelect)
-            console.log(idproducto)
+            console.log(idCategoriaSelect);
+            console.log(idproducto);
 
             const data = await response.json();
             
@@ -57,15 +62,44 @@ const Detalles = (idCategoriaSelect, idproducto) => {
     };
 
     useEffect(() => {
-        getProductos();
+        getProductos(idCategoria, idProducto);
     }, []);
-
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Detalles del Producto</Text>
-            <Text style={styles.productName}>Nombre: </Text>
-            <Text style={styles.productId}>ID: </Text>
+
+            <Text style={styles.text}>Selecciona tu producto</Text>
+            {/* Modal de compra */}
+            <ModalCompra
+                visible={modalVisible}
+                cerrarModal={setModalVisible}
+                nombreProductoModal={nombreProductoModal}
+                idProductoModal={idProductoModal}
+                cantidad={cantidad}
+                setCantidad={setCantidad}
+            />
+
+            <SafeAreaView style={styles.containerFlat}>
+                {/* Aquí reemplazamos ScrollView por FlatList */}
+                <FlatList
+                    data={dataProductos}
+                    keyExtractor={(item) => item.id_detalle_producto.toString()} // Asegúrate de que sea una cadena
+                    renderItem={({ item }) => (
+                        <DetailProductCard
+                            ip={ip}
+                            imagenProducto={item.imagen_producto}
+                            nombreProducto={item.nombre_producto}
+                            descripcionProducto={item.descripcion_producto}
+                            precioProducto={item.precio_producto}
+                            existenciasProducto={item.existencias_producto}
+                            descuentoProducto={item.descuento_producto}
+                            talla={item.talla} // Asegúrate de que todos los props necesarios sean pasados
+                            color={item.color}
+                            accionBotonProducto={() => handleCompra(item.nombre_producto, item.id_producto)}
+                        />
+                    )}
+                />
+            </SafeAreaView>
         </View>
     );
 };
@@ -88,6 +122,15 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginVertical: 10,
     },
+    containerFlat: {
+        flex: 1
+    },
+
+    text:{
+        marginTop: 40,
+        fontSize: 15,
+        fontWeight: "bold"
+    }
 });
 
 export default Detalles;

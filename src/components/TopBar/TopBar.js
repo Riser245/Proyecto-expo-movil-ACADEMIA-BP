@@ -1,4 +1,3 @@
-
 import { StatusBar, StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, FlatList, ScrollView, SafeAreaView, Image } from 'react-native';
 import { useState, useEffect } from 'react';
 import { FontAwesome } from '@expo/vector-icons'; // Importamos el ícono
@@ -8,7 +7,7 @@ import * as Constantes from '../../utils/constantes';
 //productoCard
 const ip = Constantes.IP;
 
-export default function detailProductCard({ ip, imagenProducto, idProducto, nombreProducto, descripcionProducto
+export default function DetailProductCard({ ip, imagenProducto, idProducto, nombreProducto, descripcionProducto
   , precioProducto, existenciasProducto, descuentoProducto, talla, color, accionBotonProducto
 }) {
 
@@ -25,17 +24,17 @@ export default function detailProductCard({ ip, imagenProducto, idProducto, nomb
       <Text style={styles.textTitle}>{idProducto}</Text>
       <Text style={styles.textTitle}>{nombreProducto}</Text>
       <Text style={styles.text}>{descripcionProducto}</Text>
-      <Text style={styles.text}>{precioProducto}</Text>
-      <Text style={styles.text}>{existenciasProducto}</Text>
-      <Text style={styles.text}>{descuentoProducto}</Text>
-      <Text style={styles.text}>{talla}</Text>
-      <Text style={styles.text}>{color}</Text>
+      <Text style={styles.text}>Precio: ${precioProducto}</Text>
+      <Text style={styles.text}>Existencias: {existenciasProducto}</Text>
+      <Text style={styles.text}>Descuento: {descuentoProducto}%</Text>
+      <Text style={styles.text}>Talla: {talla}</Text>
+      <Text style={styles.text}>Color: {color}</Text>
       
       <TouchableOpacity
         style={styles.cartButton}
         onPress={accionBotonProducto}>
         <FontAwesome name="plus-circle" size={24} color="white" />
-        <Text style={styles.cartButtonText}>Ver más</Text>
+        <Text style={styles.cartButtonText}>Agregar al carrito</Text>
       </TouchableOpacity>
     </View>
 
