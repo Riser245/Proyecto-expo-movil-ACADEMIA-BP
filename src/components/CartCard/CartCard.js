@@ -1,60 +1,72 @@
 import React, { useEffect, useState } from 'react';
-import { Text, TouchableOpacity, View, StyleSheet, FlatList, Alert } from 'react-native';
+import { Text, TouchableOpacity, View, StyleSheet, Alert } from 'react-native';
 import Constants from 'expo-constants';
 import * as Constantes from '../../utils/constantes'
 
-const CarritoCard = ({item, cargarCategorias, 
-  modalVisible,
-  setModalVisible,
-  cantidadProductoCarrito,
-  setCantidadProductoCarrito, 
+const CarritoCard = ({item,
   accionBotonDetalle,
-  idDetalle,
-  setIdDetalle, getDetalleCarrito}) => {
+ updateDataDetalleCarrito}) => {
 
     const ip = Constantes.IP;
     //asignar el valor a cantidadproducto carrito que viene 
   
 
     const handleDeleteDetalleCarrito = async (idDetalle) => {
-        // Lógica para agregar al carrito con la cantidad ingresada
-        try {
-          const formData = new FormData();
-          formData.append('idDetalle', idDetalle);
-          const response = await fetch(`${ip}/coffeeshop/api/services/public/pedido.php?action=deleteDetail`, {
-            method: 'POST',
-            body: formData
-        });
-        const data = await response.json();
-        if (data.status) {
-            Alert.alert('Datos elimnados correctamente del carrito');
-            cargarCategorias();
-        } else {
-            Alert.alert('Error al agregar al carrito', data.error);
-        }
-        } catch (error) {
-        Alert.alert("Error en agregar al carrito")
-        }
-      };
+      try {
+        // Mostrar un mensaje de confirmación antes de eliminar
+        Alert.alert(
+          'Confirmación',
+          '¿Estás seguro de que deseas eliminar este elemento del carrito?',
+          [
+            {
+              text: 'Cancelar',
+              style: 'cancel'
+            },
+            {
+              text: 'Eliminar',
+              onPress: async () => {
+                const formData = new FormData();
+                formData.append('idDetalle', idDetalle);
+                const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/compras.php?action=deleteDetail`, {
+                  method: 'POST',
+                  body: formData
+                });
+                const data = await response.json();
+                if (data.status) {
+                  Alert.alert('Datos eliminados correctamente del carrito');
+                  // Llamar a la función de actualización para actualizar la lista
+                  updateDataDetalleCarrito(prevData => prevData.filter(item => item.id_detalle_producto !== idDetalle));
+                } else {
+                  Alert.alert('Error al eliminar del carrito', data.error);
+                }
+              }
+            }
+          ]
+        );
+      } catch (error) {
+        Alert.alert("Error al eliminar del carrito")
+        console.log("No se elimino")
+      }
+    };
     
 
   return (
     <View style={styles.itemContainer}>
 
-    <Text style={styles.itemText}>ID: {item.id_detalle}</Text>
+    <Text style={styles.itemText}>ID: {item.id_detalle_producto}</Text>
     <Text style={styles.itemText}>Nombre: {item.nombre_producto}</Text>
     <Text style={styles.itemText}>Precio: ${item.precio_producto}</Text>
     <Text style={styles.itemText}>Cantidad: {item.cantidad_producto}</Text>
     <Text style={styles.itemText}>SubTotal: ${(parseFloat(item.cantidad_producto)*parseFloat(item.precio_producto)).toFixed(2)}</Text>
 
     <TouchableOpacity style={styles.modifyButton}
-    onPress={()=>accionBotonDetalle(item.id_detalle, item.cantidad_producto)}
+    onPress={()=>accionBotonDetalle(item.id_detalle_producto, item.cantidad_producto)}
     >
       <Text style={styles.buttonText}>Modificar Cantidad</Text>
     </TouchableOpacity>
 
     <TouchableOpacity style={styles.deleteButton}
-    onLongPress={()=>handleDeleteDetalleCarrito(item.id_detalle)}
+    onLongPress={()=>handleDeleteDetalleCarrito(item.id_detalle_producto)}
     >
       <Text style={styles.buttonText}>Eliminar del carrito</Text>
     </TouchableOpacity>

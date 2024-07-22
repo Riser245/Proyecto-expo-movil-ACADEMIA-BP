@@ -1,116 +1,207 @@
-import * as React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Button, Card, Searchbar } from 'react-native-paper';
-import { MaterialIcons } from '@expo/vector-icons';
+import React, { useEffect, useState } from 'react';
+import { Text, View, StyleSheet, FlatList, Alert, Image, TouchableOpacity } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import Constants from 'expo-constants';
+import * as Constantes from '../utils/constantes';
+import Buttons from '../components/Buttons/Button';
+import CarritoCard from '../components/CartCard/CartCard';
+import ModalEditarCantidad from '../components/Modales/ModalEditarCantidad';
+import { FontAwesome } from '@expo/vector-icons';
 
-const Carrito = () => {
-  const [searchQuery, setSearchQuery] = React.useState('');
+const Carrito = ({ navigation }) => {
+    const [dataDetalleCarrito, setDataDetalleCarrito] = useState([]);
+    const [idDetalle, setIdDetalle] = useState(null);
+    const [cantidadProductoCarrito, setCantidadProductoCarrito] = useState(0);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [drawerVisible, setDrawerVisible] = useState(false);
+    const ip = Constantes.IP;
 
-  return (
-    <View style={styles.overlay}>
-      <Text style={styles.texto}>Carrito</Text>
-      <Searchbar
-        style={styles.search}
-        placeholder="Buscar"
-        onChangeText={setSearchQuery}
-        value={searchQuery}
-      />
-      <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.row}>
-          <Card style={styles.card}>
-            <Card.Cover style={styles.image} source={require('../imagenes/pelota.png')} />
-            <Card.Content>
-              <Text style={styles.texto2} variant="titleLarge">Balón de fútbol</Text>
-            </Card.Content>
-            <Card.Actions>
-              <Text style={styles.btn1}>$894</Text>
-              <Button style={styles.btn2}><MaterialIcons name="remove-shopping-cart" size={22} color="red" /></Button>
-            </Card.Actions>
-          </Card>
+    const backProducts = () => {
+        navigation.navigate('Productos');
+    };
 
-          <Card style={styles.card}>
-            <Card.Cover style={styles.image} source={require('../imagenes/camisa.png')} />
-            <Card.Content>
-              <Text style={styles.texto2} variant="titleLarge">Camisa deportiva</Text>
-            </Card.Content>
-            <Card.Actions>
-              <Text style={styles.btn1}>$894</Text>
-              <Button style={styles.btn2}><MaterialIcons name="remove-shopping-cart" size={22} color="red" /></Button>
-            </Card.Actions>
-          </Card>
+    useFocusEffect(
+        React.useCallback(() => {
+            getDetalleCarrito();
+        }, [])
+    );
+
+    const volverInicio = () => {
+        setDrawerVisible(true);
+    };
+
+    const getDetalleCarrito = async () => {
+        try {
+            const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/compras.php?action=readDetail`, {
+                method: 'GET',
+            });
+            const data = await response.json();
+            console.log(data, "Data desde getDetalleCarrito");
+
+            if (data.status) {
+                setDataDetalleCarrito(data.dataset);
+            } else {
+                console.log("No hay detalles del carrito disponibles");
+            }
+        } catch (error) {
+            console.error(error, "Error desde Catch");
+            Alert.alert('Error', 'Ocurrió un error al listar las categorías');
+        }
+    };
+
+    const finalizarPedido = async () => {
+        try {
+            const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/compras.php?action=finishOrder`, {
+                method: 'GET',
+            });
+            const data = await response.json();
+            if (data.status) {
+                Alert.alert("Se finalizó la compra correctamente");
+                setDataDetalleCarrito([]);
+                navigation.navigate('Productos', { screen: 'Productos' });
+            } else {
+                Alert.alert('Error', data.error);
+            }
+        } catch (error) {
+            Alert.alert('Error', 'Ocurrió un error al finalizar pedido');
+        }
+    };
+
+    const handleEditarDetalle = (idDetalle, cantidadDetalle) => {
+        setModalVisible(true);
+        setIdDetalle(idDetalle);
+        setCantidadProductoCarrito(cantidadDetalle);
+    };
+
+    const renderItem = ({ item }) => (
+        <CarritoCard
+            item={item}
+            cargarCategorias={getDetalleCarrito}
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            setCantidadProductoCarrito={setCantidadProductoCarrito}
+            cantidadProductoCarrito={cantidadProductoCarrito}
+            idDetalle={idDetalle}
+            setIdDetalle={setIdDetalle}
+            accionBotonDetalle={handleEditarDetalle}
+            getDetalleCarrito={getDetalleCarrito}
+            updateDataDetalleCarrito={setDataDetalleCarrito} // Nueva prop para actualizar la lista
+        />
+    );
+
+    const calcularTotalConDescuento = () => {
+        return dataDetalleCarrito.reduce((total, item) => {
+            const subtotalConDescuento = (
+                parseFloat(item.precio_producto) * parseFloat(item.cantidad_producto) -
+                (parseFloat(item.precio_producto) * parseFloat(item.cantidad_producto) * parseFloat(item.descuento_producto) / 100)
+            );
+            return total + subtotalConDescuento;
+        }, 0).toFixed(2);
+    };
+
+    return (
+        <View style={styles.container}>
+
+            <ModalEditarCantidad
+                setModalVisible={setModalVisible}
+                modalVisible={modalVisible}
+                idDetalle={idDetalle}
+                setIdDetalle={setIdDetalle}
+                setCantidadProductoCarrito={setCantidadProductoCarrito}
+                cantidadProductoCarrito={cantidadProductoCarrito}
+                getDetalleCarrito={getDetalleCarrito}
+            />
+
+            <Text style={styles.title}>Carrito de Compras</Text>
+
+            {dataDetalleCarrito.length > 0 ? (
+                <FlatList
+                    data={dataDetalleCarrito.filter(item => item.id_detalle_producto)}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item.id_detalle_producto.toString()}
+                    contentContainerStyle={{ paddingBottom: 100 }}
+                />
+            ) : (
+                <Text style={styles.titleDetalle}>No hay detalles del carrito disponibles.</Text>
+            )}
+
+            {dataDetalleCarrito.length > 0 && (
+                <View style={styles.totalContainer}>
+                    <Text style={styles.totalText}>Total de la compra: ${calcularTotalConDescuento()}</Text>
+                </View>
+            )}
+
+            <View style={styles.containerButtons}>
+                {dataDetalleCarrito.length > 0 && (
+                    <Buttons
+                        textoBoton='Finalizar Pedido'
+                        accionBoton={finalizarPedido}
+                    />
+                )}
+                <Buttons
+                    textoBoton='Regresar a productos'
+                    accionBoton={backProducts}
+                />
+            </View>
         </View>
-
-        <View style={styles.row}>
-          <Card style={styles.card}>
-            <Card.Cover style={styles.image} source={require('../imagenes/botella.png')} />
-            <Card.Content>
-              <Text style={styles.texto2} variant="titleLarge">Botella con agua</Text>
-            </Card.Content>
-            <Card.Actions>
-              <Text style={styles.btn1}>$894</Text>
-              <Button style={styles.btn2}><MaterialIcons name="remove-shopping-cart" size={22} color="red" /></Button>
-            </Card.Actions>
-          </Card>
-
-          <Card style={styles.card}>
-            <Card.Cover style={styles.image} source={require('../imagenes/camisa2.png')} />
-            <Card.Content>
-              <Text style={styles.texto2} variant="titleLarge">Camisa deportiva 2</Text>
-            </Card.Content>
-            <Card.Actions>
-              <Text style={styles.btn1}>$894</Text>
-              <Button style={styles.btn2}><MaterialIcons name="remove-shopping-cart" size={22} color="red" /></Button>
-            </Card.Actions>
-          </Card>
-        </View>
-      </ScrollView>
-    </View>
-  );
+    );
 };
 
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-  },
-  search: {
-    marginTop: 20,
-    paddingHorizontal: 20,
-  },
-  texto: {
-    textAlign: 'center',
-    fontSize: 20,
-    marginTop: 80,
-  },
-  texto2: {
-    textAlign: 'center',
-    fontSize: 16,
-    marginTop: 10,
-  },
-  container: {
-    paddingHorizontal: 10,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: 10,
-  },
-  card: {
-    width: 180,
-    height: 250,
-    marginTop: 50,
-  },
-  image: {
-    width: '100%',
-    height: 160,
-  },
-  btn1: {
-    fontSize: 15,
-    color: 'black',
-  },
-  btn2: {
-    backgroundColor: 'transparent',
-    height: 45,
-  },
-});
-
 export default Carrito;
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#FFF',
+    },
+    topBar: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 20,
+        backgroundColor: '#E9E8E8',
+        height: 60 + Constants.statusBarHeight,
+        width: '100%',
+    },
+    image: {
+        width: 90,
+        height: 35,
+        marginTop: 20,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginVertical: 16,
+        color: '#000',
+        marginTop: 70,
+    },
+    titleDetalle: {
+        fontSize: 20,
+        fontWeight: '600',
+        textAlign: 'center',
+        marginVertical: 16,
+        color: '#5C3D2E',
+    },
+    containerButtons: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    totalContainer: {
+        padding: 16,
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+        marginBottom: 17,
+    },
+    totalText: {
+        fontSize: 19,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: '#333',
+    },
+});

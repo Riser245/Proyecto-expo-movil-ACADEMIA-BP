@@ -20,7 +20,7 @@ const ModalValoracion = ({ visible, cerrarModal, idDetalle, calificacion, coment
         formData.append('calificacion', rating);
         formData.append('comentario', comment);
 
-        const response = await fetch(`${ip}/OinosDeLaVid/api/services/public/valoracion.php?action=createRating`, {
+        const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/valoracion.php?action=createRating`, {
           method: 'POST',
           body: formData,
         });

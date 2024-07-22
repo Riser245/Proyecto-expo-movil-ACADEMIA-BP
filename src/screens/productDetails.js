@@ -31,6 +31,9 @@ const Detalles = () => {
         setModalVisible(true);
         setIdProductoModal(id);
         setNombreProductoModal(nombre);
+
+        console.log(id)
+        console.log(nombre)
     };
 
     const getProductos = async (idCategoriaSelect, idproducto) => {
@@ -74,7 +77,7 @@ const Detalles = () => {
                 visible={modalVisible}
                 cerrarModal={setModalVisible}
                 nombreProductoModal={nombreProductoModal}
-                idProductoModal={idProductoModal}
+                idDetalleModal={idProductoModal}
                 cantidad={cantidad}
                 setCantidad={setCantidad}
             />
@@ -95,14 +98,17 @@ const Detalles = () => {
                             descuentoProducto={item.descuento_producto}
                             talla={item.talla} // Asegúrate de que todos los props necesarios sean pasados
                             color={item.color}
-                            accionBotonProducto={() => handleCompra(item.nombre_producto, item.id_producto)}
+                            accionBotonProducto={() => handleCompra(item.nombre_producto, item.id_detalle_producto)}
                         />
                     )}
                 />
             </SafeAreaView>
         </View>
     );
+    
 };
+
+
 
 const styles = StyleSheet.create({
     container: {
