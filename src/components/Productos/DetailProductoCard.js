@@ -1,4 +1,3 @@
-
 import { StatusBar, StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, FlatList, ScrollView, SafeAreaView, Image } from 'react-native';
 import { useState, useEffect } from 'react';
 import { FontAwesome } from '@expo/vector-icons'; // Importamos el ícono
@@ -29,7 +28,10 @@ export default function DetailProductCard({ ip, imagenProducto, idProducto, nomb
       <Text style={styles.text}>Existencias: {existenciasProducto}</Text>
       <Text style={styles.text}>Descuento: {descuentoProducto}%</Text>
       <Text style={styles.text}>Talla: {talla}</Text>
-      <Text style={styles.text}>Color: {color}</Text>
+      <View style={styles.colorContainer}>
+        <Text style={styles.text}>Color:</Text>
+        <View style={[styles.colorBox, { backgroundColor: "#" + color }]} />
+      </View>
       
       <TouchableOpacity
         style={styles.cartButton}
@@ -131,5 +133,15 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     textAlign: 'center'
   },
+  colorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  colorBox: {
+    width: 20,
+    height: 20,
+    borderRadius: 3,
+    marginLeft: 8,
+  },
 });
-

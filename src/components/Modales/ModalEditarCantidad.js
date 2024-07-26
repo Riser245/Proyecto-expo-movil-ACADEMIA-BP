@@ -24,6 +24,8 @@ const ModalEditarCantidad = ({ setModalVisible, modalVisible, idDetalle, setCant
             });
 
             const data = await response.json();
+            console.log(idDetalle);
+
             if (data.status) {
                 Alert.alert('Se actualizo el detalle del producto');
                 getDetalleCarrito();

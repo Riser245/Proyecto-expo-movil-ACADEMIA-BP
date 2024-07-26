@@ -6,8 +6,7 @@ import SettingsScreen from '../screens/SettingsScreen';
 import ProductsScreen from '../screens/productScreen';
 import CartScreen from '../screens/Cart';
 import { Ionicons } from '@expo/vector-icons';
-import Login from '../screens/Login';
-import SignUp from '../screens/SignUp';
+
 
 
 const Tab = createBottomTabNavigator();

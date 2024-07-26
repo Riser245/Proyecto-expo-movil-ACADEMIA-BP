@@ -116,9 +116,9 @@ const Carrito = ({ navigation }) => {
 
             {dataDetalleCarrito.length > 0 ? (
                 <FlatList
-                    data={dataDetalleCarrito.filter(item => item.id_detalle_producto)}
+                    data={dataDetalleCarrito.filter(item => item.id_detalle_compra)}
                     renderItem={renderItem}
-                    keyExtractor={(item) => item.id_detalle_producto.toString()}
+                    keyExtractor={(item) => item.id_detalle_compra.toString()}
                     contentContainerStyle={{ paddingBottom: 100 }}
                 />
             ) : (

@@ -35,7 +35,7 @@ const CarritoCard = ({item,
                 if (data.status) {
                   Alert.alert('Datos eliminados correctamente del carrito');
                   // Llamar a la función de actualización para actualizar la lista
-                  updateDataDetalleCarrito(prevData => prevData.filter(item => item.id_detalle_producto !== idDetalle));
+                  updateDataDetalleCarrito(prevData => prevData.filter(item => item.id_detalle_compra !== idDetalle));
                 } else {
                   Alert.alert('Error al eliminar del carrito', data.error);
                 }
@@ -53,20 +53,19 @@ const CarritoCard = ({item,
   return (
     <View style={styles.itemContainer}>
 
-    <Text style={styles.itemText}>ID: {item.id_detalle_producto}</Text>
     <Text style={styles.itemText}>Nombre: {item.nombre_producto}</Text>
     <Text style={styles.itemText}>Precio: ${item.precio_producto}</Text>
     <Text style={styles.itemText}>Cantidad: {item.cantidad_producto}</Text>
     <Text style={styles.itemText}>SubTotal: ${(parseFloat(item.cantidad_producto)*parseFloat(item.precio_producto)).toFixed(2)}</Text>
 
     <TouchableOpacity style={styles.modifyButton}
-    onPress={()=>accionBotonDetalle(item.id_detalle_producto, item.cantidad_producto)}
+    onPress={()=>accionBotonDetalle(item.id_detalle_compra, item.cantidad_producto)}
     >
       <Text style={styles.buttonText}>Modificar Cantidad</Text>
     </TouchableOpacity>
 
     <TouchableOpacity style={styles.deleteButton}
-    onLongPress={()=>handleDeleteDetalleCarrito(item.id_detalle_producto)}
+    onLongPress={()=>handleDeleteDetalleCarrito(item.id_detalle_compra)}
     >
       <Text style={styles.buttonText}>Eliminar del carrito</Text>
     </TouchableOpacity>
@@ -109,20 +108,20 @@ const styles = StyleSheet.create({
   },
   modifyButton: {
     borderWidth: 1,
-    borderColor: '#8F6B58',
+    borderColor: '#209C15',
     borderRadius: 8,
     paddingVertical: 8,
     paddingHorizontal: 16,
-    backgroundColor: '#8F6B58', // Light brown color for modify button
+    backgroundColor: '#209C15', // Light brown color for modify button
     marginVertical: 4,
   },
   deleteButton: {
     borderWidth: 1,
-    borderColor: '#D2691E',
+    borderColor: '#165810',
     borderRadius: 8,
     paddingVertical: 8,
     paddingHorizontal: 16,
-    backgroundColor: '#D2691E', // Darker orange color for delete button
+    backgroundColor: '#165810', // Darker orange color for delete button
     marginVertical: 4,
   },
   buttonText: {
