@@ -19,21 +19,7 @@ const UserModal = ({
     confirmarClave, setConfirmarClave,
     modalType
 }) => {
-    const [selectedImage, setSelectedImage] = useState(null);
-
-    const pickImage = async () => {
-        const result = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (result.granted === false) {
-            alert("Permission to access gallery is required!");
-            return;
-        }
-        
-        const pickerResult = await ImagePicker.launchImageLibraryAsync();
-        if (!pickerResult.cancelled) {
-            setSelectedImage(pickerResult.uri);
-            setFoto(pickerResult.uri);
-        }
-    };
+    
 
     return (
         <Modal isVisible={isVisible} onBackdropPress={onClose}>
@@ -81,10 +67,6 @@ const UserModal = ({
                             value={telefono}
                             onChangeText={text => setTelefono(text)}
                         />
-                        <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
-                            <Text style={styles.imagePickerText}>Seleccionar Foto</Text>
-                        </TouchableOpacity>
-                        {selectedImage && <Image source={{ uri: selectedImage }} style={styles.image} />}
                     </>
                 )}
 

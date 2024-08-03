@@ -1,8 +1,7 @@
-import React, { useState, useEffect ,Alert} from 'react';
+import React, { useState, useEffect } from 'react';
+import { Alert, View, Text, StyleSheet, Image } from 'react-native';
 import { Button, Card, TextInput } from 'react-native-paper';
-import { View, Text, StyleSheet, Image } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import * as Constantes from '../utils/constantes';
 import UserModal from '../Modales/UserModal';
 import Input from '../components/Inputs/InputsPerfil/Inputs';
@@ -89,9 +88,11 @@ const ProfileScreen = () => {
       if (data.status) {
         Alert.alert('Éxito', data.message);
         setIsModalVisible(false);
+        console.log('Éxito')
       } else {
         Alert.alert('Error', data.error);
         console.log(error)
+        console.log('err')
       }
     } catch (error) {
       console.error('Error al editar el usuario:', error);
