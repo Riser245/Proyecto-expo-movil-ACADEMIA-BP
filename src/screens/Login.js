@@ -12,7 +12,7 @@ export default function Login({ navigation }) {
 
   const validarSesion = async () => {
     try {
-      const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=getUser`, { //Obtenemos el usuario que ha iniciado sesion
+      const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=getUser`, {
         method: 'GET'
       });
       const data = await response.json();
@@ -31,7 +31,7 @@ export default function Login({ navigation }) {
 
   const cerrarSesion = async () => {
     try {
-      const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=logOut`, { //Metodo para cerrar sesion
+      const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=logOut`, {
         method: 'GET'
       });
       const data = await response.json();
@@ -42,7 +42,7 @@ export default function Login({ navigation }) {
       }
     } catch (error) {
       console.error(error, "Error desde Catch");
-      Alert.alert('Error', 'Ocurrió un error al iniciar sesión con bryancito');
+      Alert.alert('Error', 'Ocurrió un error al cerrar sesión');
     }
   };
 
@@ -52,7 +52,7 @@ export default function Login({ navigation }) {
       formData.append('correoCliente', usuario);
       formData.append('claveCliente', contrasenia);
 
-      const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=logIn`, { //Metodo del login
+      const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=logIn`, {
         method: 'POST',
         body: formData
       });
@@ -74,6 +74,7 @@ export default function Login({ navigation }) {
   const irRegistrar = () => {
     navigation.navigate('SignUp');
   };
+
   const irCorreo = () => {
     navigation.navigate('RecoverEmailPassword');
   };
@@ -105,7 +106,7 @@ export default function Login({ navigation }) {
           <Text style={styles.textRegistrar}>¿No tienes cuenta? Regístrate aquí</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={irCorreo}>
-          <Text style={styles.textRegistrar}>¿Olvisate tu contraseña?</Text>
+          <Text style={styles.textRegistrar}>¿Olvidaste tu contraseña?</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
@@ -121,7 +122,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-   
   },
   texto: {
     color: '#322C2B',

@@ -7,6 +7,9 @@ import Login from './src/screens/Login';
 import SignUp from './src/screens/SignUp';
 import TabNavigation from './src/navigation/tabNavigation';
 import Detalles from './src/screens/productDetails';
+import RecuperarClaveCorreo from './src/screens/RecoverEmailPassword';
+import Verificar from './src/screens/VerifyCode';
+import Actualizar from './src/screens/UpdatePassword';
 
 //Pantalla que se va a cargar deespues del splash screen
 const Stack = createStackNavigator();
@@ -40,6 +43,10 @@ const App = () => {
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="Home" component={TabNavigation} /> 
         <Stack.Screen name="Detalles" component={Detalles} />
+        <Stack.Screen name="RecoverEmailPassword" component={RecuperarClaveCorreo}/>
+        <Stack.Screen name="VerifyCode" component={Verificar}/>
+        <Stack.Screen name="UpdatePassword" component={Actualizar}/>
+
       </Stack.Navigator>
     </NavigationContainer>
   );

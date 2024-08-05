@@ -70,20 +70,20 @@ const TabNavigation = () => {
         component={CartScreen} 
         options={{ title: 'Carrito' }} 
       />
-      <Tab.Screen 
-        name="RecoverEmailPassword" 
-        component={EmailScreen} 
+      <Tab.Screen
+        name="RecoverEmailPassword"
+        component={EmailScreen}
         options={{ title: 'Recuperar contraseña' }}
       />
-      <Tab.Screen 
-        name="VerifyCode" 
-        component={VerifyCodeScreen} 
-        options={{ title: 'Verificar codigo' }}
+      <Tab.Screen
+        name="VerifyCode"
+        component={VerifyCodeScreen}
+        options={{ title: 'Verificar código' }}
       />
-      <Tab.Screen 
-        name="UpdatePassword" 
-        component={UpdatePasswordScreen} 
-        options={{ title: 'Cambiar contraseña' }}
+      <Tab.Screen
+        name="UpdatePassword"
+        component={UpdatePasswordScreen}
+        options={{ title: 'Actualizar contraseña' }}
       />
     </Tab.Navigator>
   );

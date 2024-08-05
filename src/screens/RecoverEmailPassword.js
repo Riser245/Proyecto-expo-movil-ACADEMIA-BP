@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert } from 'react-native';
-import { useState } from 'react';
-import Input from '../components/Inputs/Inputs';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground } from 'react-native';
+import InputEmail from '../components/Inputs/InputEmail';
 import Buttons from '../components/Buttons/Button';
 import * as Constantes from '../utils/constantes';
 import enviarEmail from '../utils/Email';
@@ -12,9 +12,9 @@ export default function RecuperarClaveCorreo({ navigation }) {
 
   const enviarCodigo = async () => {
     const FORM = new FormData();
-    FORM.append('IngreseCorreo', correo);
+    FORM.append('inputCorreo', correo);
     try {
-      const response = await fetch(`${ip}/OinosDeLaVid/api/services/public/cliente.php?action=checkCorreo`, {
+      const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=checkCorreo`, {
         method: 'POST',
         body: FORM
       });
@@ -32,7 +32,7 @@ export default function RecuperarClaveCorreo({ navigation }) {
           await AsyncStorage.setItem('verificationCode', CODIGO); // Guardar el código generado
           await AsyncStorage.setItem('email', EMAIL); // Guardar el correo electrónico
           Alert.alert('Éxito', 'Se ha enviado un correo con el código de recuperación');
-          navigation.navigate('RecuperarClaveCodigo', { correo: EMAIL });
+          navigation.navigate('VerifyCode', { correo: EMAIL });
         } else {
           Alert.alert('Error', 'Ocurrió un error al enviar el correo');
         }
@@ -62,11 +62,12 @@ export default function RecuperarClaveCorreo({ navigation }) {
   return (
     <ImageBackground source={require('../imagenes/inicio.png')} style={styles.background}>
       <View style={styles.overlay}>
-        <Text style={styles.texto}>Iniciar Sesión</Text>
-        <Input
+        <Text style={styles.texto}>Recuperacion contraseña</Text>
+        <InputEmail
           placeHolder='micorreo@gmail.com'
           setValor={correo}
           setTextChange={setCorreo}
+          style={styles.inputSpacing}
         />
         <Buttons
           textoBoton='Enviar Código'
@@ -103,5 +104,9 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 18,
     marginTop: 10,
+  },
+  inputSpacing: {
+    marginTop: 20,
+    width: '100%',
   },
 });

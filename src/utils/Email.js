@@ -1,6 +1,6 @@
 const enviarEmail = async (code, email, nombre) => {
     try {
-      const response = await fetch('https://formspree.io/f/xkgwrlgg', {
+      const response = await fetch('https://formspree.io/f/xkgwrdbk', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
