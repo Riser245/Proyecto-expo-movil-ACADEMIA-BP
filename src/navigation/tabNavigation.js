@@ -5,6 +5,9 @@ import ProfileScreen from '../screens/ProfileScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import ProductsScreen from '../screens/productScreen';
 import CartScreen from '../screens/Cart';
+import EmailScreen from '../screens/RecoverEmailPassword';
+import VerifyCodeScreen from '../screens/VerifyCode';
+import UpdatePasswordScreen from '../screens/UpdatePassword';
 import { Ionicons } from '@expo/vector-icons';
 
 
@@ -66,6 +69,21 @@ const TabNavigation = () => {
         name="Cart" 
         component={CartScreen} 
         options={{ title: 'Carrito' }} 
+      />
+      <Tab.Screen 
+        name="RecoverEmailPassword" 
+        component={EmailScreen} 
+        options={{ title: 'Recuperar contraseña' }}
+      />
+      <Tab.Screen 
+        name="VerifyCode" 
+        component={VerifyCodeScreen} 
+        options={{ title: 'Verificar codigo' }}
+      />
+      <Tab.Screen 
+        name="UpdatePassword" 
+        component={UpdatePasswordScreen} 
+        options={{ title: 'Cambiar contraseña' }}
       />
     </Tab.Navigator>
   );

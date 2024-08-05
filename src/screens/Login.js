@@ -74,6 +74,9 @@ export default function Login({ navigation }) {
   const irRegistrar = () => {
     navigation.navigate('SignUp');
   };
+  const irCorreo = () => {
+    navigation.navigate('RecoverEmailPassword');
+  };
 
   useEffect(() => {
     validarSesion();
@@ -100,6 +103,9 @@ export default function Login({ navigation }) {
         />
         <TouchableOpacity onPress={irRegistrar}>
           <Text style={styles.textRegistrar}>¿No tienes cuenta? Regístrate aquí</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={irCorreo}>
+          <Text style={styles.textRegistrar}>¿Olvisate tu contraseña?</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
