@@ -24,9 +24,9 @@ export default function Actualizar({ navigation }) {
  
   const Update = async () => {
     const FORM = new FormData();
-    FORM.append('claveCliente', claveNueva);
+    FORM.append('nuevaClave', claveNueva);
     FORM.append('confirmarClave', confirmarClave);
-    FORM.append('IngreseCorreo', correo);
+    FORM.append('inputCorreo', correo);
     try {
       const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=updateClave`, {
         method: 'POST',
@@ -38,9 +38,9 @@ export default function Actualizar({ navigation }) {
       const DATA = JSON.parse(responseText);
       if (DATA.status) {
         Alert.alert('Éxito', 'Se ha actualizado la contraseña');
-        navigation.navigate('Sesion');
+        navigation.navigate('Login');
       } else {
-        Alert.alert('Error', `Error en la solicitud: ${DATA.error}`);
+        Alert.alert('Error', `${DATA.error}`);
       }
     } catch (error) {
       console.error('Error desde Catch', error);
@@ -69,7 +69,7 @@ export default function Actualizar({ navigation }) {
         />
         <Buttons
           textoBoton='Aceptar'
-          accionBoton={Regresar}
+          accionBoton={Update}
         />
         <Buttons
           textoBoton='Regresar'
