@@ -37,7 +37,7 @@ export default function RecuperarClaveCorreo({ navigation }) {
           Alert.alert('Error', 'Ocurrió un error al enviar el correo');
         }
       } else {
-        Alert.alert('Error', `Error en la solicitud: ${DATA.status}`);
+        Alert.alert('Error', `${DATA.error}`);
       }
     } catch (error) {
       console.error('Error desde Catch', error);
