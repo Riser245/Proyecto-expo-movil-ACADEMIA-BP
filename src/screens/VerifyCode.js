@@ -21,6 +21,7 @@ export default function Verificar({ navigation }) {
         obtenerDatos();
       }, []);
 
+      // Verifica el código que se mandó al correo
     const VerificarCodigo = async () => {
         try {
             const codigo = await AsyncStorage.getItem('verificationCode');
@@ -37,8 +38,10 @@ export default function Verificar({ navigation }) {
     }
 };
 
+// Función para reenviar código
+
 const ReenviarCodigo = async () => {
-    const CODIGO = generateRandomCode(6);
+    const CODIGO = generateRandomCode(6); //Genera un código aleatorio
     const EMAIL = correo;
     const EMAIL_ENVIADO = await enviarEmail(CODIGO, EMAIL);
     if (EMAIL_ENVIADO) {
@@ -48,6 +51,8 @@ const ReenviarCodigo = async () => {
         Alert.alert('Error', 'Ocurrió un error al enviar el correo');
     }
 };
+
+// Función para generar un código aleatorio
 function generateRandomCode(length) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let result = '';
@@ -57,6 +62,8 @@ function generateRandomCode(length) {
     }
     return result;
   }
+
+  // Navegación
   const Regresar = () => {
     navigation.navigate('RecoverEmailPassword');
   };
