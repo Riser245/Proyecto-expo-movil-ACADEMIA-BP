@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, View, Text, StyleSheet, Image } from 'react-native';
-import { Card } from 'react-native-paper';
+import { Button, Card } from 'react-native-paper';
 import * as Constantes from '../utils/constantes';
 import UserModal from '../Modales/UserModal';
 import Input from '../components/Inputs/InputsPerfil/Inputs';
@@ -55,7 +55,7 @@ const ProfileScreen = () => {
                 setDireccion(data.dataset.direccion_cliente);
                 setDui(data.dataset.dui_cliente);
                 setTelefono(data.dataset.telefono_cliente);
-                setFotoCliente(data.dataset.foto_cliente);
+                setFotoCliente(`${ip}/AcademiaBP_EXPO/api/images/clientes/${data.dataset.foto_cliente}`);
             } else {
                 // Si hay un error, se muestra una alerta
                 Alert.alert('Error perfil', data.error);
@@ -69,6 +69,23 @@ const ProfileScreen = () => {
     // Función para editar los datos del usuario
     const handleEditUser = async () => {
         try {
+
+
+            let localUri = foto
+            let fileName = ""
+            let match = ""
+            let type = ""
+            console.log('valor de la url:', localUri)
+            if (localUri == null || localUri == "") {
+                Alert.alert("Selecciona una iamgen")
+            }
+            else {
+                console.log('ejecutando filename')
+                fileName = localUri.split('/').pop()
+                match = /\.(\w+)$/.exec(fileName)
+                type = match ? `image/${match[1]}` : `image`
+                console.log(type)
+            }
             const formData = new FormData();
             formData.append('idCliente', idCliente);
             formData.append('nombreCliente', nombre);
@@ -77,28 +94,19 @@ const ProfileScreen = () => {
             formData.append('direccionCliente', direccion);
             formData.append('duiCliente', dui);
             formData.append('telefonoCliente', telefono);
-
-            if (foto) {
-                // Construir URI del archivo
-                const fileUri = `${FileSystem.documentDirectory}${foto}`;
-                const fileInfo = await FileSystem.getInfoAsync(fileUri);
-
-                if (fileInfo.exists) {
-                    formData.append('fotoInput', {
-                        uri: fileUri,
-                        name: foto,
-                        type: 'image/jpeg', // Ajusta el tipo según corresponda
-                    });
-                } else {
-                    console.log('Archivo no encontrado:', fileUri);
-                    Alert.alert('Error', 'Archivo de imagen no encontrado.');
-                    return; // Salir si el archivo no existe
-                }
-            }
+            formData.append('fotoInput', {
+                uri: localUri,
+                name: foto,
+                type// Ajusta el tipo según corresponda
+            });
 
             const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=editProfile`, {
                 method: 'POST',
-                body: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data', // Se utiliza para que acepte cualquier tipo de contenido
+                    'Accept': 'application/json'
+                },
+                body: formData
             });
 
             const responseText = await response.text(); // Obtén la respuesta como texto para depuración
@@ -180,7 +188,14 @@ const ProfileScreen = () => {
         <View style={styles.container}>
             <View style={styles.container3}>
                 <Text style={styles.texto1}>Perfil</Text>
-                <Image style={styles.image} source={require('../imagenes/usuario.png')}></Image>
+
+                {/* Condicional para mostrar la imagen del usuario si existe, de lo contrario, mostrar una imagen por defecto */}
+                {foto ? (
+                    <Image style={styles.image} source={{ uri: foto }} />
+                ) : (
+                    <Image style={styles.image} source={require('../imagenes/usuario.png')} />
+                )}
+
                 <Text style={styles.texto2}>Información del usuario</Text>
             </View>
 
