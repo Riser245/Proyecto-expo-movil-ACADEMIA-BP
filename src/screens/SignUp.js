@@ -19,7 +19,6 @@ export default function SignUp({ navigation }) {
   const [telefono, setTelefono] = useState('');
   const [clave, setClave] = useState('');
   const [confirmarClave, setConfirmarClave] = useState('');
-  const [estado, setEstado] = useState('');
 
   const handleLogout = async () => {
     navigation.navigate('Login');

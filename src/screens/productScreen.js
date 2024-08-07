@@ -9,10 +9,10 @@ export default function MyComponent({ navigation }) {
     const [dataProductos, setDataProductos] = useState([]);
     const [dataCategorias, setDataCategorias] = useState([]);
 
-    
+
 
     const handleVerDetalle = (idCategoriaSelect, idProducto) => {
-        navigation.navigate('Detalles', {idCategoria: idCategoriaSelect, idProducto});
+        navigation.navigate('Detalles', { idCategoria: idCategoriaSelect, idProducto });
     };
 
     const getProductos = async (idCategoriaSelect = 1) => {
@@ -27,10 +27,10 @@ export default function MyComponent({ navigation }) {
                 body: formData
             });
 
-            
+
 
             const data = await response.json();
-            
+
             if (data.status) {
                 setDataProductos(data.dataset);
             } else {
@@ -67,10 +67,10 @@ export default function MyComponent({ navigation }) {
     }, []);
 
     return (
-        
+
         <View style={styles.container}>
             <Text style={styles.pageTitle}>Nuestros productos</Text>
-            
+
 
             <SafeAreaView style={styles.containerFlat}>
                 <FlatList
@@ -85,10 +85,10 @@ export default function MyComponent({ navigation }) {
                             descripcionProducto={item.descripcion_producto}
                             accionBotonProducto={() => handleVerDetalle(item.id_categoria_producto, item.id_producto)}
                         />
-                        
+
                     )}
 
-                    
+
                     ListHeaderComponent={
                         <>
                             <View style={styles.categoryContainer}>
@@ -265,5 +265,5 @@ const styles = StyleSheet.create({
     },
     iconButton: {
         marginTop: 20,
-      },
-    });
+    },
+});

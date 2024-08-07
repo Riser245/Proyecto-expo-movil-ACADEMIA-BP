@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Text, View, StyleSheet, FlatList, Alert, Image, TouchableOpacity } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import Constants from 'expo-constants';
@@ -6,14 +6,12 @@ import * as Constantes from '../utils/constantes';
 import Buttons from '../components/Buttons/Button';
 import CarritoCard from '../components/CartCard/CartCard';
 import ModalEditarCantidad from '../components/Modales/ModalEditarCantidad';
-import { FontAwesome } from '@expo/vector-icons';
 
 const Carrito = ({ navigation }) => {
     const [dataDetalleCarrito, setDataDetalleCarrito] = useState([]);
     const [idDetalle, setIdDetalle] = useState(null);
     const [cantidadProductoCarrito, setCantidadProductoCarrito] = useState(0);
     const [modalVisible, setModalVisible] = useState(false);
-    const [drawerVisible, setDrawerVisible] = useState(false);
     const ip = Constantes.IP;
 
     const backProducts = () => {
@@ -26,9 +24,6 @@ const Carrito = ({ navigation }) => {
         }, [])
     );
 
-    const volverInicio = () => {
-        setDrawerVisible(true);
-    };
 
     const getDetalleCarrito = async () => {
         try {

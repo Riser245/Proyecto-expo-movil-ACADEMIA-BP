@@ -57,13 +57,13 @@ export default function MisCompras() {
 
     return (
         <View style={styles.container}>
-           
+
 
             <SafeAreaView style={styles.containerFlat}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.text1}>Mis compras</Text>
-                    
-                    
+
+
                 </View>
                 {/* Lista de compras */}
                 <FlatList

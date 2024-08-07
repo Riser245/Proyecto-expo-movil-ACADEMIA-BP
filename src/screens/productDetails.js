@@ -52,7 +52,7 @@ const Detalles = () => {
             console.log(idproducto);
 
             const data = await response.json();
-            
+
             if (data.status) {
                 setDataProductos(data.dataset);
             } else {
@@ -105,7 +105,7 @@ const Detalles = () => {
             </SafeAreaView>
         </View>
     );
-    
+
 };
 
 
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
 
-    text:{
+    text: {
         marginTop: 40,
         fontSize: 15,
         fontWeight: "bold"
