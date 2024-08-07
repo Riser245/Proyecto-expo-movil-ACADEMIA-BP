@@ -3,8 +3,9 @@ import { View, Text, StyleSheet, Alert, FlatList, Dimensions, SafeAreaView, Imag
 import * as Constantes from '../utils/constantes';
 import EntrenamientoView from '../components/EntrenamientoViews/EntrenamientosView';
 import Modal from 'react-native-modal';
+import TopBar from '../components/TopBar/TopBar'
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 export default function Home({ navigation }) {
     const [nombre, setNombre] = useState(null);
@@ -83,20 +84,12 @@ export default function Home({ navigation }) {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <View style={styles.row}>
-                    <View style={styles.circle}>
-                        <Text style={styles.emailText}>{formatUsername(nombre)}</Text>
-                    </View>
-                    <TouchableOpacity
-                        onPress={handleLogout}
-                        onLongPress={toggleModal} //Cuando se mantenfa presionado el boton con el logo de la academia, se mostrará una modal para cerrar sesió
-                    >
-                        <Image
-                            source={require('../imagenes/logoAcademiaBP.png')}
-                            style={styles.image}
-                        />
-                    </TouchableOpacity>
-                </View>
+            <TopBar
+                    formatUsername={formatUsername}
+                    nombre={nombre}
+                    handleLogout={handleLogout}
+                    toggleModal={toggleModal}
+                />
                 <Text style={styles.titleHeader}>Bienvenid@</Text>
                 <Text style={styles.titleHeader2}>Información sobre nosotros</Text>
             </View>

@@ -71,7 +71,7 @@ const Detalles = () => {
     return (
         <View style={styles.container}>
 
-            <Text style={styles.text}>Selecciona tu producto</Text>
+            <Text style={styles.text}>Selecciona un producto</Text>
             {/* Modal de compra */}
             <ModalCompra
                 visible={modalVisible}

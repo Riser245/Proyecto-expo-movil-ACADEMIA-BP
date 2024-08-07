@@ -84,7 +84,7 @@ export default function MisCompras() {
                                 descuentoProducto={item.descuento_producto}
                                 precioTotal={precioTotal}
                                 fechaCompra={item.fecha_registro}
-                                estado={item.estado_orden}
+                                estado={item.estado_compra}
                                 accionBotonCompras={() => handleCompra(item.id_detalle_compra)}
                             />
                         );

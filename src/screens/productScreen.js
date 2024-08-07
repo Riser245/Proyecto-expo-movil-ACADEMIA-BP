@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Alert, FlatList
 import * as Constantes from '../utils/constantes';
 import Constants from 'expo-constants';
 import ProductoCard from '../components/Productos/ProductoCard';
+import TopBar from '../components/TopBar/TopBar';
 
 export default function MyComponent({ navigation }) {
     const ip = Constantes.IP;
@@ -69,6 +70,7 @@ export default function MyComponent({ navigation }) {
     return (
 
         <View style={styles.container}>
+            
             <Text style={styles.pageTitle}>Nuestros productos</Text>
 
 

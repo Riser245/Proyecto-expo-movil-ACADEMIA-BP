@@ -21,9 +21,8 @@ export default function DetailProductCard({ ip, imagenProducto, idProducto, nomb
           resizeMode="contain" // Ajustar la imagen al contenedor
         />
       </View>
-      <Text style={styles.textTitle}>{idProducto}</Text>
       <Text style={styles.textTitle}>{nombreProducto}</Text>
-      <Text style={styles.text}>{descripcionProducto}</Text>
+      <Text style={styles.textd}>{descripcionProducto}</Text>
       <Text style={styles.text}>Precio: ${precioProducto}</Text>
       <Text style={styles.text}>Existencias: {existenciasProducto}</Text>
       <Text style={styles.text}>Descuento: {descuentoProducto}%</Text>
@@ -61,7 +60,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 8,
     padding: 16,
-    marginVertical: 1,
+    marginVertical: 10,
     marginHorizontal: 16,
     shadowColor: '#000',
     shadowOffset: {
@@ -71,10 +70,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    width: 320
   },
   text: {
     fontSize: 16,
     marginBottom: 8,
+  },
+  textd: {
+    fontSize: 16,
+    marginTop: 16,
+    marginBottom: 16,
   },
   textTitle: {
     fontSize: 16,

@@ -22,7 +22,6 @@ export default function ProductoCard({ ip, imagenProducto, idProducto, nombrePro
           resizeMode="contain" // Ajustar la imagen al contenedor
         />
       </View>
-      <Text style={styles.textTitle}>{idProducto}</Text>
       <Text style={styles.textTitle}>{nombreProducto}</Text>
       <Text style={styles.text}>{descripcionProducto}</Text>
       
