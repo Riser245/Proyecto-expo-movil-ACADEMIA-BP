@@ -14,8 +14,8 @@ const UserModal = ({
     direccion, setDireccion,
     dui, setDui,
     telefono, setTelefono,
-    foto, setFoto,
     clave, setClave,
+    fotoo, setFotoo,
     confirmarClave, setConfirmarClave,
     modalType
 }) => {
@@ -66,6 +66,12 @@ const UserModal = ({
                             placeholder="Teléfono"
                             value={telefono}
                             onChangeText={text => setTelefono(text)}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Imagen"
+                            value={fotoo}
+                            onChangeText={text => setFotoo(text)}
                         />
                     </>
                 )}

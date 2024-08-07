@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, View, Text, StyleSheet, Image } from 'react-native';
-import { Button, Card, TextInput } from 'react-native-paper';
-import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { Button, Card } from 'react-native-paper';
 import * as Constantes from '../utils/constantes';
 import UserModal from '../Modales/UserModal';
 import Input from '../components/Inputs/InputsPerfil/Inputs';
@@ -10,11 +9,10 @@ import MaskedInputTelefono from '../components/Inputs/InputsPerfil/MaskedInputTe
 import MaskedInputDui from '../components/Inputs/InputsPerfil/MaskedInputDui';
 import InputEmail from '../components/Inputs/InputsPerfil/InputEmail';
 import Buttons from '../components/Inputs/InputsPerfil/Buttons/Button';
+import * as FileSystem from 'expo-file-system';
 
 const ProfileScreen = () => {
-
   const [isModalVisible, setIsModalVisible] = useState(false);
-
 
   // Estados para almacenar los datos del usuario
   const [idCliente, setId] = useState('');
@@ -24,6 +22,7 @@ const ProfileScreen = () => {
   const [direccion, setDireccion] = useState('');
   const [dui, setDui] = useState('');
   const [telefono, setTelefono] = useState('');
+  const [foto, setFotoCliente] = useState('');
   const [clave, setClave] = useState('');
   const [confirmarClave, setConfirmar] = useState('');
 
@@ -45,7 +44,7 @@ const ProfileScreen = () => {
       });
 
       const data = await response.json();
-      console.log(data)
+      console.log(data);
       if (data.status) {
         // Si la solicitud es exitosa, se actualizan los estados con los datos del perfil
         setProfileData(data.dataset);
@@ -56,6 +55,7 @@ const ProfileScreen = () => {
         setDireccion(data.dataset.direccion_cliente);
         setDui(data.dataset.dui_cliente);
         setTelefono(data.dataset.telefono_cliente);
+        setFotoCliente(data.dataset.foto_cliente);
       } else {
         // Si hay un error, se muestra una alerta
         Alert.alert('Error perfil', data.error);
@@ -77,29 +77,48 @@ const ProfileScreen = () => {
       formData.append('direccionCliente', direccion);
       formData.append('duiCliente', dui);
       formData.append('telefonoCliente', telefono);
+      
+      if (foto) {
+        // Construir URI del archivo
+        const fileUri = `${FileSystem.documentDirectory}${foto}`;
+        const fileInfo = await FileSystem.getInfoAsync(fileUri);
 
+        if (fileInfo.exists) {
+          formData.append('fotoInput', {
+            uri: fileUri,
+            name: foto,
+            type: 'image/jpeg', // Ajusta el tipo según corresponda
+          });
+        } else {
+          console.log('Archivo no encontrado:', fileUri);
+          Alert.alert('Error', 'Archivo de imagen no encontrado.');
+          return; // Salir si el archivo no existe
+        }
+      }
+  
       const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=editProfile`, {
         method: 'POST',
-        body: formData
+        body: formData,
       });
 
-      const data = await response.json();
-      console.log(data)
+      const responseText = await response.text(); // Obtén la respuesta como texto para depuración
+      console.log(responseText);
+  
+      const data = JSON.parse(responseText); // Asegúrate de parsear el texto a JSON
+      console.log(data);
+  
       if (data.status) {
         Alert.alert('Éxito', data.message);
         setIsModalVisible(false);
-        console.log('Éxito')
       } else {
         Alert.alert('Error', data.error);
-        console.log(error)
-        console.log('err')
       }
     } catch (error) {
       console.error('Error al editar el usuario:', error);
       Alert.alert('Error', `Ocurrió un error al editar el usuario: ${error.message}`);
     }
   };
-
+  
   // Función para cambiar la contraseña del usuario
   const handleChangePassword = async () => {
     try {
@@ -152,7 +171,6 @@ const ProfileScreen = () => {
     }
   };
 
-
   // Uso del hook useEffect para obtener los datos del perfil cuando el componente se monta
   useEffect(() => {
     getProfileData();
@@ -163,12 +181,11 @@ const ProfileScreen = () => {
       <View style={styles.container3}>
         <Text style={styles.texto1}>Perfil</Text>
         <Image style={styles.image} source={require('../imagenes/usuario.png')}></Image>
-        <Text style={styles.texto2}>Informacion del usuario</Text>
+        <Text style={styles.texto2}>Información del usuario</Text>
       </View>
 
       <View style={styles.container2}>
-
-        <Card style={styles.card} >
+        <Card style={styles.card}>
           <Card.Content style={styles.inputs}>
             <Input
               placeHolder='Nombre Cliente'
@@ -185,8 +202,8 @@ const ProfileScreen = () => {
               style={isModalVisible ? styles.inactivo : {}}
             />
           </Card.Content>
-          <Card.Content >
-          <InputEmail
+          <Card.Content>
+            <InputEmail
               placeHolder='Email Cliente'
               setValor={correo}
               setTextChange={setCorreo}
@@ -213,7 +230,6 @@ const ProfileScreen = () => {
               editable={!isModalVisible}
               style={isModalVisible ? styles.inactivo : {}}
             />
-
           </Card.Content>
         </Card>
 
@@ -241,6 +257,8 @@ const ProfileScreen = () => {
           setDui={setDui}
           telefono={telefono}
           setTelefono={setTelefono}
+          fotoo={foto}
+          setFotoo={setFotoCliente}
           clave={clave}
           setClave={setClave}
           confirmarClave={confirmarClave}
@@ -279,8 +297,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 100,
     borderColor: 'white'
-  }
-  ,
+  },
   texto1: {
     color: 'white',
     marginBottom: 20,
@@ -301,36 +318,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 15,
   },
-  input: {
-    width: 160,
-    borderRadius: 25,
-  },
-  inputss: {
-    width: '100%',
-    marginTop:10,
-    borderColor:'transparent',
-    borderRadius:25
-  },
-  scrollViewStyle: {
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  texto: {
-    color: '#322C2B',
-    fontWeight: '900',
-    fontSize: 20,
-    marginTop: 100
+  card: {
+    marginTop: 20,
+    backgroundColor: '#D2D7DF',
+    marginBottom: 20,
+    width: '95%',
+    marginLeft: 12
   },
   inactivo: {
     opacity: 0.5,  // Cambia la opacidad para indicar que está inactivo
     pointerEvents: 'none'  // Evita que responda a eventos de toque
-  },
-  card:{
-    marginTop:20,
-    backgroundColor:'#D2D7DF',
-    marginBottom:20,
-    width:'95%',
-    marginLeft:12
   }
 });
 

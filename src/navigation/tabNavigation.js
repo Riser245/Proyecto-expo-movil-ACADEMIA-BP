@@ -2,7 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/Home';
 import ProfileScreen from '../screens/ProfileScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import MisCompras from '../screens/MyOrders';
 import ProductsScreen from '../screens/productScreen';
 import CartScreen from '../screens/Cart';
 import EmailScreen from '../screens/RecoverEmailPassword';
@@ -62,28 +62,13 @@ const TabNavigation = () => {
       />
       <Tab.Screen 
         name="Settings" 
-        component={SettingsScreen} 
+        component={MisCompras} 
         options={{ title: 'Mis compras' }} 
       />
       <Tab.Screen 
         name="Cart" 
         component={CartScreen} 
         options={{ title: 'Carrito' }} 
-      />
-      <Tab.Screen
-        name="RecoverEmailPassword"
-        component={EmailScreen}
-        options={{ title: 'Recuperar contraseña' }}
-      />
-      <Tab.Screen
-        name="VerifyCode"
-        component={VerifyCodeScreen}
-        options={{ title: 'Verificar código' }}
-      />
-      <Tab.Screen
-        name="UpdatePassword"
-        component={UpdatePasswordScreen}
-        options={{ title: 'Actualizar contraseña' }}
       />
     </Tab.Navigator>
   );
