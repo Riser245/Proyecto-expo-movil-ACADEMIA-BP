@@ -22,13 +22,14 @@ export default function Actualizar({ navigation }) {
       }, []);
 
  
+      // Función para actualizar la contraseña
   const Update = async () => {
     const FORM = new FormData();
     FORM.append('nuevaClave', claveNueva);
     FORM.append('confirmarClave', confirmarClave);
     FORM.append('inputCorreo', correo);
     try {
-      const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=updateClave`, {
+      const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=updateClave`, { // Verifica la acción de actualizar clave
         method: 'POST',
         body: FORM
       });
@@ -48,6 +49,7 @@ export default function Actualizar({ navigation }) {
     }
   };
 
+  // Navegación
   const Regresar = () => {
     navigation.navigate('VerifyCode');
   };
