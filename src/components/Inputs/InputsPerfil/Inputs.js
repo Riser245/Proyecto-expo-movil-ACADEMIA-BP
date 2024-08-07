@@ -9,6 +9,7 @@ export default function Inputs({ placeHolder, setValor, contra, setTextChange })
       placeholderTextColor={'#000'}
       secureTextEntry={contra}
       onChangeText={setTextChange}
+      editable = {false}
     />
   );
 }

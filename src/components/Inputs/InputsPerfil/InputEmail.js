@@ -11,6 +11,7 @@ export default function InputEmail({placeHolder, setValor, setTextChange}) {
     value={setValor}
     placeholderTextColor={'#000'}
     onChangeText={setTextChange}
+    editable = {false}
     keyboardType="email-address"
     />
 

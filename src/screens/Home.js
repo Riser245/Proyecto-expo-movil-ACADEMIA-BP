@@ -136,27 +136,6 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
     },
-    row: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between', // Asegurar que los elementos se distribuyen a lo largo de la fila
-        marginBottom: 10,
-    },
-    circle: {
-        width: 40,
-        height: 40,
-        borderRadius: 40,
-        backgroundColor: '#FFF',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 1,
-        marginTop: 20,
-        borderColor: '#000',
-    },
-    emailText: {
-        color: '#000',
-        textAlign: 'center',
-    },
     item: {
         width: width * 0.9,
         height: 300,
@@ -168,12 +147,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         overflow: 'hidden',
         backgroundColor: '#fff',
-    },
-    image: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
-        marginTop: 20,
     },
     itemTitle: {
         fontSize: 18,
@@ -220,28 +193,5 @@ const styles = StyleSheet.create({
     },
     containerFlat: {
         flex: 1,
-    },
-    modalContent: {
-        backgroundColor: 'white',
-        padding: 22,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 10,
-        borderColor: 'rgba(0, 0, 0, 0.1)',
-    },
-    modalText: {
-        fontSize: 18,
-        marginBottom: 10,
-    },
-    modalButton: {
-        marginTop: 10,
-        padding: 10,
-        borderRadius: 5,
-        backgroundColor: 'darkblue',
-        width: 100,
-        alignItems: 'center',
-    },
-    modalButtonText: {
-        color: 'white',
     },
 });

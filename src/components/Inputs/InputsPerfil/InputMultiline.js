@@ -12,6 +12,7 @@ export default function InputMultiline({placeHolder, setValor, contra, valor}) {
     onChangeText={setValor}
     placeholderTextColor={'#000'}
     secureTextEntry={contra} 
+    editable = {false}
     multiline={true}
     numberOfLines={4}
     />

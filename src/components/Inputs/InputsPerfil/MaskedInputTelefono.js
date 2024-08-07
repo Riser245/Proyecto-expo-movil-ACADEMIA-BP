@@ -14,6 +14,7 @@ export default function MaskedInputTelefono({ telefono, setTelefono }) {
             }}
             value={telefono}
             onChangeText={setTelefono}
+            editable = {false}
         />
     );
 }

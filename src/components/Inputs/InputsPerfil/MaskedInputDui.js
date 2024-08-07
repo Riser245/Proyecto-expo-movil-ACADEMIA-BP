@@ -14,6 +14,7 @@ export default function MaskedInputDui({ dui, setDui }) {
             }}
             value={dui}
             onChangeText={setDui}
+            editable = {false}
         />
     );
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, View, Text, StyleSheet, Image } from 'react-native';
+import { Alert, View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Button, Card } from 'react-native-paper';
 import * as Constantes from '../utils/constantes';
 import UserModal from '../Modales/UserModal';
@@ -10,11 +10,11 @@ import MaskedInputDui from '../components/Inputs/InputsPerfil/MaskedInputDui';
 import InputEmail from '../components/Inputs/InputsPerfil/InputEmail';
 import Buttons from '../components/Inputs/InputsPerfil/Buttons/Button';
 import * as FileSystem from 'expo-file-system';
+import * as ImagePicker from 'expo-image-picker';
 
 const ProfileScreen = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
 
-    // Estados para almacenar los datos del usuario
     const [idCliente, setId] = useState('');
     const [nombre, setNombre] = useState('');
     const [apellido, setApellido] = useState('');
@@ -25,28 +25,20 @@ const ProfileScreen = () => {
     const [foto, setFotoCliente] = useState('');
     const [clave, setClave] = useState('');
     const [confirmarClave, setConfirmar] = useState('');
-
-    // Estado para manejar el tipo de modal (crear, editar o cambiar contraseña)
     const [modalType, setModalType] = useState('');
-
-    // Estado para almacenar los datos del perfil del usuario
     const [profileData, setProfileData] = useState(null);
-
-    // Constante que almacena la dirección IP del servidor
     const ip = Constantes.IP;
 
-    // Función para obtener los datos del perfil del usuario desde el servidor
     const getProfileData = async () => {
         try {
             const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=readProfile`, {
                 method: 'GET',
-                credentials: 'include' // Para enviar cookies con la solicitud
+                credentials: 'include'
             });
 
             const data = await response.json();
             console.log(data);
             if (data.status) {
-                // Si la solicitud es exitosa, se actualizan los estados con los datos del perfil
                 setProfileData(data.dataset);
                 setId(data.dataset.id_cliente);
                 setNombre(data.dataset.nombre_cliente);
@@ -57,34 +49,46 @@ const ProfileScreen = () => {
                 setTelefono(data.dataset.telefono_cliente);
                 setFotoCliente(`${ip}/AcademiaBP_EXPO/api/images/clientes/${data.dataset.foto_cliente}`);
             } else {
-                // Si hay un error, se muestra una alerta
                 Alert.alert('Error perfil', data.error);
             }
         } catch (error) {
-            // Manejo de errores en caso de que la solicitud falle
             Alert.alert('Error', 'Ocurrió un error al obtener los datos del perfil');
         }
     };
 
-    // Función para editar los datos del usuario
+    const openGalery = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: false,
+            aspect: [8, 8],
+            quality: 1,
+        });
+        if (!result.canceled) {
+            const imageWidth = result.assets[0].width;
+            const imageHeight = result.assets[0].height;
+            if (imageWidth <= 1800 && imageHeight <= 1800) {
+                setFotoCliente(result.assets[0].uri);
+                console.log("Valor enviado a imagen \n", result.assets[0].uri);
+            } else {
+                alert('La imagen es de dimension ' +imageWidth + 'x' + imageHeight + '.La imagen seleccionada debe tener dimensiones de 1800x1800 píxeles o menores.');
+            }
+        }
+    };
+
     const handleEditUser = async () => {
         try {
-
-
-            let localUri = foto
-            let fileName = ""
-            let match = ""
-            let type = ""
-            console.log('valor de la url:', localUri)
+            let localUri = foto;
+            let fileName = "";
+            let match = "";
+            let type = "";
+            console.log('valor de la url:', localUri);
             if (localUri == null || localUri == "") {
-                Alert.alert("Selecciona una iamgen")
-            }
-            else {
-                console.log('ejecutando filename')
-                fileName = localUri.split('/').pop()
-                match = /\.(\w+)$/.exec(fileName)
-                type = match ? `image/${match[1]}` : `image`
-                console.log(type)
+                Alert.alert("Selecciona una iamgen");
+            } else {
+                fileName = localUri.split('/').pop();
+                match = /\.(\w+)$/.exec(fileName);
+                type = match ? `image/${match[1]}` : `image`;
+                console.log(type);
             }
             const formData = new FormData();
             formData.append('idCliente', idCliente);
@@ -96,23 +100,23 @@ const ProfileScreen = () => {
             formData.append('telefonoCliente', telefono);
             formData.append('fotoInput', {
                 uri: localUri,
-                name: foto,
-                type// Ajusta el tipo según corresponda
+                name: fileName,
+                type
             });
 
             const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=editProfile`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'multipart/form-data', // Se utiliza para que acepte cualquier tipo de contenido
+                    'Content-Type': 'multipart/form-data',
                     'Accept': 'application/json'
                 },
                 body: formData
             });
 
-            const responseText = await response.text(); // Obtén la respuesta como texto para depuración
+            const responseText = await response.text();
             console.log(responseText);
 
-            const data = JSON.parse(responseText); // Asegúrate de parsear el texto a JSON
+            const data = JSON.parse(responseText);
             console.log(data);
 
             if (data.status) {
@@ -127,7 +131,6 @@ const ProfileScreen = () => {
         }
     };
 
-    // Función para cambiar la contraseña del usuario
     const handleChangePassword = async () => {
         try {
             const formData = new FormData();
@@ -153,24 +156,20 @@ const ProfileScreen = () => {
         }
     };
 
-    // Función para abrir el modal de edición
     const openEditModal = () => {
         setModalType('edit');
         setIsModalVisible(true);
     };
 
-    // Función para abrir el modal de cambio de contraseña
     const openChangePassword = () => {
         setModalType('password');
         setIsModalVisible(true);
     };
 
-    // Función para cerrar el modal
     const closeModal = () => {
         setIsModalVisible(false);
     };
 
-    // Función para manejar el envío del formulario según el tipo de modal
     const handleSubmit = () => {
         if (modalType === 'edit') {
             handleEditUser();
@@ -179,7 +178,6 @@ const ProfileScreen = () => {
         }
     };
 
-    // Uso del hook useEffect para obtener los datos del perfil cuando el componente se monta
     useEffect(() => {
         getProfileData();
     }, []);
@@ -189,12 +187,16 @@ const ProfileScreen = () => {
             <View style={styles.container3}>
                 <Text style={styles.texto1}>Perfil</Text>
 
-                {/* Condicional para mostrar la imagen del usuario si existe, de lo contrario, mostrar una imagen por defecto */}
-                {foto ? (
-                    <Image style={styles.image} source={{ uri: foto }} />
-                ) : (
-                    <Image style={styles.image} source={require('../imagenes/usuario.png')} />
-                )}
+                <View style={styles.imageContainer}>
+                    {foto ? (
+                        <Image style={styles.image} source={{ uri: foto }} />
+                    ) : (
+                        <Image style={styles.image} source={require('../imagenes/usuario.png')} />
+                    )}
+                    <TouchableOpacity style={styles.editButton} onPress={openGalery}>
+                        <Text style={styles.editButtonText}>Editar</Text>
+                    </TouchableOpacity>
+                </View>
 
                 <Text style={styles.texto2}>Información del usuario</Text>
             </View>
@@ -306,12 +308,28 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         color: 'white'
     },
+    imageContainer: {
+        position: 'relative',
+    },
     image: {
-        width: '30%',
+        width: 110,
         height: 110,
         backgroundColor: 'white',
         borderRadius: 100,
         borderColor: 'white'
+    },
+    editButton: {
+        position: 'absolute',
+        bottom: 5,
+        right: 5,
+        backgroundColor: 'white',
+        padding: 5,
+        borderRadius: 10,
+    },
+    editButtonText: {
+        color: 'black',
+        fontSize: 10,
+        fontWeight: 'bold',
     },
     texto1: {
         color: 'white',
@@ -341,8 +359,8 @@ const styles = StyleSheet.create({
         marginLeft: 12
     },
     inactivo: {
-        opacity: 0.5,  // Cambia la opacidad para indicar que está inactivo
-        pointerEvents: 'none'  // Evita que responda a eventos de toque
+        opacity: 0.5,
+        pointerEvents: 'none'
     }
 });
 
