@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StatusBar, StyleSheet, Text, View, SafeAreaView, TextInput, Alert, FlatList, Image } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import { StyleSheet, Text, View, SafeAreaView, TextInput, Alert, FlatList, Image } from 'react-native';
 import ModalValoracion from '../components/Modales/ModalValoracion'; // Importa el ModalValoracion
 import * as Constantes from '../utils/constantes';
 import ComprasViews from '../components/Compras/ComprasViews';
@@ -23,10 +22,6 @@ export default function MisCompras() {
     // Estado para almacenar el término de búsqueda
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Función para mostrar el drawer
-    const volverInicio = () => {
-        setDrawerVisible(true);
-    };
 
     // Función para manejar la selección de una compra
     const handleCompra = (id) => {

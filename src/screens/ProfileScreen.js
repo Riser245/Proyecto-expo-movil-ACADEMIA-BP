@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, View, Text, StyleSheet, Image } from 'react-native';
-import { Button, Card } from 'react-native-paper';
+import { Card } from 'react-native-paper';
 import * as Constantes from '../utils/constantes';
 import UserModal from '../Modales/UserModal';
 import Input from '../components/Inputs/InputsPerfil/Inputs';

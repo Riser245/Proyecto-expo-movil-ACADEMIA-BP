@@ -1,30 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { StatusBar, StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Alert, FlatList, Image, TextInput, ScrollView } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
-import ModalCompra from '../components/Modales/ModalCompra';
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Alert, FlatList, ScrollView } from 'react-native';
 import * as Constantes from '../utils/constantes';
-import RNPickerSelect from 'react-native-picker-select';
 import Constants from 'expo-constants';
 import ProductoCard from '../components/Productos/ProductoCard';
-import { useRoute } from '@react-navigation/native';
 
 export default function MyComponent({ navigation }) {
     const ip = Constantes.IP;
     const [dataProductos, setDataProductos] = useState([]);
     const [dataCategorias, setDataCategorias] = useState([]);
-    const [selectedValue, setSelectedValue] = useState(null);
-    const [cantidad, setCantidad] = useState('');
-    const [modalVisible, setModalVisible] = useState(false);
-    const [drawerVisible, setDrawerVisible] = useState(false);
-    const [idProducto, setIdProducto] = useState('');
-    const [idCategoria, setIdCategoria] = useState('');
-    const [nombreProductoModal, setNombreProductoModal] = useState('');
-    const [currentIndex, setCurrentIndex] = useState(0); // Índice de la imagen actual
 
-
-    const volverInicio = () => {
-        setDrawerVisible(true);
-    };
     
 
     const handleVerDetalle = (idCategoriaSelect, idProducto) => {
@@ -81,10 +65,6 @@ export default function MyComponent({ navigation }) {
         getProductos();
         getCategorias();
     }, []);
-
-    const irCarrito = () => {
-        navigation.navigate('Carrito');
-    };
 
     return (
         

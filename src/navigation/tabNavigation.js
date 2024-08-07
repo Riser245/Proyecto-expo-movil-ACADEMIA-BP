@@ -5,9 +5,6 @@ import ProfileScreen from '../screens/ProfileScreen';
 import MisCompras from '../screens/MyOrders';
 import ProductsScreen from '../screens/ProductScreen';
 import CartScreen from '../screens/Cart';
-import EmailScreen from '../screens/RecoverEmailPassword';
-import VerifyCodeScreen from '../screens/VerifyCode';
-import UpdatePasswordScreen from '../screens/UpdatePassword';
 import { Ionicons } from '@expo/vector-icons';
 
 
