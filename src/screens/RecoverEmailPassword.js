@@ -10,11 +10,12 @@ export default function RecuperarClaveCorreo({ navigation }) {
   const ip = Constantes.IP;
   const [correo, setCorreo] = useState('');
 
+  // Función para que envíe el código al correo ingresado
   const enviarCodigo = async () => {
     const FORM = new FormData();
     FORM.append('inputCorreo', correo);
     try {
-      const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=checkCorreo`, {
+      const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=checkCorreo`, { // Se manda a llamar la acción y verifica que sea el correo correcto
         method: 'POST',
         body: FORM
       });
@@ -45,10 +46,12 @@ export default function RecuperarClaveCorreo({ navigation }) {
     }
   };
 
+  // Navegación
   const Regresar = () => {
     navigation.navigate('Login');
   };
 
+  // Genera un código aleatorio
   function generateRandomCode(length) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let result = '';
