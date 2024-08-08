@@ -25,6 +25,7 @@ const Carrito = ({ navigation }) => {
     );
 
 
+    //Obtenemos los datos del carrito
     const getDetalleCarrito = async () => {
         try {
             const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/compras.php?action=readDetail`, {
@@ -44,6 +45,7 @@ const Carrito = ({ navigation }) => {
         }
     };
 
+    //Método para finalizar la compra del cliente
     const finalizarPedido = async () => {
         try {
             const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/compras.php?action=finishOrder`, {
@@ -62,6 +64,7 @@ const Carrito = ({ navigation }) => {
         }
     };
 
+    //Función para mostrar la modal para editar cantidad de productos
     const handleEditarDetalle = (idDetalle, cantidadDetalle) => {
         setModalVisible(true);
         setIdDetalle(idDetalle);
@@ -84,6 +87,7 @@ const Carrito = ({ navigation }) => {
         />
     );
 
+    //Función para calcular el total de la compra
     const calcularTotalConDescuento = () => {
         return dataDetalleCarrito.reduce((total, item) => {
             const subtotalConDescuento = (

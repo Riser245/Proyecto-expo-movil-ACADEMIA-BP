@@ -10,6 +10,9 @@ export default function Login({ navigation }) {
     const [usuario, setUsuario] = useState('');
     const [contrasenia, setContrasenia] = useState('');
 
+    //Método que se ejecuta al iniciar la aplicación,
+    //Cerrando la sesión del usuario si no está activa
+    //También la utilizamos para validar si la dirección IP del dispositivo es la correcta
     const validarSesion = async () => {
         try {
             const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=getUser`, {
@@ -29,6 +32,7 @@ export default function Login({ navigation }) {
         }
     };
 
+    //Método para cerrar sesión
     const cerrarSesion = async () => {
         try {
             const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=logOut`, {
@@ -46,6 +50,7 @@ export default function Login({ navigation }) {
         }
     };
 
+    //Método para validar el usuario y la contraseña ingresada
     const handlerLogin = async () => {
         try {
             const formData = new FormData();

@@ -8,8 +8,7 @@ import * as Constantes from '../../utils/constantes';
 //productoCard
 const ip = Constantes.IP;
 
-export default function ProductoCard({ ip, imagenProducto, idProducto, nombreProducto, descripcionProducto
-  , precioProducto, existenciasProducto, descuentoProducto, accionBotonProducto
+export default function ProductoCard({ ip, imagenProducto, nombreProducto, descripcionProducto, accionBotonProducto
 }) {
 
   return (

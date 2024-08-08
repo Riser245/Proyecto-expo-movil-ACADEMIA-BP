@@ -14,7 +14,6 @@ const UserModal = ({
     dui, setDui,
     telefono, setTelefono,
     clave, setClave,
-    fotoo, setFotoo,
     confirmarClave, setConfirmarClave,
     modalType
 }) => {
@@ -27,7 +26,8 @@ const UserModal = ({
                 {modalType === 'edit' && <Text style={styles.modalTitle}>Editar Usuario</Text>}
                 {modalType === 'password' && <Text style={styles.modalTitle}>Cambiar Contraseña</Text>}
                 
-                {/* Renderización condicional de los inputs */}
+                {/* Renderización condicional de los inputs dependiendo de si se crea el usuario
+                o si se edita su perfil*/}
                 {(modalType === 'create' || modalType === 'edit') && (
                     <>
                         <TextInput
@@ -65,12 +65,6 @@ const UserModal = ({
                             placeholder="Teléfono"
                             value={telefono}
                             onChangeText={text => setTelefono(text)}
-                        />
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Imagen"
-                            value={fotoo}
-                            onChangeText={text => setFotoo(text)}
                         />
                     </>
                 )}

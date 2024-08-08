@@ -9,16 +9,20 @@ const ModalValoracion = ({ visible, cerrarModal, idDetalle, calificacion, coment
   const [rating, setRating] = useState(calificacion || 0);
   const [comment, setComment] = useState(comentario || '');
 
+  //Manejo del envío de la valoración hacia productos comprados
+  //La calificación se hará por medio de estrellas, y se enviará
+  //Un comentario sobre el producto
   const handleCreateRating = async () => {
     try {
+      //No podrá mandarse una calificación menor a 1
       if (rating < 1) {
         Alert.alert('Debes llenar todos los campos');
         return;
       } else {
         const formData = new FormData();
-        formData.append('idDetalle', idDetalle);
-        formData.append('calificacion', rating);
-        formData.append('comentario', comment);
+        formData.append('idDetalle', idDetalle); //Detalle de la compra
+        formData.append('calificacion', rating); //Calificación
+        formData.append('comentario', comment); //Comentario
 
         const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/valoracion.php?action=createRating`, {
           method: 'POST',

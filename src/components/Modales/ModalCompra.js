@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Text, Modal, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
 import Buttons from '../Buttons/Button';
 import * as Constantes from '../../utils/constantes'
@@ -7,6 +7,7 @@ const ModalCompra = ({ visible, cerrarModal, nombreProductoModal, idDetalleModal
 
     const ip = Constantes.IP;
 
+    //Manejo de agregar los productos al carrito de compras
     const handleCreateDetail = async () => {
 
         try {
@@ -16,8 +17,8 @@ const ModalCompra = ({ visible, cerrarModal, nombreProductoModal, idDetalleModal
             }
             else {
                 const formData = new FormData();
-                formData.append('idDetalle', idDetalleModal);
-                formData.append('cantidadProducto', cantidad);
+                formData.append('idDetalle', idDetalleModal); //detalle de la compra
+                formData.append('cantidadProducto', cantidad); //cantidad del producto
 
                 const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/compras.php?action=createDetail`, {
                     method: 'POST',

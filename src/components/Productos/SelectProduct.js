@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, ScrollView } from 'react-native';
-import { useState } from 'react';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+
 
 
 export default function SelectProduct({ip, imagenProducto, idProducto, nombreProducto, descripcionProducto

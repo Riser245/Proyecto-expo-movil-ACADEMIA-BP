@@ -29,6 +29,7 @@ const ProfileScreen = () => {
     const [profileData, setProfileData] = useState(null);
     const ip = Constantes.IP;
 
+    //Obtenemos los datos del cliente que ha iniciado sesión
     const getProfileData = async () => {
         try {
             const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=readProfile`, {
@@ -39,15 +40,15 @@ const ProfileScreen = () => {
             const data = await response.json();
             console.log(data);
             if (data.status) {
-                setProfileData(data.dataset);
-                setId(data.dataset.id_cliente);
-                setNombre(data.dataset.nombre_cliente);
-                setApellido(data.dataset.apellido_cliente);
-                setCorreo(data.dataset.correo_cliente);
-                setDireccion(data.dataset.direccion_cliente);
-                setDui(data.dataset.dui_cliente);
-                setTelefono(data.dataset.telefono_cliente);
-                setFotoCliente(`${ip}/AcademiaBP_EXPO/api/images/clientes/${data.dataset.foto_cliente}`);
+                setProfileData(data.dataset); //Inicio de asignación de datos
+                setId(data.dataset.id_cliente); //id del cleinte
+                setNombre(data.dataset.nombre_cliente); //nombre
+                setApellido(data.dataset.apellido_cliente); //apellido
+                setCorreo(data.dataset.correo_cliente); //correo
+                setDireccion(data.dataset.direccion_cliente); //dirección
+                setDui(data.dataset.dui_cliente); //dui
+                setTelefono(data.dataset.telefono_cliente); //telefono
+                setFotoCliente(`${ip}/AcademiaBP_EXPO/api/images/clientes/${data.dataset.foto_cliente}`); //foto del cliente
             } else {
                 Alert.alert('Error perfil', data.error);
             }
@@ -56,6 +57,8 @@ const ProfileScreen = () => {
         }
     };
 
+    //Método para abrir la galería de fotos del usuario
+    //Este método se utilizará para actualizar la foto del perfil del usuario
     const openGalery = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -66,6 +69,7 @@ const ProfileScreen = () => {
         if (!result.canceled) {
             const imageWidth = result.assets[0].width;
             const imageHeight = result.assets[0].height;
+            //Validamos que la imagen no sobre pase el ancho y alto definido
             if (imageWidth <= 1800 && imageHeight <= 1800) {
                 setFotoCliente(result.assets[0].uri);
                 console.log("Valor enviado a imagen \n", result.assets[0].uri);
@@ -75,22 +79,24 @@ const ProfileScreen = () => {
         }
     };
 
+    //Método para actualizar los datos del cliente
     const handleEditUser = async () => {
         try {
-            let localUri = foto;
+            let localUri = foto; //Aquí se guarda la ubicación de la foto dentro de la api
             let fileName = "";
             let match = "";
             let type = "";
             console.log('valor de la url:', localUri);
             if (localUri == null || localUri == "") {
-                Alert.alert("Selecciona una iamgen");
+                Alert.alert("Selecciona una imagen");
             } else {
+                //Aquí se define el tipo de archivo que tiene la imagen, ya sea png, jpg, jpeg, etc.
                 fileName = localUri.split('/').pop();
                 match = /\.(\w+)$/.exec(fileName);
                 type = match ? `image/${match[1]}` : `image`;
                 console.log(type);
             }
-            const formData = new FormData();
+            const formData = new FormData(); //Al abrir la modal, se asignarán los datos a cada input
             formData.append('idCliente', idCliente);
             formData.append('nombreCliente', nombre);
             formData.append('apellidoCliente', apellido);
@@ -98,6 +104,7 @@ const ProfileScreen = () => {
             formData.append('direccionCliente', direccion);
             formData.append('duiCliente', dui);
             formData.append('telefonoCliente', telefono);
+            //Para la foto, mandamos la ubicación, el nombre y el tipo, que se reconoce dentro del ELSE
             formData.append('fotoInput', {
                 uri: localUri,
                 name: fileName,
@@ -131,6 +138,7 @@ const ProfileScreen = () => {
         }
     };
 
+    //Método para cambiar la contraseña
     const handleChangePassword = async () => {
         try {
             const formData = new FormData();
@@ -156,11 +164,13 @@ const ProfileScreen = () => {
         }
     };
 
+    //Método para mostrar la modal para editar los datos del cliente
     const openEditModal = () => {
         setModalType('edit');
         setIsModalVisible(true);
     };
 
+    //Método para mostrar la modal para editar la contraseña
     const openChangePassword = () => {
         setModalType('password');
         setIsModalVisible(true);
@@ -170,6 +180,7 @@ const ProfileScreen = () => {
         setIsModalVisible(false);
     };
 
+    //Método para mandar los datos a la base
     const handleSubmit = () => {
         if (modalType === 'edit') {
             handleEditUser();

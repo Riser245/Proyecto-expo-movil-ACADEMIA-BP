@@ -11,11 +11,12 @@ export default function MyComponent({ navigation }) {
     const [dataCategorias, setDataCategorias] = useState([]);
 
 
-
+    //Función para mandar a ProductDetail el detalle del producto que queremos ver
     const handleVerDetalle = (idCategoriaSelect, idProducto) => {
         navigation.navigate('Detalles', { idCategoria: idCategoriaSelect, idProducto });
     };
 
+    //Obtenemos los productos de la categoría seleccionada
     const getProductos = async (idCategoriaSelect = 1) => {
         try {
             if (idCategoriaSelect <= 0) {
@@ -44,7 +45,7 @@ export default function MyComponent({ navigation }) {
     };
 
 
-
+    //Obtenemos todas las categorías de nuestra base de datos
     const getCategorias = async () => {
         try {
             const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/categorias.php?action=readAll`, {

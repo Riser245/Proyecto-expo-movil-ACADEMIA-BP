@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Modal, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
+import React from 'react';
+import { View, Text, Modal, StyleSheet, TextInput, Alert } from 'react-native';
 import Buttons from '../Buttons/Button';
 import * as Constantes from '../../utils/constantes';
 
@@ -7,11 +7,13 @@ const ModalEditarCantidad = ({ setModalVisible, modalVisible, idDetalle, setCant
 
     const ip = Constantes.IP;
 
+    //Manejo de la edición de cantidad de producto del carrito
     const handleUpdateDetalleCarrito = async () => {
         try {
+            //En caso de que la cantidad que se ingrese sea menor a cero, se muestra un mensaje de error
             if (cantidadProductoCarrito <= 0) {
                 Alert.alert("La cantidad no puede ser igual o menor a 0");
-                return; // Corrige la lógica aquí
+                return; 
             }
 
             const formData = new FormData();

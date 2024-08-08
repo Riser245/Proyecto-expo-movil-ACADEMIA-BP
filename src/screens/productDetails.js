@@ -27,6 +27,7 @@ const Detalles = () => {
         setDrawerVisible(true);
     };
 
+    //Función para enviar los datos al carrito de compra
     const handleCompra = (nombre, id) => {
         setModalVisible(true);
         setIdProductoModal(id);
@@ -36,14 +37,15 @@ const Detalles = () => {
         console.log(nombre)
     };
 
+    //Método para obtener los detalles de los productos, dependiendo del producto que se haya seleccionado y la categoría correspondiente
     const getProductos = async (idCategoriaSelect, idproducto) => {
         try {
             if (idCategoriaSelect <= 0) {
                 return;
             }
             const formData = new FormData();
-            formData.append('idCategoria', idCategoriaSelect);
-            formData.append('idProducto', idproducto);
+            formData.append('idCategoria', idCategoriaSelect); //Mandamos la categoría
+            formData.append('idProducto', idproducto); //Mandamos el producto, para obtener tanto la talla como el color
             const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/productos.php?action=readProductosCategoria`, {
                 method: 'POST',
                 body: formData
