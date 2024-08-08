@@ -23,13 +23,11 @@ const TabNavigation = () => {
                     } else if (route.name === 'Profile') {
                         iconName = focused ? 'person' : 'person-outline';
                     } else if (route.name === 'Productos') {
-                        iconName = focused ? 'cart' : 'cart-outline';
+                        iconName = focused ? 'cube' : 'cube-outline';
                     } else if (route.name === 'Settings') {
-                        iconName = focused ? 'cart' : 'cart-outline';
+                        iconName = focused ? 'bag' : 'bag-outline';
                     } else if (route.name === 'Cart') {
-                        iconName = focused ? 'cart' : 'cart-outline';
-                    } else if (route.name === 'Cart') {
-                        iconName = focused ? 'settings' : 'settings-outline';
+                        iconName = focused ? 'bag' : 'cart-outline';
                     } else if (route.name === 'Login') {
                         iconName = focused ? 'person' : 'person-outline';
                     } else if (route.name === 'SignUp') {
@@ -37,7 +35,7 @@ const TabNavigation = () => {
                     }
                     return <Ionicons name={iconName} size={size} color={color} />;
                 },
-                tabBarActiveTintColor: 'tomato',
+                tabBarActiveTintColor: 'green',
                 tabBarInactiveTintColor: 'gray',
                 headerShown: false, // Puedes ocultar el header si no lo necesitas
             })}
