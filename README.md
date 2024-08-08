@@ -13,18 +13,18 @@ influyendo en la seguridad y fortaleciendo vínculos entre los miembros de la ac
 # Docente: Daniel Wilfredo Granados Hernández
 
 # Dependencias utilizadas
-"npm install @react-native-async-storage/async-storage@^1.23.1",
-"npm install @react-navigation/bottom-tabs@^6.5.20",
-"npm install @react-navigation/native@^6.1.17",
-"npm install @react-navigation/native-stack@^6.9.26",
-"npm install @react-navigation/stack@^6.3.29",
-"npm install expo@~51.0.14",
-"npm install expo-status-bar@~1.12.1",
-"npm install react@18.2.0",
-"npm install react-native@0.74.2",
-"npm install react-native-gesture-handler@~2.16.1",
-"npm install react-native-masked-text@^1.13.0",
-"npm install react-native-safe-area-context@^4.10.5",
-"npm install react-native-screens@^3.32.0",
-"npm install expo-image-picker"
+* "npm install @react-native-async-storage/async-storage@^1.23.1",
+* "npm install @react-navigation/bottom-tabs@^6.5.20",
+* "npm install @react-navigation/native@^6.1.17",
+* "npm install @react-navigation/native-stack@^6.9.26",
+* "npm install @react-navigation/stack@^6.3.29",
+* "npm install expo@~51.0.14",
+* "npm install expo-status-bar@~1.12.1",
+* "npm install react@18.2.0",
+* "npm install react-native@0.74.2",
+* "npm install react-native-gesture-handler@~2.16.1",
+* "npm install react-native-masked-text@^1.13.0",
+* "npm install react-native-safe-area-context@^4.10.5",
+* "npm install react-native-screens@^3.32.0",
+* "npm install expo-image-picker"
 
