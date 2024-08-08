@@ -6,23 +6,47 @@ import * as Constantes from '../utils/constantes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Actualizar({ navigation }) {
-    const ip = Constantes.IP;
-    const [claveNueva, setClaveNueva] = useState('');
-    const [confirmarClave, setConfirmarClave] = useState('');
-    const [correo, setCorreo] = useState('');
+  const ip = Constantes.IP;
+  const [claveNueva, setClaveNueva] = useState('');
+  const [confirmarClave, setConfirmarClave] = useState('');
+  const [correo, setCorreo] = useState('');
 
-    useEffect(() => {
-        const obtenerDatos = async () => {
-          const storedEmail = await AsyncStorage.getItem('email');
-          if (storedEmail) {
-            setCorreo(storedEmail);
-          }
-        };
-        obtenerDatos();
-      }, []);
+  useEffect(() => {
+    const obtenerDatos = async () => {
+      const storedEmail = await AsyncStorage.getItem('email');
+      if (storedEmail) {
+        setCorreo(storedEmail);
+      }
+    };
+    obtenerDatos();
+  }, []);
 
- 
-  
+  // Función para actualizar la contraseña
+  const Update = async () => {
+    const FORM = new FormData();
+    FORM.append('nuevaClave', claveNueva);
+    FORM.append('confirmarClave', confirmarClave);
+    FORM.append('inputCorreo', correo);
+    try {
+      const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=updateClave`, { // Verifica la acción de actualizar clave
+        method: 'POST',
+        body: FORM
+      });
+
+      const responseText = await response.text();
+      console.log('Response Text:', responseText);
+      const DATA = JSON.parse(responseText);
+      if (DATA.status) {
+        Alert.alert('Éxito', 'Se ha actualizado la contraseña');
+        navigation.navigate('Login');
+      } else {
+        Alert.alert('Error', `${DATA.error}`);
+      }
+    } catch (error) {
+      console.error('Error desde Catch', error);
+      Alert.alert('Error', `Ocurrió un error: ${error.message}`);
+    }
+  };
 
   // Navegación
   const Regresar = () => {
