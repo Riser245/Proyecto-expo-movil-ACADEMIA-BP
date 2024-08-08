@@ -114,15 +114,7 @@ export default function Login({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    background: {
-        flex: 1,
-        justifyContent: 'center',
-    },
-    overlay: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
+  
     texto: {
         color: '#322C2B',
         fontWeight: '900',
