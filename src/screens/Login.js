@@ -25,7 +25,7 @@ export default function Login({ navigation }) {
             }
         } catch (error) {
             console.error(error);
-            Alert.alert('Error', 'Ocurrió un error al validar la sesión');
+           
         }
     };
 
@@ -92,7 +92,12 @@ export default function Login({ navigation }) {
                     setValor={usuario}
                     setTextChange={setUsuario}
                 />
-               
+                <Input
+                    placeHolder='Contraseña'
+                    setValor={contrasenia}
+                    setTextChange={setContrasenia}
+                    contra={isContra}
+                />
                 <Buttons
                     textoBoton='Iniciar Sesión'
                     accionBoton={handlerLogin}
