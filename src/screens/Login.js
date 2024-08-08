@@ -92,12 +92,7 @@ export default function Login({ navigation }) {
                     setValor={usuario}
                     setTextChange={setUsuario}
                 />
-                <Input
-                    placeHolder='Contraseña'
-                    setValor={contrasenia}
-                    setTextChange={setContrasenia}
-                    contra={isContra}
-                />
+               
                 <Buttons
                     textoBoton='Iniciar Sesión'
                     accionBoton={handlerLogin}
@@ -114,7 +109,15 @@ export default function Login({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  
+    background: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    overlay: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     texto: {
         color: '#322C2B',
         fontWeight: '900',
