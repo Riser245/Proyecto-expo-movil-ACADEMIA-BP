@@ -62,12 +62,15 @@ export default function Actualizar({ navigation }) {
                     placeHolder='Contraseña'
                     setValor={claveNueva}
                     setTextChange={setClaveNueva}
+                    contra={true}  // Aquí se pasa true para activar la máscara
                 />
                 <Input
                     placeHolder='Confirmar contraseña'
                     setValor={confirmarClave}
                     setTextChange={setConfirmarClave}
+                    contra={true}  // Aquí también se pasa true para activar la máscara
                 />
+
                 <Buttons
                     textoBoton='Aceptar'
                     accionBoton={Update}

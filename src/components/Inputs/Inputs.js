@@ -7,7 +7,7 @@ export default function Inputs({ placeHolder, setValor, contra, setTextChange })
       placeholder={placeHolder}
       value={setValor}
       placeholderTextColor={'#000'}
-      secureTextEntry={true}
+      secureTextEntry={contra}
       onChangeText={setTextChange}
     />
   );
