@@ -25,7 +25,7 @@ export default function Login({ navigation }) {
             }
         } catch (error) {
             console.error(error);
-           
+            Alert.alert('Error', 'Ocurrió un error al validar la sesión');
         }
     };
 
