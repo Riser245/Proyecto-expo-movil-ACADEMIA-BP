@@ -1,20 +1,30 @@
-# AcademiaBP_EXPO
-La Academia BP se destaca por brindar una experiencia emocionante y accesible para jóvenes amantes del fútbol. Al unirse, los estudiantes pueden seleccionar planes mensuales, otorgándoles acceso exclusivo a entrenamientos dinámicos. Además de la experiencia de suscripción, la academia ofrece la oportunidad de adquirir artículos deportivos como mochilas, ropa deportiva, botellas de agua, etc. Artículos funcionales para el día a día de los deportistas.
+# Proyecto-expo-movil-ACADEMIA-BP
+Aplicación móvil para la academia BP cuyo principal objetivo es innovar de manera eficaz un punto de venta significativo para cada usuario
+influyendo en la seguridad y fortaleciendo vínculos entre los miembros de la academia y la comunidad de seguidores.
 
 # Integrantes:
-• Iván Daniel Salguero Esperanza (20220270)
-• Ricardo Daniel De Leon Cruz (20220039)
-• Rebeca Marcela Hernández Amaya (20200248)
-• Dennis Alejandro Gonzales Carrillo (20220440)
-• Anderson Renè Figueroa Coto (20220105)
+* Iván Daniel Salguero Esperanza (20220270)
+* Ricardo Daniel De Leon Cruz (20220039)
+* Rebeca Marcela Hernández Amaya (20200248)
+* Dennis Alejandro Gonzales Carrillo (20220440)
+* Anderson Renè Figueroa Coto (20220105)
 
-# Estándares de programación utilizados en
-#JavaScipt:
-• SCREAMING_SNAKE_CASE: Se utilizan en las constantes.
-• K&R Style (Kernighan and Ritchie): Se utiliza en la ubicación de los contenidos de if y else.
-• CamelCase: Se utilizan principalmente en los ID de los componentes y las funciones.
 
-#PHP:
-• PascalCase: Se utilizan en el nombre de las clases
-• CamelCase: Se utilizan principalmente en las funciones.
-• alllowercase: Se utilizan principalmente en los atributos.
+# Docente: Daniel Wilfredo Granados Hernández
+
+# Dependencias utilizadas
+"npm install @react-native-async-storage/async-storage@^1.23.1",
+"npm install @react-navigation/bottom-tabs@^6.5.20",
+"npm install @react-navigation/native@^6.1.17",
+"npm install @react-navigation/native-stack@^6.9.26",
+"npm install @react-navigation/stack@^6.3.29",
+"npm install expo@~51.0.14",
+"npm install expo-status-bar@~1.12.1",
+"npm install react@18.2.0",
+"npm install react-native@0.74.2",
+"npm install react-native-gesture-handler@~2.16.1",
+"npm install react-native-masked-text@^1.13.0",
+"npm install react-native-safe-area-context@^4.10.5",
+"npm install react-native-screens@^3.32.0",
+"npm install expo-image-picker"
+
