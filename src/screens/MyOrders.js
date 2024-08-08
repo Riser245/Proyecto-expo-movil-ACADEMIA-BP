@@ -53,6 +53,7 @@ export default function MisCompras() {
         if (searchTerm.trim() === '') {
             getCompras();
         }
+        getCompras();
     }, [searchTerm]);
 
     return (
