@@ -113,7 +113,7 @@ export default function Home({ navigation }) {
 
             <Modal isVisible={isModalVisible}>
                 <View style={styles.modalContent}>
-                    <Text style={styles.modalText}>Cerrar sesión</Text>
+                    <Text style={styles.modalText}>¿Deseas cerrar sesión?</Text>
                     <TouchableOpacity onPress={handleLogout} style={styles.modalButton}>
                         <Text style={styles.modalButtonText}>Sí</Text>
                     </TouchableOpacity>

@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     textRegistrar: {
         color: '#322C2B',
         fontWeight: '700',
-        fontSize: 18,
+        fontSize: 15,
         marginTop: 10,
     },
 });
