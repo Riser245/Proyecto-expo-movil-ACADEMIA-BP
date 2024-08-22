@@ -5,6 +5,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import MisCompras from '../screens/MyOrders';
 import ProductsScreen from '../screens/ProductScreen';
 import CartScreen from '../screens/Cart';
+import Comments from '../screens/Comments';
 import { Ionicons } from '@expo/vector-icons';
 
 

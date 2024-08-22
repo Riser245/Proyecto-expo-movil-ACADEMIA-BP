@@ -16,6 +16,12 @@ export default function MyComponent({ navigation }) {
         navigation.navigate('Detalles', { idCategoria: idCategoriaSelect, idProducto });
     };
 
+    const handleValoracion = (idProducto) => {
+        navigation.navigate('CommentsProduct', {idProducto: idProducto})
+
+        console.log(idProducto)
+    };
+
     //Obtenemos los productos de la categoría seleccionada
     const getProductos = async (idCategoriaSelect = 1) => {
         try {
@@ -87,6 +93,7 @@ export default function MyComponent({ navigation }) {
                             nombreProducto={item.nombre_producto}
                             descripcionProducto={item.descripcion_producto}
                             accionBotonProducto={() => handleVerDetalle(item.id_categoria_producto, item.id_producto)}
+                            accionBotonProducto2={() => handleValoracion(item.id_producto)}
                         />
 
                     )}
