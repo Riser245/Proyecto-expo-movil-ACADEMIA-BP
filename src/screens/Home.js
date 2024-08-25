@@ -65,10 +65,12 @@ export default function Home({ navigation }) {
         }
     };
 
-    useEffect(() => { //Se cargan los metodos
-        getUser();
+    useFocusEffect(
+        React.useCallback(() => {
+            getUser();
         getEntrenamientos();
-    }, []);
+        }, [])
+    );
 
     const formatUsername = (username) => { //Formateamos el correo a mostrar, para que unicamente se muestre la primer y ultima letra antes del @
         if (!username) return 'No hay correo para mostrar';

@@ -66,9 +66,11 @@ const Detalles = () => {
         }
     };
 
-    useEffect(() => {
-        getProductos(idCategoria, idProducto);
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            getProductos(idCategoria, idProducto);
+        }, [])
+    );
 
     return (
         <View style={styles.container}>

@@ -69,10 +69,12 @@ export default function MyComponent({ navigation }) {
         }
     };
 
-    useEffect(() => {
-        getProductos();
+    useFocusEffect(
+        React.useCallback(() => {
+            getProductos();
         getCategorias();
-    }, []);
+        }, [])
+    );
 
     return (
 

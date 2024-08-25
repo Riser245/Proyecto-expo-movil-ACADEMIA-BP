@@ -189,9 +189,11 @@ const ProfileScreen = () => {
         }
     };
 
-    useEffect(() => {
-        getProfileData();
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            getProfileData();
+        }, [])
+    );
 
     return (
         <View style={styles.container}>

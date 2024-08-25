@@ -43,10 +43,11 @@ const CommentsProduct = () => {
         }
     };
 
-    useEffect(() => {
-        getValoraciones(idProducto);
-    }, [idProducto]);
-
+    useFocusEffect(
+        React.useCallback(() => {
+            getValoraciones(idProducto);
+        }, [idProducto])
+    );
     return (
         <View style={styles.container}>
 
