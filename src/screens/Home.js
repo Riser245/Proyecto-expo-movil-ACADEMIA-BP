@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, Alert, FlatList, Dimensions, SafeAreaView, Imag
 import * as Constantes from '../utils/constantes';
 import EntrenamientoView from '../components/EntrenamientoViews/EntrenamientosView';
 import Modal from 'react-native-modal';
-import TopBar from '../components/TopBar/TopBar'
+import TopBar from '../components/TopBar/TopBar';
+import { useFocusEffect } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 

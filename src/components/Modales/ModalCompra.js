@@ -31,6 +31,7 @@ const ModalCompra = ({ visible, cerrarModal, nombreProductoModal, idDetalleModal
                 console.log("data despues del response", data);
                 if (data.status) {
                     Alert.alert('Datos Guardados correctamente');
+                    setCantidad(0)
                     cerrarModal(false);
                 } else {
                     Alert.alert('Error', data.error);

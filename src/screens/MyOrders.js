@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, SafeAreaView, TextInput, Alert, FlatList, Image
 import ModalValoracion from '../components/Modales/ModalValoracion'; // Importa el ModalValoracion
 import * as Constantes from '../utils/constantes';
 import ComprasViews from '../components/Compras/ComprasViews';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function MisCompras() {
     // Constante IP del servidor

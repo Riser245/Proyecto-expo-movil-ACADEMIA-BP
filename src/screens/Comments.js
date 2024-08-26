@@ -3,6 +3,7 @@ import {  StyleSheet, Text, View, SafeAreaView, Alert, FlatList } from 'react-na
 import { useRoute, useNavigation } from '@react-navigation/native'; // Importa useNavigation
 import * as Constantes from '../utils/constantes';
 import Comments from '../components/CommentsCards/CommentsCards';
+import { useFocusEffect } from '@react-navigation/native';
 
 const CommentsProduct = () => {
     const ip = Constantes.IP;

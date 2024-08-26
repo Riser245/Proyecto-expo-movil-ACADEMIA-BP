@@ -7,6 +7,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import Constants from 'expo-constants';
 import DetailProductCard from '../components/Productos/DetailProductoCard';
 import { useRoute } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Detalles = () => {
     const ip = Constantes.IP;

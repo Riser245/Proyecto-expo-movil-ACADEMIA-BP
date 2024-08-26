@@ -11,6 +11,7 @@ import InputEmail from '../components/Inputs/InputsPerfil/InputEmail';
 import Buttons from '../components/Inputs/InputsPerfil/Buttons/Button';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
+import { useFocusEffect } from '@react-navigation/native';
 
 const ProfileScreen = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);

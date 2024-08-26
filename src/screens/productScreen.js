@@ -4,6 +4,7 @@ import * as Constantes from '../utils/constantes';
 import Constants from 'expo-constants';
 import ProductoCard from '../components/Productos/ProductoCard';
 import TopBar from '../components/TopBar/TopBar';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function MyComponent({ navigation }) {
     const ip = Constantes.IP;
