@@ -4,9 +4,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import Login from './src/screens/Login';
+import Onboard from './src/screens/OnboardingScreen'
 import SignUp from './src/screens/SignUp';
 import TabNavigation from './src/navigation/tabNavigation';
-import Detalles from './src/screens/ProductDetails';
+import Detalles from './src/screens/productDetails';
 import RecuperarClaveCorreo from './src/screens/RecoverEmailPassword';
 import Verificar from './src/screens/VerifyCode';
 import Actualizar from './src/screens/UpdatePassword';
@@ -37,8 +38,9 @@ const SplashScreen = ({ navigation }) => {
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Splash">
+      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Onboard">
         <Stack.Screen name="Splash" component={SplashScreen} />
+        <Stack.Screen name="Onboard" component={Onboard} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="Home" component={TabNavigation} /> 
