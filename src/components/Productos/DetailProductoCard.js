@@ -7,6 +7,9 @@ import * as Constantes from '../../utils/constantes';
 //productoCard
 const ip = Constantes.IP;
 
+const backProducts = ({navigation}) => {
+  navigation.navigate('Productos');
+};  
 export default function DetailProductCard({ ip, imagenProducto, idProducto, nombreProducto, descripcionProducto
   , precioProducto, existenciasProducto, descuentoProducto, talla, color, accionBotonProducto
 }) {
@@ -38,6 +41,14 @@ export default function DetailProductCard({ ip, imagenProducto, idProducto, nomb
         <FontAwesome name="plus-circle" size={24} color="white" />
         <Text style={styles.cartButtonText}>Agregar al carrito</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.cartButton}
+        onPress={backProducts}>
+        <FontAwesome name="arrow-left" size={24} color="white" />
+        <Text style={styles.cartButtonText} >Regresar a productos</Text>
+        </TouchableOpacity>
+
     </View>
 
   );
