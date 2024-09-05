@@ -1,38 +1,10 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, Alert, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import * as Constantes from '../../utils/constantes';
-import Modal from 'react-native-modal';
+import React from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Modal } from 'react-native';
+import useAuth from '../TopBar/Auth';
 
 const TopBar = ({ nombre }) => {
-    const [isModalVisible, setModalVisible] = useState(false);
-    const navigation = useNavigation();
-    const ip = Constantes.IP;
-
-    // Formatear el nombre de usuario
-    const formatUsername = (username) => {
-        if (!username) return 'No hay correo para mostrar';
-        const localPart = username.split('@')[0];
-        if (localPart.length < 2) return localPart;
-        return localPart.charAt(0) + localPart.charAt(localPart.length - 1);
-    };
-
-    // Manejar el cierre de sesión
-    const handleLogout = async () => {
-        try {
-            const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=logOut`, {
-                method: 'GET'
-            });
-            const data = await response.json();
-            if (data.status) {
-                navigation.navigate('Login');
-            } else {
-                Alert.alert('Error', data.error);
-            }
-        } catch (error) {
-            Alert.alert('Error', 'Ocurrió un error al cerrar la sesión');
-        }
-    };
+    const { formatUsername, handleLogout } = useAuth();
+    const [isModalVisible, setModalVisible] = React.useState(false);
 
     // Alternar visibilidad del modal
     const toggleModal = () => {
@@ -44,9 +16,10 @@ const TopBar = ({ nombre }) => {
             <View style={styles.circle}>
                 <Text style={styles.emailText}>{formatUsername(nombre)}</Text>
             </View>
+
             <TouchableOpacity
                 onPress={handleLogout}
-                onLongPress={toggleModal}
+                onLongPress={toggleModal} // Al mantener presionado, se activará el modal
             >
                 <Image
                     source={require('../../imagenes/logoAcademiaBP.png')}
@@ -54,15 +27,22 @@ const TopBar = ({ nombre }) => {
                 />
             </TouchableOpacity>
 
-            <Modal isVisible={isModalVisible}>
-                <View style={styles.modalContent}>
-                    <Text style={styles.modalText}>¿Desea cerrar sesión?</Text>
-                    <TouchableOpacity onPress={handleLogout} style={styles.modalButton}>
-                        <Text style={styles.modalButtonText}>Sí</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={toggleModal} style={[styles.modalButton, { backgroundColor: '#ddd' }]}>
-                        <Text style={[styles.modalButtonText, { color: '#000' }]}>No</Text>
-                    </TouchableOpacity>
+            <Modal
+                visible={isModalVisible} // Usar 'visible' en vez de 'isVisible'
+                transparent={true} // Para que el fondo sea semi-transparente
+                animationType="fade" // Puedes elegir 'slide', 'fade', etc.
+                onRequestClose={toggleModal} // Para cerrar el modal cuando se presiona atrás en Android
+            >
+                <View style={styles.modalBackground}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalText}>¿Desea cerrar sesión?</Text>
+                        <TouchableOpacity onPress={handleLogout} style={styles.modalButton}>
+                            <Text style={styles.modalButtonText}>Sí</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={toggleModal} style={[styles.modalButton, { backgroundColor: '#ddd' }]}>
+                            <Text style={[styles.modalButtonText, { color: '#000' }]}>No</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </Modal>
         </View>
@@ -85,6 +65,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 1,
         marginTop: 20,
+        marginLeft: 20,
         borderColor: '#000',
     },
     emailText: {
@@ -96,6 +77,13 @@ const styles = StyleSheet.create({
         height: 50,
         borderRadius: 25,
         marginTop: 20,
+        marginRight: 20
+    },
+    modalBackground: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo oscuro traslúcido
     },
     modalContent: {
         backgroundColor: 'white',

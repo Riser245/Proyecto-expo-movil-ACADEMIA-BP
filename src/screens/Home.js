@@ -1,34 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Alert, FlatList, Dimensions, SafeAreaView, Image, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, StyleSheet, Alert, FlatList, SafeAreaView, TouchableOpacity } from 'react-native';
 import * as Constantes from '../utils/constantes';
 import EntrenamientoView from '../components/EntrenamientoViews/EntrenamientosView';
 import Modal from 'react-native-modal';
 import TopBar from '../components/TopBar/TopBar';
 import { useFocusEffect } from '@react-navigation/native';
-
-const { width } = Dimensions.get('window');
+import useAuth from '../components/TopBar/Auth';
 
 export default function Home({ navigation }) {
     const [nombre, setNombre] = useState(null);
-    const ip = Constantes.IP;
     const [dataEntrenamientos, setDataEntrenamientos] = useState([]);
-    const [isModalVisible, setModalVisible] = useState(false);
-
-    const handleLogout = async () => {
-        try {
-            const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=logOut`, {
-                method: 'GET'
-            });
-            const data = await response.json();
-            if (data.status) {
-                navigation.navigate('Login');
-            } else {
-                Alert.alert('Error', data.error);
-            }
-        } catch (error) {
-            Alert.alert('Error', 'Ocurrió un error al cerrar la sesión');
-        }
-    };
+    const { isModalVisible, handleLogout, toggleModal } = useAuth();
+    const ip = Constantes.IP;
 
     const getUser = async () => {
         try {
@@ -37,7 +20,7 @@ export default function Home({ navigation }) {
             });
             const data = await response.json();
             if (data.status) {
-                setNombre(data.username); //Aqui asignamos el correo del usuario que ha iniciado sesion
+                setNombre(data.username);
             } else {
                 Alert.alert('Error', data.error);
             }
@@ -49,12 +32,10 @@ export default function Home({ navigation }) {
     const getEntrenamientos = async () => {
         try {
             const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/entrenamiento.php?action=readAllHorariosLugares`, {
-                method: 'GET', //Obtenemos la información extra de La Academia
+                method: 'GET',
             });
 
             const data = await response.json();
-            console.log(data);
-
             if (data.status) {
                 setDataEntrenamientos(data.dataset);
             } else {
@@ -69,38 +50,19 @@ export default function Home({ navigation }) {
     useFocusEffect(
         React.useCallback(() => {
             getUser();
-        getEntrenamientos();
+            getEntrenamientos();
         }, [])
     );
 
-    const formatUsername = (username) => { //Formateamos el correo a mostrar, para que unicamente se muestre la primer y ultima letra antes del @
-        if (!username) return 'No hay correo para mostrar';
-        const localPart = username.split('@')[0];
-        if (localPart.length < 2) return localPart; // En caso de que el nombre de usuario sea de una sola letra
-        return localPart.charAt(0) + localPart.charAt(localPart.length - 1);
-    };
-
-    const toggleModal = () => {
-        setModalVisible(!isModalVisible); //Mostramos una modal para cerrar sesion
-    };
-
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-            <TopBar
-                    formatUsername={formatUsername}
-                    nombre={nombre}
-                    handleLogout={handleLogout}
-                    toggleModal={toggleModal}
-                />
-                <Text style={styles.titleHeader}>Bienvenid@</Text>
-                <Text style={styles.titleHeader2}>Información sobre nosotros</Text>
-            </View>
+            <TopBar nombre={nombre} />
 
             <SafeAreaView style={styles.containerFlat}>
+                <Text style={styles.title}>¡Bienvenido!</Text>
                 <FlatList
                     data={dataEntrenamientos}
-                    keyExtractor={(item) => item.id_lugar.toString()} // Id por el que se cargan las cards
+                    keyExtractor={(item) => item.id_lugar.toString()}
                     renderItem={({ item }) => (
                         <EntrenamientoView
                             ip={ip}
@@ -110,7 +72,6 @@ export default function Home({ navigation }) {
                             horariosE={item.horarios}
                         />
                     )}
-                    ListHeaderComponent={<></>}
                 />
             </SafeAreaView>
 
@@ -139,8 +100,13 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
     },
+    title:{
+        textAlign: 'center',
+        fontSize: 30,
+        fontWeight: 'bold'
+    },
     item: {
-        width: width * 0.9,
+        width:  0.9,
         height: 300,
         padding: 10,
         marginVertical: 8,

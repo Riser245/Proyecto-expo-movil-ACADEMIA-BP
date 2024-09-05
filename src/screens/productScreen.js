@@ -5,12 +5,31 @@ import Constants from 'expo-constants';
 import ProductoCard from '../components/Productos/ProductoCard';
 import TopBar from '../components/TopBar/TopBar';
 import { useFocusEffect } from '@react-navigation/native';
+import useAuth from '../components/TopBar/Auth';
 
 export default function MyComponent({ navigation }) {
     const ip = Constantes.IP;
     const [dataProductos, setDataProductos] = useState([]);
     const [dataCategorias, setDataCategorias] = useState([]);
+    const { isModalVisible, handleLogout, toggleModal } = useAuth();
+    const [nombre, setNombre] = useState(null);
 
+
+    const getUser = async () => {
+        try {
+            const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=getUser`, {
+                method: 'GET'
+            });
+            const data = await response.json();
+            if (data.status) {
+                setNombre(data.username);
+            } else {
+                Alert.alert('Error', data.error);
+            }
+        } catch (error) {
+            Alert.alert('Error', 'Ocurrió un error al obtener el usuario');
+        }
+    };
 
     //Función para mandar a ProductDetail el detalle del producto que queremos ver
     const handleVerDetalle = (idCategoriaSelect, idProducto) => {
@@ -72,15 +91,16 @@ export default function MyComponent({ navigation }) {
 
     useFocusEffect(
         React.useCallback(() => {
-            getProductos();
+        getProductos();
         getCategorias();
+        getUser();
         }, [])
     );
 
     return (
 
         <View style={styles.container}>
-            
+            <TopBar nombre={nombre} />
             <Text style={styles.pageTitle}>Nuestros productos</Text>
 
 
