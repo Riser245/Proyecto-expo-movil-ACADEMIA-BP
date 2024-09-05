@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, TextInput, Alert, FlatList, Image } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TextInput, Alert, FlatList, Image, TouchableOpacity} from 'react-native';
 import ModalValoracion from '../components/Modales/ModalValoracion'; // Importa el ModalValoracion
 import * as Constantes from '../utils/constantes';
+import Modal from 'react-native-modal';
 import ComprasViews from '../components/Compras/ComprasViews';
 import { useFocusEffect } from '@react-navigation/native';
+import TopBar from '../components/TopBar/TopBar';
+import useAuth from '../components/TopBar/Auth';
+
+
 
 export default function MisCompras() {
     // Constante IP del servidor
     const ip = Constantes.IP;
+    const { isModalVisible, handleLogout, toggleModal } = useAuth();
+
+    const [nombre, setNombre] = useState(null);
     // Estado para almacenar las compras
     const [datCompras, setDataCompras] = useState([]);
     // Estado para controlar la visibilidad del drawer
@@ -22,6 +30,22 @@ export default function MisCompras() {
     const [comentario, setComentario] = useState('');
     // Estado para almacenar el término de búsqueda
     const [searchTerm, setSearchTerm] = useState('');
+
+    const getUser = async () => {
+        try {
+            const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=getUser`, {
+                method: 'GET'
+            });
+            const data = await response.json();
+            if (data.status) {
+                setNombre(data.username);
+            } else {
+                Alert.alert('Error', data.error);
+            }
+        } catch (error) {
+            Alert.alert('Error', 'Ocurrió un error al obtener el usuario');
+        }
+    };
 
 
     // Función para manejar la selección de una compra
@@ -57,15 +81,20 @@ export default function MisCompras() {
         getCompras();
     }, [searchTerm]);
 
+    
+    useFocusEffect(
+        React.useCallback(() => {
+            getUser();
+        }, [])
+    );
+
     return (
         <View style={styles.container}>
 
-
             <SafeAreaView style={styles.containerFlat}>
+            <TopBar nombre={nombre} />
                 <View style={styles.titleContainer}>
                     <Text style={styles.text1}>Mis compras</Text>
-
-
                 </View>
                 {/* Lista de compras */}
                 <FlatList
@@ -89,12 +118,23 @@ export default function MisCompras() {
                                 estado={item.estado_compra}
                                 accionBotonCompras={() => handleCompra(item.id_detalle_compra)}
                             />
+                            
                         );
                     }}
                     ListHeaderComponent={<></>}
                 />
             </SafeAreaView>
-
+            <Modal isVisible={isModalVisible}>
+                <View style={styles.modalContent}>
+                    <Text style={styles.modalText}>¿Deseas cerrar sesión?</Text>
+                    <TouchableOpacity onPress={handleLogout} style={styles.modalButton}>
+                        <Text style={styles.modalButtonText}>Sí</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={toggleModal} style={[styles.modalButton, { backgroundColor: '#ddd' }]}>
+                        <Text style={[styles.modalButtonText, { color: '#000' }]}>No</Text>
+                    </TouchableOpacity>
+                </View>
+            </Modal>
             {/* Modal de valoración */}
             <ModalValoracion
                 visible={modalVisible}

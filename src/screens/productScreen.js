@@ -37,7 +37,7 @@ export default function MyComponent({ navigation }) {
     };
 
     const handleValoracion = (idProducto) => {
-        navigation.navigate('CommentsProduct', {idProducto: idProducto})
+        navigation.navigate('CommentsProduct', { idProducto: idProducto })
 
         console.log(idProducto)
     };
@@ -91,20 +91,17 @@ export default function MyComponent({ navigation }) {
 
     useFocusEffect(
         React.useCallback(() => {
-        getProductos();
-        getCategorias();
-        getUser();
+            getProductos();
+            getCategorias();
+            getUser();
         }, [])
     );
 
     return (
-
         <View style={styles.container}>
-            <TopBar nombre={nombre} />
-            <Text style={styles.pageTitle}>Nuestros productos</Text>
-
-
             <SafeAreaView style={styles.containerFlat}>
+                <TopBar nombre={nombre} />
+                <Text style={styles.pageTitle}>Nuestros productos</Text>
                 <FlatList
                     data={dataProductos}
                     keyExtractor={(item, index) => item.id_producto ? item.id_producto.toString() : index.toString()}
@@ -176,6 +173,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingTop: Constants.statusBarHeight, // Agrega paddingTop para evitar la barra de estado
+        marginBottom:20
     },
     pageTitle: {
         fontSize: 24,

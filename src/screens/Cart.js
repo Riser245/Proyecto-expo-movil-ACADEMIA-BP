@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, FlatList, Alert, Image, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, FlatList, Alert, Image, TouchableOpacity,Modal } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import Constants from 'expo-constants';
 import * as Constantes from '../utils/constantes';
 import Buttons from '../components/Buttons/Button';
 import CarritoCard from '../components/CartCard/CartCard';
 import ModalEditarCantidad from '../components/Modales/ModalEditarCantidad';
+import TopBar from '../components/TopBar/TopBar';
+import useAuth from '../components/TopBar/Auth';
 
 const Carrito = ({ navigation }) => {
+
+    const { isModalVisible, handleLogout, toggleModal } = useAuth();
+    const [nombre, setNombre] = useState(null);
     const [dataDetalleCarrito, setDataDetalleCarrito] = useState([]);
     const [idDetalle, setIdDetalle] = useState(null);
     const [cantidadProductoCarrito, setCantidadProductoCarrito] = useState(0);
@@ -21,9 +26,26 @@ const Carrito = ({ navigation }) => {
     useFocusEffect(
         React.useCallback(() => {
             getDetalleCarrito();
+            getUser();
         }, [])
     );
 
+
+    const getUser = async () => {
+        try {
+            const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=getUser`, {
+                method: 'GET'
+            });
+            const data = await response.json();
+            if (data.status) {
+                setNombre(data.username);
+            } else {
+                Alert.alert('Error', data.error);
+            }
+        } catch (error) {
+            Alert.alert('Error', 'Ocurrió un error al obtener el usuario');
+        }
+    };
 
     //Obtenemos los datos del carrito
     const getDetalleCarrito = async () => {
@@ -100,6 +122,8 @@ const Carrito = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+            <TopBar nombre={nombre} />
+
 
             <ModalEditarCantidad
                 setModalVisible={setModalVisible}
@@ -143,6 +167,7 @@ const Carrito = ({ navigation }) => {
                 />
             </View>
         </View>
+
     );
 };
 

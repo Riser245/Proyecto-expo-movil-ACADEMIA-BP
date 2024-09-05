@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/Home';
 import ProfileScreen from '../screens/ProfileScreen';
 import MisCompras from '../screens/MyOrders';
-import ProductsScreen from '../screens/ProductScreen';
+import ProductsScreen from '../screens/productScreen';
 import CartScreen from '../screens/Cart';
 import Comments from '../screens/Comments';
 import { Ionicons } from '@expo/vector-icons';
