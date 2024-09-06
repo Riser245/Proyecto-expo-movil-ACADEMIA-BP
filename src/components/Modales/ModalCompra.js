@@ -26,9 +26,6 @@ const ModalCompra = ({ visible, cerrarModal, nombreProductoModal, idDetalleModal
                 });
 
                 const data = await response.json();
-                console.log("data despues del response", idDetalleModal);
-                console.log("data despues del response", cantidad);
-                console.log("data despues del response", data);
                 if (data.status) {
                     Alert.alert('Datos Guardados correctamente');
                     setCantidad(0)

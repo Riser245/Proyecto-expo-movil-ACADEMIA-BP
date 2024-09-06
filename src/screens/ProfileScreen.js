@@ -366,9 +366,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
     },
     card: {
-        marginTop: 20,
+        marginTop: 15,
         backgroundColor: '#D2D7DF',
-        marginBottom: 20,
+        marginBottom: 10,
         width: '95%',
         marginLeft: 12
     },

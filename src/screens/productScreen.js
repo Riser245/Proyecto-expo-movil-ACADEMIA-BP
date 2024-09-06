@@ -172,28 +172,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingTop: Constants.statusBarHeight, // Agrega paddingTop para evitar la barra de estado
-        marginBottom:20
     },
     pageTitle: {
         fontSize: 24,
         fontWeight: 'bold',
         textAlign: 'center',
-        marginTop: 20, // Ajusta el margen superior según sea necesario
-    },
-    topBar: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 20,
-        backgroundColor: '#E9E8E8',
-        height: 60 + Constants.statusBarHeight,
-        width: '100%',
     },
     image: {
         width: 90,
         height: 35,
-        marginTop: 20
     },
     title: {
         fontSize: 24,
@@ -208,7 +195,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom: 10,
         color: '#5C3D2E',
-        marginTop: 20
     },
     categoryContainer: {
         alignItems: 'center', // Alinea horizontalmente el texto y el picker

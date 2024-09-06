@@ -1,17 +1,16 @@
-import { StatusBar, StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, FlatList, ScrollView, SafeAreaView, Image } from 'react-native';
-import { useState, useEffect } from 'react';
+import React, { StatusBar, StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, FlatList, ScrollView, SafeAreaView, Image } from 'react-native';
+import { useState } from 'react';
 import { FontAwesome } from '@expo/vector-icons'; // Importamos el ícono
 import Constants from 'expo-constants';
 import * as Constantes from '../../utils/constantes';
+import { useFocusEffect } from '@react-navigation/native';
 //recibimos por props la imagen del producto, nombre, precio y otras propiedades de productos para mostrarlas en el componente de 
 //productoCard
 const ip = Constantes.IP;
 
-const backProducts = ({navigation}) => {
-  navigation.navigate('Productos');
-};  
+
 export default function DetailProductCard({ ip, imagenProducto, idProducto, nombreProducto, descripcionProducto
-  , precioProducto, existenciasProducto, descuentoProducto, talla, color, accionBotonProducto
+  , precioProducto, existenciasProducto, descuentoProducto, talla, color, accionBotonProducto, accionBotonProducto2
 }) {
 
   return (
@@ -44,7 +43,7 @@ export default function DetailProductCard({ ip, imagenProducto, idProducto, nomb
 
       <TouchableOpacity
         style={styles.cartButton}
-        onPress={backProducts}>
+        onPress={accionBotonProducto2}>
         <FontAwesome name="arrow-left" size={24} color="white" />
         <Text style={styles.cartButtonText} >Regresar a productos</Text>
         </TouchableOpacity>

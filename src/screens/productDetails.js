@@ -1,59 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { StatusBar, StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Alert, FlatList, Image, TextInput, ScrollView } from 'react-native';
+import { StatusBar, StyleSheet, Text, View, SafeAreaView, FlatList, Alert } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import ModalCompra from '../components/Modales/ModalCompra';
 import * as Constantes from '../utils/constantes';
-import RNPickerSelect from 'react-native-picker-select';
-import Constants from 'expo-constants';
 import DetailProductCard from '../components/Productos/DetailProductoCard';
-import { useRoute } from '@react-navigation/native';
-import { useFocusEffect } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 
 const Detalles = () => {
-    const ip = Constantes.IP;
-    const [dataProductos, setDataProductos] = useState([]);
-    const [dataCategorias, setDataCategorias] = useState([]);
-    const [selectedValue, setSelectedValue] = useState(null);
-    const [cantidad, setCantidad] = useState('');
-    const [modalVisible, setModalVisible] = useState(false);
-    const [drawerVisible, setDrawerVisible] = useState(false);
-    const [idProductoModal, setIdProductoModal] = useState('');
-    const [nombreProductoModal, setNombreProductoModal] = useState('');
-    const [currentIndex, setCurrentIndex] = useState(0); // Índice de la imagen actual
-
+    const navigation = useNavigation(); // Obtén la instancia de navegación
     const route = useRoute();
     const { idCategoria, idProducto } = route.params;
 
-    const volverInicio = () => {
-        setDrawerVisible(true);
+    const ip = Constantes.IP;
+    const [dataProductos, setDataProductos] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [idProductoModal, setIdProductoModal] = useState('');
+    const [nombreProductoModal, setNombreProductoModal] = useState('');
+    const [cantidad, setCantidad] = useState('');
+
+    const backProducts = () => {
+        navigation.navigate('Products'); // Usa la instancia de navegación para ir a la pantalla Products
     };
 
-    //Función para enviar los datos al carrito de compra
     const handleCompra = (nombre, id) => {
         setModalVisible(true);
         setIdProductoModal(id);
         setNombreProductoModal(nombre);
-
-        console.log(id)
-        console.log(nombre)
     };
 
-    //Método para obtener los detalles de los productos, dependiendo del producto que se haya seleccionado y la categoría correspondiente
     const getProductos = async (idCategoriaSelect, idproducto) => {
         try {
             if (idCategoriaSelect <= 0) {
                 return;
             }
             const formData = new FormData();
-            formData.append('idCategoria', idCategoriaSelect); //Mandamos la categoría
-            formData.append('idProducto', idproducto); //Mandamos el producto, para obtener tanto la talla como el color
+            formData.append('idCategoria', idCategoriaSelect);
+            formData.append('idProducto', idproducto);
             const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/productos.php?action=readProductosCategoria`, {
                 method: 'POST',
                 body: formData
             });
-            console.log(idCategoriaSelect);
-            console.log(idproducto);
-
             const data = await response.json();
 
             if (data.status) {
@@ -62,22 +48,18 @@ const Detalles = () => {
                 Alert.alert('Error productos', data.error);
             }
         } catch (error) {
-            console.error(error, "Error desde Catch");
+            console.error(error);
             Alert.alert('Error', 'Ocurrió un error al listar los productos');
         }
     };
 
-    useFocusEffect(
-        React.useCallback(() => {
-            getProductos(idCategoria, idProducto);
-        }, [])
-    );
+    useEffect(() => {
+        getProductos(idCategoria, idProducto);
+    }, [idCategoria, idProducto]);
 
     return (
         <View style={styles.container}>
-
             <Text style={styles.text}>Selecciona un producto</Text>
-            {/* Modal de compra */}
             <ModalCompra
                 visible={modalVisible}
                 cerrarModal={setModalVisible}
@@ -86,12 +68,10 @@ const Detalles = () => {
                 cantidad={cantidad}
                 setCantidad={setCantidad}
             />
-
             <SafeAreaView style={styles.containerFlat}>
-                {/* Aquí reemplazamos ScrollView por FlatList */}
                 <FlatList
                     data={dataProductos}
-                    keyExtractor={(item) => item.id_detalle_producto.toString()} // Asegúrate de que sea una cadena
+                    keyExtractor={(item) => item.id_detalle_producto.toString()}
                     renderItem={({ item }) => (
                         <DetailProductCard
                             ip={ip}
@@ -101,16 +81,16 @@ const Detalles = () => {
                             precioProducto={item.precio_producto}
                             existenciasProducto={item.existencias_producto}
                             descuentoProducto={item.descuento_producto}
-                            talla={item.talla} // Asegúrate de que todos los props necesarios sean pasados
+                            talla={item.talla}
                             color={item.color}
                             accionBotonProducto={() => handleCompra(item.nombre_producto, item.id_detalle_producto)}
+                            accionBotonProducto2={backProducts} // Pasa la función de navegación aquí
                         />
                     )}
                 />
             </SafeAreaView>
         </View>
     );
-
 };
 
 
