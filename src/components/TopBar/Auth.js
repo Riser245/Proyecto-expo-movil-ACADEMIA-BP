@@ -1,11 +1,12 @@
 // hooks/useAuth.js
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import * as Constantes from '../../utils/constantes';
 
 const useAuth = () => {
     const [isModalVisible, setModalVisible] = useState(false);
+    const [user, setUser] = useState({ firstName: '', lastName: '' });
     const navigation = useNavigation();
     const ip = Constantes.IP;
 
@@ -15,8 +16,14 @@ const useAuth = () => {
                 method: 'GET'
             });
             const data = await response.json();
+            
             if (data.status) {
-                setNombre(data.username);
+                const [firstName, ...lastNameParts] = data.nombre.split(' ');
+                const lastName = data.apellido || '';
+                setUser({
+                    firstName: firstName || '',
+                    lastName: lastName || ''
+                });
             } else {
                 Alert.alert('Error', data.error);
             }
@@ -25,11 +32,11 @@ const useAuth = () => {
         }
     };
 
-    const formatUsername = (username) => {
-        if (!username) return 'No hay correo para mostrar';
-        const localPart = username.split('@')[0];
-        if (localPart.length < 2) return localPart;
-        return localPart.charAt(0) + localPart.charAt(localPart.length - 1);
+    const formatUsername = () => {
+        const { firstName, lastName } = user;
+        const firstInitial = firstName ? firstName.charAt(0) : '';
+        const lastInitial = lastName ? lastName.charAt(0) : '';
+        return `${firstInitial}${lastInitial}`; //Se mostrará la primer letra del primer nombre y la primer del primer apellido.
     };
 
     const handleLogout = async () => {
@@ -48,6 +55,9 @@ const useAuth = () => {
         }
     };
 
+    useEffect(() => {
+        getUser();
+    }, []);
 
     return {
         getUser,
