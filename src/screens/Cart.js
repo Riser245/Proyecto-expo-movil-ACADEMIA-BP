@@ -54,7 +54,6 @@ const Carrito = ({ navigation }) => {
                 method: 'GET',
             });
             const data = await response.json();
-            console.log(data, "Data desde getDetalleCarrito");
 
             if (data.status) {
                 setDataDetalleCarrito(data.dataset);

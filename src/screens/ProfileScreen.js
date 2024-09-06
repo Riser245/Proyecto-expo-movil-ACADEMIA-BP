@@ -39,7 +39,6 @@ const ProfileScreen = () => {
             });
 
             const data = await response.json();
-            console.log(data);
             if (data.status) {
                 setProfileData(data.dataset); //Inicio de asignación de datos
                 setId(data.dataset.id_cliente); //id del cleinte
@@ -73,7 +72,6 @@ const ProfileScreen = () => {
             //Validamos que la imagen no sobre pase el ancho y alto definido
             if (imageWidth <= 1800 && imageHeight <= 1800) {
                 setFotoCliente(result.assets[0].uri);
-                console.log("Valor enviado a imagen \n", result.assets[0].uri);
             } else {
                 alert('La imagen es de dimension ' +imageWidth + 'x' + imageHeight + '.La imagen seleccionada debe tener dimensiones de 1800x1800 píxeles o menores.');
             }
@@ -87,7 +85,6 @@ const ProfileScreen = () => {
             let fileName = "";
             let match = "";
             let type = "";
-            console.log('valor de la url:', localUri);
             if (localUri == null || localUri == "") {
                 Alert.alert("Selecciona una imagen");
             } else {
@@ -95,7 +92,6 @@ const ProfileScreen = () => {
                 fileName = localUri.split('/').pop();
                 match = /\.(\w+)$/.exec(fileName);
                 type = match ? `image/${match[1]}` : `image`;
-                console.log(type);
             }
             const formData = new FormData(); //Al abrir la modal, se asignarán los datos a cada input
             formData.append('idCliente', idCliente);
@@ -122,10 +118,8 @@ const ProfileScreen = () => {
             });
 
             const responseText = await response.text();
-            console.log(responseText);
 
             const data = JSON.parse(responseText);
-            console.log(data);
 
             if (data.status) {
                 Alert.alert('Éxito', data.message);

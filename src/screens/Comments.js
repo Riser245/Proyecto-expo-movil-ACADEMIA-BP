@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between', // Espacio entre el botón y el texto
         width: '75%', // Ancho del contenedor para que el contenido no quede al borde
         marginBottom: 20,
-        marginTop: 40,
+        marginTop: 10,
         marginLeft: 15
     },
     text1: {
