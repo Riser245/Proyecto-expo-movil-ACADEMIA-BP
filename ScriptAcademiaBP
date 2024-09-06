@@ -1,0 +1,704 @@
+Script de base de datos:
+
+DROP DATABASE IF EXISTS academiabp_db;
+
+CREATE DATABASE academiabp_db;
+
+USE academiabp_db;
+
+------------------------------------------------------------
+-- niveles de usuario
+CREATE TABLE tb_niveles_administradores(
+id_nivel INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+nivel  VARCHAR(100) NOT NULL
+);
+
+INSERT INTO tb_niveles_administradores (nivel) VALUES('Administrador'), ('Trabajador');
+
+ALTER TABLE tb_niveles_administradores ADD CONSTRAINT u_nivel UNIQUE (nivel);
+
+
+------------------------------------------------------------
+-- administradores
+CREATE TABLE tb_administradores(
+    id_administrador INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    nombre_admistrador  VARCHAR(50) NOT NULL,
+    apellido_administrador VARCHAR(50) NOT NULL,
+    dui_administrador VARCHAR(10) NOT NULL,
+    correo_administrador VARCHAR(100) NOT NULL,
+    telefono_administrador VARCHAR(9) NOT NULL,
+    alias_administrador VARCHAR(100) NOT NULL,
+    clave_administrador VARCHAR(100) NOT NULL,
+    fecha_registro DATE NOT NULL DEFAULT NOW(),
+    foto_administrador VARCHAR(200) NULL,
+    id_nivel INT NOT NULL,
+    estado_adminstrador ENUM('Activo', 'Inactivo') NOT NULL
+);
+
+-- restricciones de administradores
+ALTER TABLE tb_administradores ADD CONSTRAINT fk_nivel_admin 
+FOREIGN KEY(id_nivel) REFERENCES tb_niveles_administradores(id_nivel) 
+ON UPDATE CASCADE 
+ON DELETE CASCADE;
+
+-- restricciones de administradores
+ALTER TABLE tb_administradores ADD CONSTRAINT u_dui_admin UNIQUE(dui_administrador);
+ALTER TABLE tb_administradores ADD CONSTRAINT u_correo_admin UNIQUE(correo_administrador);
+ALTER TABLE tb_administradores ADD CONSTRAINT u_telefono_admin UNIQUE(telefono_administrador);
+ALTER TABLE tb_administradores ADD CONSTRAINT u_alias_admin UNIQUE(alias_administrador);
+-----------------------------------------------------------------------------------------------------------------------------
+
+-- categorias de productos
+CREATE TABLE tb_categorias_productos(
+id_categoria_producto INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+categoria_producto VARCHAR(50) NOT NULL,
+imagen_categoria VARCHAR(100) NOT NULL
+);
+
+ALTER TABLE tb_categorias_productos ADD CONSTRAINT U_categoriaaa UNIQUE(categoria_producto);
+
+------------------------------------------------------------
+CREATE TABLE tb_tallas(
+id_talla INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+talla VARCHAR(20) NOT NULL
+);
+ALTER TABLE tb_tallas ADD CONSTRAINT U_talla UNIQUE(talla);
+
+------------------------------------------------------------
+CREATE TABLE tb_colores(
+id_color INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+color VARCHAR(40) NOT NULL
+);
+ALTER TABLE tb_colores ADD CONSTRAINT U_color UNIQUE(color);
+
+------------------------------------------------------------
+-- productos
+CREATE TABLE tb_productos(
+id_producto INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+id_administrador INT NOT NULL,
+id_categoria_producto INT NOT NULL,
+nombre_producto VARCHAR(50) NOT NULL,
+descripcion_producto VARCHAR(250) NOT NULL,
+precio_producto NUMERIC(8,2) NOT NULL,
+imagen_producto VARCHAR(100) NOT NULL,
+estado_producto ENUM("En venta", "No disponible") NOT NULL,
+fecha_registro DATE NOT NULL default NOW(),
+descuento_producto DECIMAL(4,2) NULL
+);
+
+ALTER TABLE tb_productos ADD CONSTRAINT fk_admin_productos 
+FOREIGN KEY(id_administrador) REFERENCES tb_administradores(id_administrador) 
+ON UPDATE CASCADE 
+ON DELETE CASCADE;
+
+ALTER TABLE tb_productos ADD CONSTRAINT fk_cat_productos 
+FOREIGN KEY (id_categoria_producto) REFERENCES tb_categorias_productos(id_categoria_producto) 
+ON UPDATE CASCADE 
+ON DELETE CASCADE;
+
+-- restricciones de productos
+ALTER TABLE tb_productos ADD CONSTRAINT ch_precio CHECK(precio_producto > 0);
+ALTER TABLE tb_productos ADD CONSTRAINT ch_descuento CHECK(descuento_producto < 100 && descuento_producto >= 0);
+ALTER TABLE tb_productos ADD CONSTRAINT u_producto UNIQUE(nombre_producto);
+
+------------------------------------------------------------
+CREATE TABLE tb_detalleProducto(
+id_detalle_producto INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+id_producto INT NOT NULL,
+id_talla INT NOT NULL,
+id_color INT NOT NULL,
+existencias_producto INT NOT NULL
+);
+
+
+ALTER TABLE tb_detalleProducto ADD CONSTRAINT fk_productos_detalless
+FOREIGN KEY (id_producto) REFERENCES tb_productos(id_producto) 
+ON UPDATE CASCADE 
+ON DELETE CASCADE;
+ALTER TABLE tb_detalleProducto ADD CONSTRAINT fk_tallas_detalles 
+FOREIGN KEY (id_talla) REFERENCES tb_tallas(id_talla) 
+ON UPDATE CASCADE 
+ON DELETE CASCADE;
+ALTER TABLE tb_detalleProducto ADD CONSTRAINT fk_colores_detalles
+FOREIGN KEY (id_color) REFERENCES tb_colores(id_color) 
+ON UPDATE CASCADE 
+ON DELETE CASCADE;
+
+ALTER TABLE tb_detalleProducto ADD CONSTRAINT ch_existencias CHECK(existencias_producto >= 0);
+ALTER TABLE tb_detalleProducto
+ADD CONSTRAINT unique_producto_talla_color UNIQUE (id_producto, id_talla, id_color);
+
+
+--------------------------------
+
+
+-- tabla para los valores de la Academia
+CREATE TABLE tb_valores(
+id_valor INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+nombre_valor VARCHAR(100) NOT NULL,
+descripcion_valor VARCHAR(400) NOT NULL,
+imagen_valor VARCHAR(100) NOT NULL
+);
+
+alter table tb_valores add constraint U_nombre UNIQUE(nombre_valor);
+
+------------------------------------------------------------
+-- tabla para los aliados que tenga la Academia
+CREATE TABLE tb_aliados(
+id_aliado INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+nombre_aliado VARCHAR(100) NOT NULL,
+imagen_aliado VARCHAR(100) NOT NULL
+);
+
+alter table tb_aliados add constraint U_aliado UNIQUE(nombre_aliado);
+
+------------------------------------------------------------
+-- staff, o personal, de la academia
+CREATE TABLE tb_staffs(
+id_staff INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+nombre_staff VARCHAR(100) NOT NULL,
+apellido_staff VARCHAR(100) NOT NULL,
+imagen_staff VARCHAR(200) NOT NULL,
+descripcion_extra VARCHAR(500) NOT NULL
+);
+
+
+------------------------------------------------------------
+CREATE TABLE tb_niveles_entrenamientos(
+id_nivel_entrenamiento INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+nivel_entrenamiento VARCHAR(100) NOT NULL,
+descripcion_nivel VARCHAR(500) NOT NULL,
+imagen_nivel VARCHAR(100) NOT NULL
+);
+
+ALTER TABLE tb_niveles_entrenamientos ADD CONSTRAINT U_nivelentrenamiento UNIQUE(nivel_entrenamiento);
+
+------------------------------------------------------------
+CREATE TABLE tb_horarios_entrenamientos(
+id_horario INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+dia_entrenamiento ENUM('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo') NOT NULL,
+hora_inicio TIME NOT NULL,
+hor_fin TIME NOT NULL
+);
+
+ALTER TABLE tb_horarios_entrenamientos ADD CONSTRAINT ch_horarios CHECK (hora_inicio < hor_fin);
+
+------------------------------------------------------------
+CREATE TABLE tb_lugares_entrenamientos(
+id_lugar INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+nombre_lugar VARCHAR(200) NOT NULL,
+imagen_lugar VARCHAR(100) NOT NULL,
+direccion_lugar VARCHAR(200) NOT NULL,
+URL_lugar varchar(300) NOT NULL
+);
+
+ALTER TABLE tb_lugares_entrenamientos ADD CONSTRAINT U_lugarentrenamiento UNIQUE(nombre_lugar);
+ALTER TABLE tb_lugares_entrenamientos ADD CONSTRAINT U_URLentrenamiento UNIQUE(URL_lugar);
+
+CREATE TABLE tb_horarios_lugares (
+    id_horario_lugar INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    id_horario INT NOT NULL,
+    id_lugar INT NOT NULL,
+    FOREIGN KEY (id_horario) REFERENCES tb_horarios_entrenamientos(id_horario) 
+        ON UPDATE CASCADE 
+        ON DELETE CASCADE,
+    FOREIGN KEY (id_lugar) REFERENCES tb_lugares_entrenamientos(id_lugar) 
+        ON UPDATE CASCADE 
+        ON DELETE CASCADE
+);
+
+------------------------------------------------------------
+
+
+CREATE TABLE tb_dias_pagos(
+id_dia_pago INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+numero_dias INT NOT NULL,
+mensualidad_pagar DECIMAL(8, 2) NOT NULL
+);
+
+ALTER TABLE tb_dias_pagos ADD CONSTRAINT ch_mensualidad CHECK(mensualidad_pagar >= 0);
+ALTER TABLE tb_dias_pagos ADD CONSTRAINT ch_dias CHECK(numero_dias > 0);
+
+
+
+------------------------------------------------------------
+-- categorias de alumnos
+CREATE TABLE tb_categorias_alumnos(
+id_categoria_alumno INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+categoria VARCHAR(30) NOT NULL,
+edad_maxima INT NOT NULL, -- Edad máxima para estar en una categoría
+id_nivel_entrenamiento INT NOT NULL,
+imagen_categoria VARCHAR(100) NOT NULL
+);
+ALTER TABLE tb_categorias_alumnos ADD edad_minima INT NOT NULL;
+
+
+ALTER TABLE tb_categorias_alumnos ADD CONSTRAINT ch_eddad CHECK(edad_maxima > 0);
+ALTER TABLE tb_categorias_alumnos ADD CONSTRAINT ch_eddadd CHECK(edad_minima > 0 AND edad_minima < edad_maxima);
+ALTER TABLE tb_categorias_alumnos ADD CONSTRAINT U_cate UNIQUE(categoria);
+
+ALTER TABLE tb_categorias_alumnos ADD CONSTRAINT fk_nivel_entrenamiento_categoria 
+FOREIGN KEY (id_nivel_entrenamiento) REFERENCES tb_niveles_entrenamientos(id_nivel_entrenamiento) 
+ON UPDATE CASCADE 
+ON DELETE CASCADE;
+
+
+
+------------------------------------------------------------
+
+CREATE TABLE tb_categorias_horarios(
+    id_categoria_horario INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_categoria_alumno INT NOT NULL,
+    id_horario_lugar INT NOT NULL
+);
+
+ALTER TABLE tb_categorias_horarios ADD CONSTRAINT fk_categoria_alumnooos 
+FOREIGN KEY (id_categoria_alumno) REFERENCES tb_categorias_alumnos(id_categoria_alumno) 
+ON UPDATE CASCADE 
+ON DELETE CASCADE;
+
+ALTER TABLE tb_categorias_horarios ADD CONSTRAINT fk_categoria_horariooo 
+FOREIGN KEY (id_horario_lugar) REFERENCES tb_horarios_lugares(id_horario_lugar) 
+ON UPDATE CASCADE 
+ON DELETE CASCADE;
+
+------------------------------------------------------------
+
+
+CREATE TABLE tb_staffs_categorias(
+    id_staff_categorias INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_staff INT NOT NULL,
+    id_categoria_horario INT NOT NULL
+);
+
+
+-- restricciones de staff y categorías de alumnos
+ALTER TABLE tb_staffs_categorias ADD CONSTRAINT fk_staff 
+FOREIGN KEY (id_staff) REFERENCES tb_staffs(id_staff) 
+ON UPDATE CASCADE 
+ON DELETE CASCADE;
+
+ALTER TABLE tb_staffs_categorias ADD CONSTRAINT fk_categoria_alumno 
+FOREIGN KEY (id_categoria_horario) REFERENCES tb_categorias_horarios(id_categoria_horario) 
+ON UPDATE CASCADE 
+ON DELETE CASCADE;
+
+
+
+------------------------------------------------------------
+-- clientes de la tienda en linea
+CREATE TABLE tb_clientes(
+id_cliente INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+nombre_cliente VARCHAR(50) NOT NULL,
+apellido_cliente VARCHAR(50) NOT NULL,
+dui_cliente VARCHAR(10) NOT NULL,
+correo_cliente VARCHAR(100) NOT NULL,
+telefono_cliente varchar(9) NOT NULL,
+direccion_cliente VARCHAR(250) NOT NULL,
+clave_cliente VARCHAR(100) NOT NULL,
+estado_cliente ENUM("Activo", "Inactivo") NOT NULL DEFAULT("Activo"),
+fecha_registro DATE NOT NULL default NOW(),
+foto_cliente VARCHAR(200) NULL
+);
+
+
+
+-- restricciones de clientes
+ALTER TABLE tb_clientes ADD CONSTRAINT u_dui_cliente UNIQUE(dui_cliente);
+ALTER TABLE tb_clientes ADD CONSTRAINT u_correo_cliente UNIQUE(correo_cliente);
+ALTER TABLE tb_clientes ADD CONSTRAINT u_telefono_cliente UNIQUE(telefono_cliente);
+
+------------------------------------------------------------------------------------------
+
+-- alumnos
+CREATE TABLE tb_alumnos(
+id_alumno INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+nombre_alumno VARCHAR(100) NOT NULL,
+apellido_alumno VARCHAR(100) NOT NULL,
+fecha_nacimiento DATE NOT NULL,
+posicion_alumno ENUM('Portero', 'Jugador de campo') NOT NULL,
+id_staff_categorias INT,
+id_dia_pago INT NOT NULL,
+id_cliente INT NOT NULL,
+estado_alumno ENUM('Activo', 'Inactivo', 'Pendiente') NOT NULL DEFAULT('Pendiente')
+-- id_dia_entreno INT NOT NULL
+);
+ALTER TABLE tb_alumnos ADD foto_alumno VARCHAR(200) NULL DEFAULT 'alumno.png';
+ALTER TABLE tb_alumnos ADD fecha_inscripcion DATE NOT NULL DEFAULT NOW();
+
+
+
+ALTER TABLE tb_alumnos ADD CONSTRAINT fk_alumno_categoria FOREIGN KEY(id_staff_categorias) REFERENCES tb_staffs_categorias(id_staff_categorias)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+ALTER TABLE tb_alumnos ADD CONSTRAINT fk_alumnodiaspago FOREIGN KEY(id_dia_pago) REFERENCES tb_dias_pagos(id_dia_pago)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+ALTER TABLE tb_alumnos ADD CONSTRAINT fk_alumnocliente FOREIGN KEY(id_cliente) REFERENCES tb_clientes(id_cliente)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+ALTER TABLE tb_alumnos
+ADD CONSTRAINT check_fecha_nacimiento CHECK (fecha_nacimiento <= CURDATE());
+
+
+------------------------------------------------------------------------------------------
+-- CREATE TABLE tb_alumnos_categorias(
+-- id_alumno_categoria INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+-- id_alumno INT NOT NULL,
+-- id_staff_categorias INT NOT NULL
+-- );
+------------------------------------------------------------------------------------------
+
+-- compras que se realicen
+CREATE TABLE tb_compras(
+id_compra INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+id_cliente INT NOT NULL,
+estado_compra ENUM("Entregada", "Anulada", "Finalizada", "Pendiente") NOT NULL,
+fecha_registro DATE NOT NULL DEFAULT NOW(),
+direccion_compra VARCHAR(250) NOT NULL
+);
+
+
+ALTER TABLE tb_compras ADD CONSTRAINT fk_pedido_cliente FOREIGN KEY(id_cliente) REFERENCES tb_clientes(id_cliente)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+------------------------------------------------------------------------------------------
+
+-- detalles de cada compra
+CREATE TABLE tb_detalles_compras(
+id_detalle_compra INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+id_compra INT NOT NULL,
+id_detalle_producto INT NOT NULL,
+cantidad_producto INT NOT NULL,
+precio_producto DECIMAL(10, 2)
+);
+
+
+-- restricciones de detalles compras
+ALTER TABLE tb_detalles_compras ADD CONSTRAINT fk_orden_detalle FOREIGN KEY(id_compra) REFERENCES tb_compras(id_compra)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+ALTER TABLE tb_detalles_compras ADD CONSTRAINT fk_orden_productos FOREIGN KEY (id_detalle_producto) REFERENCES tb_detalleProducto(id_detalle_producto)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+ALTER TABLE tb_detalles_compras ADD CONSTRAINT ch_cantidadP CHECK(cantidad_producto > 0);
+
+ALTER TABLE tb_detalles_compras ADD CONSTRAINT ch_precio CHECK(precio_producto > 0);
+
+select * from tb_compras;
+select * from tb_productos;
+-------------------------------------
+
+SELECT * FROM tb_detalles_compras;
+
+------------------------------------------------------------------------------------------
+
+        
+-- valoracion de los productos comprados
+CREATE TABLE tb_valoraciones(
+id_valoracion INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+id_detalle_compra INT NOT NULL,
+calificacion_producto INT NULL,
+comentario_producto varchar(250) NULL,
+fecha_valoracion DATE NOT NULL DEFAULT NOW(),
+estado_comentario ENUM("Habilitado", "Deshabilitado") NOT NULL
+);
+        
+
+ALTER TABLE tb_valoraciones ADD CONSTRAINT fk_orden_valoracion FOREIGN KEY (id_detalle_compra) REFERENCES tb_detalles_compras(id_detalle_compra)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+ALTER TABLE tb_valoraciones ADD CONSTRAINT ch_valoracion CHECK(calificacion_producto < 6); -- la mayor calificación será 5
+
+
+------------------------------------------------------------------------------------------
+
+-- pagos de mensualidad
+CREATE TABLE tb_pagos (
+    id_pago INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    fecha_pago DATE NOT NULL DEFAULT NOW(),
+    cuotas_anuales INT, -- se enviará con un procedimiento almacenado
+    cuotas_pendientes INT DEFAULT cuotas_anuales, -- por defecto, igual a cuotas_anuales
+    id_alumno INT NOT NULL, -- hará referencia al alumno al que se le realizará el pago, con la referencia del encargado
+    estado_pago ENUM('Pagado', 'Pendiente de pago') NOT NULL DEFAULT('Pagado')
+);
+
+
+
+ALTER TABLE tb_pagos ADD CONSTRAINT Fk_cliente_pago FOREIGN KEY (id_alumno) REFERENCES tb_alumnos(id_alumno)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+ALTER TABLE tb_pagos ADD CONSTRAINT ch_cuotasAn CHECK(cuotas_anuales >= 0);
+ALTER TABLE tb_pagos ADD CONSTRAINT ch_cuotasAnn CHECK(cuotas_anuales < 13);
+ALTER TABLE tb_pagos ADD CONSTRAINT cuotasPe CHECK(cuotas_pendientes >= 0);
+
+------------------------------------------------------------------------------------------
+
+-- detalles de cada pago
+CREATE TABLE tb_detalles_pagos(
+id_detalle_pago INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+id_pago INT NOT NULL,
+descripcion_pago VARCHAR(200) NOT NULL DEFAULT('Pago de mensualidad'),
+fecha_proximo_pago DATE NOT NULL
+);
+
+ALTER TABLE tb_detalles_pagos ADD CONSTRAINT Fk_detalle_pago FOREIGN KEY (id_pago) REFERENCES tb_pagos(id_pago)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+ALTER TABLE tb_detalles_pagos ADD estado_proximo_pago ENUM('Pendiente de pago', 'Pagado') NOT NULL DEFAULT ('Pendiente de pago');
+
+------------------------------------------------------------------------------------------
+
+-- soporte tecnico
+CREATE TABLE tb_soporte_tecnico(
+id_soporte INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+mensaje VARCHAR(2000) NOT NULL,
+fecha_envio DATE NOT NULL DEFAULT NOW(),
+estado_mensaje ENUM('Pendiente', 'Visto', 'Atendido') NOT NULL,
+id_cliente INT NOT NULL
+);
+
+ALTER TABLE tb_soporte_tecnico ADD CONSTRAINT Fk_cliente_soporte FOREIGN KEY (id_cliente) REFERENCES tb_clientes(id_cliente);
+
+
+---------------------------------------------------------------------------------
+
+show tables;
+
+select * from tb_administradores;
+select * from tb_alumnos;
+select * from tb_categorias_alumnos;
+select * from tb_categorias_productos;
+select * from tb_staffs_categorias;
+select * from tb_clientes;
+select * from tb_detalles_compras;
+select * from tb_detalles_pagos;
+select * from tb_niveles_administradores;
+select * from tb_compras;
+select * from tb_pagos;
+select * from tb_productos;
+select * from tb_soporte_tecnico;
+select * from tb_staffs;
+select * from tb_valoraciones;
+select * from tb_lugares_entrenamientos;
+select * from tb_horarios_entrenamientos;
+
+
+
+-- Trigger y procedimientos
+
+-- Triggers para asignar el precio del producto, y actualizar las existencias del producto
+DELIMITER //
+
+CREATE TRIGGER before_insert_detalles_compras
+BEFORE INSERT ON tb_detalles_compras
+FOR EACH ROW
+BEGIN
+    DECLARE v_precio_producto DECIMAL(8,2);
+
+    -- Obtener el precio del producto desde tb_productos
+    SELECT precio_producto 
+    INTO v_precio_producto
+    FROM tb_productos
+    WHERE id_producto = (SELECT id_producto FROM tb_detalleProducto WHERE id_detalle_producto = NEW.id_detalle_producto);
+
+    -- Asignar el precio del producto al nuevo registro de tb_detalles_compras
+    SET NEW.precio_producto = v_precio_producto;
+END
+//
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER after_insert_detalles_compras
+AFTER INSERT ON tb_detalles_compras
+FOR EACH ROW
+BEGIN
+    DECLARE v_existencias_producto INT;
+
+    -- Obtener las existencias del producto desde tb_detalleProducto
+    SELECT existencias_producto 
+    INTO v_existencias_producto
+    FROM tb_detalleProducto
+    WHERE id_detalle_producto = NEW.id_detalle_producto;
+
+    -- Validar que no se haya reducido a un número negativo
+    IF (v_existencias_producto - NEW.cantidad_producto) < 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'No hay suficientes existencias para el producto con ID ';
+    ELSE
+        -- Actualizar las existencias del producto en tb_detalleProducto
+        UPDATE tb_detalleProducto
+        SET existencias_producto = v_existencias_producto - NEW.cantidad_producto
+        WHERE id_detalle_producto = NEW.id_detalle_producto;
+    END IF;
+END
+//
+
+DELIMITER ;
+
+-- Procedimiento para asignar una categoria a un alumno a partir de su edad
+
+DELIMITER //
+
+CREATE PROCEDURE sp_insert_alumno(
+    IN p_nombre_alumno VARCHAR(100),
+    IN p_apellido_alumno VARCHAR(100),
+    IN p_fecha_nacimiento DATE,
+    IN p_posicion_alumno ENUM('Portero', 'Jugador de campo'),
+    IN p_id_dia_pago INT,
+    IN p_id_cliente INT,
+    IN p_foto_alumno VARCHAR(200)
+)
+BEGIN
+    DECLARE edad INT;
+    DECLARE id_categoria INT;
+    DECLARE new_id_alumno INT;
+
+    -- Insertar el nuevo alumno
+    INSERT INTO tb_alumnos(nombre_alumno, apellido_alumno, fecha_nacimiento, posicion_alumno, id_dia_pago, id_cliente, foto_alumno)
+    VALUES(p_nombre_alumno, p_apellido_alumno, p_fecha_nacimiento, p_posicion_alumno, p_id_dia_pago, p_id_cliente, p_foto_alumno);
+
+    -- Obtener el ID del nuevo alumno insertado
+    SET new_id_alumno = LAST_INSERT_ID();
+
+    -- Calcular la edad del alumno
+    SET edad = TIMESTAMPDIFF(YEAR, p_fecha_nacimiento, CURDATE());
+
+    -- Buscar el id_categoria que contenga la edad del alumno
+    SELECT sc.id_staff_categorias INTO id_categoria
+    FROM tb_staffs_categorias sc
+    JOIN tb_categorias_horarios ca ON sc.id_categoria_horario = ca.id_categoria_horario
+     JOIN tb_categorias_alumnos cal ON ca.id_categoria_alumno = cal.id_categoria_alumno
+    WHERE edad >= cal.edad_minima AND edad <= cal.edad_maxima
+    LIMIT 1;
+
+    -- Actualizar el registro del alumno con el id_categoria encontrado
+    UPDATE tb_alumnos
+    SET id_staff_categorias = id_categoria
+    WHERE id_alumno = new_id_alumno;
+END//
+
+DELIMITER ;
+
+SELECT * FROM tb_staffs_categorias
+
+
+DELIMITER //
+
+CREATE PROCEDURE insertar_pago(
+    IN p_id_alumno INT
+)
+BEGIN
+    -- Definir variables locales
+    DECLARE v_fecha_actual DATE;
+    DECLARE v_mes_anterior DATE;
+    DECLARE v_cuotas_anuales INT;
+
+    -- Obtener la fecha actual
+    SET v_fecha_actual = CURDATE();
+
+    -- Calcular el mes anterior
+    SET v_mes_anterior = DATE_SUB(v_fecha_actual, INTERVAL 12 MONTH);
+
+    -- Calcular las cuotas anuales
+    SET v_cuotas_anuales = MONTH(v_mes_anterior);
+
+    -- Iniciar la transacción
+    START TRANSACTION;
+
+    -- Insertar el pago en la tabla tb_pagos
+    INSERT INTO tb_pagos (fecha_pago, cuotas_anuales, cuotas_pendientes, id_alumno)
+    VALUES (v_fecha_actual, v_cuotas_anuales, v_cuotas_anuales, p_id_alumno);
+
+    -- Confirmar la transacción
+    COMMIT;
+END //
+
+DELIMITER ;
+
+-- Procedimiento para calcular la fecha del proximo pago automaticamente
+
+DELIMITER //
+
+CREATE PROCEDURE insertar_detalle_pago(
+    IN id_pago_param INT,
+    IN descripcion_pago_param VARCHAR(200),
+    OUT id_detalle_pago_result INT
+)
+BEGIN
+    DECLARE fecha_pago_actual DATE;
+    DECLARE fecha_proximo_pago_calculada DATE;
+
+    -- Obtener la fecha_pago actual del pago correspondiente
+    SELECT fecha_pago INTO fecha_pago_actual
+    FROM tb_pagos
+    WHERE id_pago = id_pago_param;
+
+    -- Calcular la fecha_proximo_pago un mes después de fecha_pago_actual
+    SET fecha_proximo_pago_calculada = DATE_ADD(fecha_pago_actual, INTERVAL 1 MONTH);
+
+    -- Insertar el detalle de pago en tb_detalles_pagos
+    INSERT INTO tb_detalles_pagos (id_pago, descripcion_pago, fecha_proximo_pago)
+    VALUES (id_pago_param, descripcion_pago_param, fecha_proximo_pago_calculada);
+
+    -- Obtener el ID del detalle de pago recién insertado
+    SELECT LAST_INSERT_ID() INTO id_detalle_pago_result;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER validar_edad_alumno
+BEFORE INSERT ON tb_alumnos
+FOR EACH ROW
+BEGIN
+    DECLARE edad_alumno INT;
+    SET edad_alumno = TIMESTAMPDIFF(YEAR, NEW.fecha_nacimiento, CURDATE());
+    
+    IF edad_alumno < 2 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'La fecha de nacimiento del alumno indica que debe tener al menos dos años de edad.';
+    END IF;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER after_insert_pago
+AFTER INSERT ON tb_pagos
+FOR EACH ROW
+BEGIN
+    -- Actualizar el estado del próximo pago a 'Pagado' si la fecha coincide con la fecha de pago actual
+    UPDATE tb_detalles_pagos dp
+    JOIN tb_pagos p ON dp.id_pago = p.id_pago
+    SET dp.estado_proximo_pago = 'Pagado'
+    WHERE p.id_alumno = NEW.id_alumno
+      AND dp.fecha_proximo_pago = NEW.fecha_pago;
+END//
+
+DELIMITER ;
+
+
+CREATE VIEW vista_dias_pago AS
+SELECT 
+    id_dia_pago, 
+    CONCAT(
+        CASE 
+            WHEN numero_dias < 2 THEN CONCAT(numero_dias, ' Día') -- Cuando el valor de numero_dias es menor a 2 (es decir que es 1), el texto que sigue al número es Día
+            ELSE CONCAT(numero_dias, ' Días') -- Sino, el texto será Días 
+        END, 
+        ', $', mensualidad_pagar
+    ) AS dia_pago
+FROM tb_dias_pagos
+WHERE mensualidad_pagar > 0;
+
+
+
+
