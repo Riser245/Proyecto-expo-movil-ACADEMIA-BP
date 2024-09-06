@@ -4,6 +4,8 @@ import { useRoute, useNavigation } from '@react-navigation/native'; // Importa u
 import * as Constantes from '../utils/constantes';
 import Comments from '../components/CommentsCards/CommentsCards';
 import { useFocusEffect } from '@react-navigation/native';
+import GoBackProduct from '../components/Buttons/GoBackButton';
+import TopBar from '../components/TopBar/TopBar';
 
 const CommentsProduct = () => {
     const ip = Constantes.IP;
@@ -11,12 +13,28 @@ const CommentsProduct = () => {
     const navigation = useNavigation(); // Usa useNavigation para obtener el objeto de navegación
 
     const { idProducto } = route.params;
-
+    const [nombre, setNombre] = useState(null);
     const [drawerVisible, setDrawerVisible] = useState(false);
     const [dataComments, setDataComments] = useState([]);
 
     const volverInicio = () => {
         setDrawerVisible(true);
+    };
+
+    const getUser = async () => {
+        try {
+            const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=getUser`, {
+                method: 'GET'
+            });
+            const data = await response.json();
+            if (data.status) {
+                setNombre(data.username);
+            } else {
+                Alert.alert('Error', data.error);
+            }
+        } catch (error) {
+            Alert.alert('Error', 'Ocurrió un error al obtener el usuario');
+        }
     };
 
     const getValoraciones = async (idproducto) => {
@@ -46,14 +64,16 @@ const CommentsProduct = () => {
 
     useFocusEffect(
         React.useCallback(() => {
+            getUser();
             getValoraciones(idProducto);
         }, [idProducto])
     );
     return (
         <View style={styles.container}>
-
+           <TopBar nombre={nombre} />
             <SafeAreaView style={styles.containerFlat}>
                 <View style={styles.titleContainer}>
+                <GoBackProduct/>
                     <Text style={styles.text1}>Valoraciones</Text>
                 </View>
                 <FlatList
@@ -90,10 +110,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     titleContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
+        flexDirection: 'row', // Organiza el botón y el texto en una fila
+        alignItems: 'center', // Alinea verticalmente el botón y el texto
+        justifyContent: 'space-between', // Espacio entre el botón y el texto
+        width: '75%', // Ancho del contenedor para que el contenido no quede al borde
         marginBottom: 20,
         marginTop: 40,
+        marginLeft: 15
     },
     text1: {
         color: 'black',

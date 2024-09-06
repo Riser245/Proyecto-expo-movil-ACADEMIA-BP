@@ -41,12 +41,6 @@ export default function DetailProductCard({ ip, imagenProducto, idProducto, nomb
         <Text style={styles.cartButtonText}>Agregar al carrito</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.cartButton}
-        onPress={accionBotonProducto2}>
-        <FontAwesome name="arrow-left" size={24} color="white" />
-        <Text style={styles.cartButtonText} >Regresar a productos</Text>
-        </TouchableOpacity>
 
     </View>
 
