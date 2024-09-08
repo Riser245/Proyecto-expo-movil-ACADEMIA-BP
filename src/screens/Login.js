@@ -93,7 +93,7 @@ export default function Login({ navigation }) {
             <View style={styles.overlay}>
                 <Text style={styles.texto}>Iniciar Sesión</Text>
                 <Input
-                    placeHolder='Usuario'
+                    placeHolder='Correo'
                     setValor={usuario}
                     setTextChange={setUsuario}
                 />

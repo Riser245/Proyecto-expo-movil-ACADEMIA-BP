@@ -69,15 +69,16 @@ export default function MisCompras() {
         }
     };
 
-    useEffect(() => {
-        getCompras();
-    }, [searchTerm]);
-
     useFocusEffect(
         React.useCallback(() => {
+            // Llamar a getUser cuando el componente recibe el foco
             getUser();
-        }, [])
+    
+            // Llamar a getCompras cuando cambie el término de búsqueda
+            getCompras();
+        }, [searchTerm])
     );
+    
 
     return (
         <View style={styles.container}>
