@@ -59,7 +59,10 @@ export default function Home({ navigation }) {
             <TopBar nombre={nombre} />
 
             <SafeAreaView style={styles.containerFlat}>
-                <Text style={styles.title}>¡Bienvenido!</Text>
+                <Text style={styles.title}>
+                    ¡Bienvenido <Text style={styles.nombre}>{nombre}</Text>!
+                </Text>
+
                 <FlatList
                     data={dataEntrenamientos}
                     keyExtractor={(item) => item.id_lugar.toString()}
@@ -100,13 +103,18 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
     },
-    title:{
+    title: {
         textAlign: 'center',
-        fontSize: 30,
-        fontWeight: 'bold'
+        fontSize: 25,
+        fontWeight: 'bold',
+    },
+    nombre: {
+        fontSize: 20,
+        fontWeight: 'normal',
+        color: '#F99911',
     },
     item: {
-        width:  0.9,
+        width: 0.9,
         height: 300,
         padding: 10,
         marginVertical: 8,
