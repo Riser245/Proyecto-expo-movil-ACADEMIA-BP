@@ -34,6 +34,8 @@ const ModalValoracion = ({ visible, cerrarModal, idDetalle, calificacion, coment
         if (data.status) {
           Alert.alert('Valoración enviada correctamente');
           cerrarModal(false);
+          setRating('')
+          setComment('')
         } else {
           Alert.alert('Error', data.error);
         }
