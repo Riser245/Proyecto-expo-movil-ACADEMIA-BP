@@ -93,7 +93,7 @@ export default function MisCompras() {
                     <Ionicons name="search" size={20} color="#ccc" style={styles.icon} />
                     <TextInput
                         style={styles.searchInput}
-                        placeholder="Producto, fecha de compra o ID de la compra"
+                        placeholder="Nombre del producto o fecha de compra"
                         value={searchTerm}
                         onChangeText={setSearchTerm}
                     />
