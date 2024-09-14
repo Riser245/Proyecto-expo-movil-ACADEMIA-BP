@@ -28,7 +28,7 @@ const TabNavigation = () => {
                     } else if (route.name === 'Settings') {
                         iconName = focused ? 'bag' : 'bag-outline';
                     } else if (route.name === 'Cart') {
-                        iconName = focused ? 'bag' : 'cart-outline';
+                        iconName = focused ? 'cart' : 'cart-outline';
                     } else if (route.name === 'Login') {
                         iconName = focused ? 'person' : 'person-outline';
                     } else if (route.name === 'SignUp') {
