@@ -32,12 +32,12 @@ const slides = [
 
 const Slide = ({ item }) => {
     return (
-        <View style={{ alignItems: 'center' }}>
+        <View style={styles.slideContainer}>
             <Image
                 source={item?.image}
-                style={{ height: '75%', width, resizeMode: 'contain' }}
+                style={styles.image}
             />
-            <View>
+            <View style={styles.textContainer}>
                 <Text style={styles.title}>{item?.title}</Text>
                 <Text style={styles.description}>{item?.subtitle}</Text>
             </View>
@@ -62,23 +62,11 @@ const OnboardingScreen = ({ navigation }) => {
             setCurrentSlideIndex(currentSlideIndex + 1);
         }
     };
+
     const Footer = () => {
         return (
-            <View
-                style={{
-                    height: height * 0.15,
-                    justifyContent: 'space-between',
-                    paddingHorizontal: 20,
-                    backgroundColor: COLORS.white
-                }}>
-                {/* Indicator container */}
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        marginTop: 10,
-                    }}>
-                    {/* Render indicator */}
+            <View style={styles.footerContainer}>
+                <View style={styles.indicatorContainer}>
                     {slides.map((_, index) => (
                         <View
                             key={index}
@@ -93,14 +81,13 @@ const OnboardingScreen = ({ navigation }) => {
                     ))}
                 </View>
 
-                {/* Render buttons */}
                 <View style={{ marginBottom: 30 }}>
                     {currentSlideIndex == slides.length - 1 ? (
                         <View style={{ height: 50 }}>
                             <TouchableOpacity
                                 style={styles.btn}
                                 onPress={() => navigation.replace('Login')}>
-                                <Text style={{ fontWeight: 'bold', fontSize: 15, color: COLORS.white }}>
+                                <Text style={styles.btnText}>
                                     Siguiente
                                 </Text>
                             </TouchableOpacity>
@@ -112,12 +99,7 @@ const OnboardingScreen = ({ navigation }) => {
                                 activeOpacity={0.8}
                                 onPress={goToNextSlide}
                                 style={styles.btn}>
-                                <Text
-                                    style={{
-                                        fontWeight: 'bold',
-                                        fontSize: 15,
-                                        color: COLORS.white,
-                                    }}>
+                                <Text style={styles.btnText}>
                                     Siguiente
                                 </Text>
                             </TouchableOpacity>
@@ -134,7 +116,7 @@ const OnboardingScreen = ({ navigation }) => {
             <FlatList
                 ref={ref}
                 onMomentumScrollEnd={updateCurrentSlideIndex}
-                contentContainerStyle={{ height: height * 0.75 }}
+                contentContainerStyle={{ height: height * 0.85 }}
                 showsHorizontalScrollIndicator={false}
                 horizontal
                 data={slides}
@@ -147,11 +129,20 @@ const OnboardingScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+    slideContainer: {
+        alignItems: 'center',
+        width,
+    },
+    textContainer: {
+        position: 'absolute',
+        bottom: 140,
+        width: '80%',
+        alignItems: 'center',
+    },
     description: {
         color: COLORS.black,
         fontSize: 13,
-        marginTop: 10,
-        maxWidth: '70%',
+        marginTop: 1,
         textAlign: 'center',
         lineHeight: 23,
     },
@@ -159,16 +150,20 @@ const styles = StyleSheet.create({
         color: COLORS.black,
         fontSize: 22,
         fontWeight: 'bold',
-        marginTop: 20,
         textAlign: 'center',
     },
     image: {
-        height: '100%',
+        height: '60%', // Reducir la altura de la imagen para dar más espacio a los textos
         width: '100%',
         resizeMode: 'contain',
     },
+    indicatorContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: 5,
+    },
     indicator: {
-        height: 2.5,
+        height: 2.0,
         width: 20,
         backgroundColor: 'grey',
         marginHorizontal: 3,
@@ -182,5 +177,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    btnText: {
+        fontWeight: 'bold',
+        fontSize: 15,
+        color: COLORS.white,
+    },
+    footerContainer: {
+        height: height * 0.15,
+        justifyContent: 'space-between',
+        paddingHorizontal: 20,
+        backgroundColor: COLORS.white,
+    },
 });
+
 export default OnboardingScreen;
