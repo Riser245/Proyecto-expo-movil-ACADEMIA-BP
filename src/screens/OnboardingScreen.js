@@ -19,14 +19,14 @@ const slides = [
     {
         id: '1',
         image: require('../imagenes/equipo.png'),
-        title: 'Nuestros equipos competitivos',
-        subtitle: 'Baby Soccer es el equipo mayor de la Academia BP',
+        title: '¡Acabas de ingresar a la app de La Academia BP!',
+        subtitle: 'Bienvenido, usuario. Descubre todo lo relacionado a nuestros productos.',
     },
     {
         id: '2',
         image: require('../imagenes/equipo.png'),
-        title: 'La primera aficionado',
-        subtitle: 'la Primera Aficionado categoría oficial de la ADFA',
+        title: 'Esperamos que tengas una buena experiencia',
+        subtitle: 'Y puedas adquirir los productos que más te gusten y te identifiquen con nosotros.',
     },
 ];
 
