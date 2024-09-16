@@ -40,16 +40,24 @@ const SplashScreen = ({ navigation }) => {
 const Onboard = () => {
   const [isAppFirstLaunched, setIsAppFirstLaunched] = React.useState(null);
 
-  React.useEffect(async () => {
-      const appData = await AsyncStorage.getItem('isAppFirstLaunched');
-      if (appData == null) {
+  useEffect(() => {
+    // Definir una función asíncrona dentro de useEffect
+    const checkAppLaunch = async () => {
+      try {
+        const appData = await AsyncStorage.getItem('isAppFirstLaunched');
+        if (appData == null) {
           setIsAppFirstLaunched(true);
           AsyncStorage.setItem('isAppFirstLaunched', 'false');
-      } else {
+        } else {
           setIsAppFirstLaunched(false);
+        }
+      } catch (error) {
+        console.error(error);
       }
+    };
 
-
+    // Llamar a la función asíncrona
+    checkAppLaunch();
   }, []);
   return (
       isAppFirstLaunched != null && (
