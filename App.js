@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Login from './src/screens/Login';
-import Onboard from './src/screens/OnboardingScreen'
+import OnboardingScreen from './src/screens/OnboardingScreen';
 import SignUp from './src/screens/SignUp';
 import TabNavigation from './src/navigation/tabNavigation';
 import MyComponent from './src/screens/ProductScreen';
@@ -36,12 +36,34 @@ const SplashScreen = ({ navigation }) => {
   );
 };
 //
-const App = () => {
+
+const Onboard = () => {
+  const [isAppFirstLaunched, setIsAppFirstLaunched] = React.useState(null);
+
+  React.useEffect(async () => {
+      const appData = await AsyncStorage.getItem('isAppFirstLaunched');
+      if (appData == null) {
+          setIsAppFirstLaunched(true);
+          AsyncStorage.setItem('isAppFirstLaunched', 'false');
+      } else {
+          setIsAppFirstLaunched(false);
+      }
+
+
+  }, []);
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Onboard">
+      isAppFirstLaunched != null && (
+          <NavigationContainer>
+              <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="OnboardingScreen">
+                  {isAppFirstLaunched && (
+                      <Stack.Screen
+                          name="OnboardingScreen"
+                          component={OnboardingScreen}
+                      />
+                  )}
+                  <Stack.Screen name="LoginScreen" component={Login} />
         <Stack.Screen name="Splash" component={SplashScreen} />
-        <Stack.Screen name="Onboard" component={Onboard} />
+        <Stack.Screen name="Onboard" component={OnboardingScreen} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="Home" component={TabNavigation} /> 
@@ -51,11 +73,13 @@ const App = () => {
         <Stack.Screen name="VerifyCode" component={Verificar}/>
         <Stack.Screen name="UpdatePassword" component={Actualizar}/>
         <Stack.Screen name="CommentsProduct" component={CommentsProduct}/>
-
-      </Stack.Navigator>
-    </NavigationContainer>
+              </Stack.Navigator>
+          </NavigationContainer>
+      )
   );
 };
+
+
 
 const styles = StyleSheet.create({
   splashContainer: {
@@ -70,4 +94,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default Onboard;
