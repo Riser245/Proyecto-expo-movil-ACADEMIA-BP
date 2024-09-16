@@ -24,6 +24,7 @@ export default function SignUp({ navigation }) {
         navigation.navigate('Login');
     };
 
+    //Método para manejar el ingreso de los datos del cliente
     const handleCreate = async () => {
         try {
             const fechaMinima = new Date();
