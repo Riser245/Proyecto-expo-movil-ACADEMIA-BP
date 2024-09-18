@@ -62,7 +62,7 @@ const Carrito = ({ navigation }) => {
             }
         } catch (error) {
             console.error(error, "Error desde Catch");
-            Alert.alert('Error', 'Ocurrió un error al listar las categorías');
+            Alert.alert('Error', 'Ocurrió un error al listar los detalles');
         }
     };
 
