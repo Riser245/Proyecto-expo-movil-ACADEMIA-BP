@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/plh1.png",
       "resizeMode": "contain",
-      "backgroundColor": "black"
+      "backgroundColor": "#FFFFFF"
     },
     "ios": {
       "supportsTablet": true
@@ -17,11 +17,17 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-iconBP.png",
-        "backgroundColor": "black"
-      }
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.ivansalguero.EXPO"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "93bb24c8-2638-4123-81e5-919e06131929"
+      }
     }
   }
 }

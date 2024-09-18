@@ -94,10 +94,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'black',
+    backgroundColor: '#000000',
   },
   splashText: {
-    color: 'white',
+    color: '#FFFFFF',
     fontSize: 24,
   },
 });
