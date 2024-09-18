@@ -38,8 +38,6 @@ export default function MyComponent({ navigation }) {
 
     const handleValoracion = (idProducto) => {
         navigation.navigate('CommentsProduct', { idProducto: idProducto })
-
-        console.log(idProducto)
     };
 
     //Obtenemos los productos de la categoría seleccionada
