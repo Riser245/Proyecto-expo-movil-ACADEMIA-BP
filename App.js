@@ -19,7 +19,7 @@ const Stack = createStackNavigator();
 const SplashScreen = ({ navigation }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.replace('Onboard');
+      navigation.replace('Login');
     }, 3000); // 3 segundos
 
     return () => clearTimeout(timer);

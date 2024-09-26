@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import * as Constantes from '../../utils/constantes';
+import { useFocusEffect } from '@react-navigation/native';
+import React from 'react';
 
 const useAuth = () => {
     const [isModalVisible, setModalVisible] = useState(false);
@@ -55,9 +57,11 @@ const useAuth = () => {
         }
     };
 
-    useEffect(() => {
-        getUser();
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            getUser();
+        }, [])
+    );
 
     return {
         getUser,
