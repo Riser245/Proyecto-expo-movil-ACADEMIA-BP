@@ -8,6 +8,8 @@ import CarritoCard from '../components/CartCard/CartCard';
 import ModalEditarCantidad from '../components/Modales/ModalEditarCantidad';
 import TopBar from '../components/TopBar/TopBar';
 import useAuth from '../components/TopBar/Auth';
+import CustomAlert from '../components/CustomAlert/CustomAlert';
+import Error from '../imagenes/Error.png';
 
 const Carrito = ({ navigation }) => {
 
@@ -18,10 +20,9 @@ const Carrito = ({ navigation }) => {
     const [cantidadProductoCarrito, setCantidadProductoCarrito] = useState(0);
     const [modalVisible, setModalVisible] = useState(false);
     const ip = Constantes.IP;
+    const [isAlertVisible, setAlertVisible] = useState(false);
+    const [alertMessage, setAlertMessage] = useState(''); // Para manejar el mensaje de error.
 
-    const backProducts = () => {
-        navigation.navigate('Productos');
-    };
 
     useFocusEffect(
         React.useCallback(() => {
@@ -40,12 +41,15 @@ const Carrito = ({ navigation }) => {
             if (data.status) {
                 setNombre(data.username);
             } else {
-                Alert.alert('Error', data.error);
+                setAlertMessage(data.error);
+                setAlertVisible(true);
             }
         } catch (error) {
-            Alert.alert('Error', 'Ocurrió un error al obtener el usuario');
+            setAlertMessage('Ocurrió un error al obtener el usuario');
+            setAlertVisible(true);  // Muestra la alerta cuando hay un error
         }
     };
+    
 
     //Obtenemos los datos del carrito
     const getDetalleCarrito = async () => {
@@ -58,11 +62,12 @@ const Carrito = ({ navigation }) => {
             if (data.status) {
                 setDataDetalleCarrito(data.dataset);
             } else {
-                console.log("No hay detalles del carrito disponibles");
+                setAlertMessage('No hay productos dentro del carrito');
+                setAlertVisible(true);  // Muestra la alerta cuando hay un error
             }
         } catch (error) {
-            console.error(error, "Error desde Catch");
-            Alert.alert('Error', 'Ocurrió un error al listar los detalles');
+            setAlertMessage('Ocurrió un error al obtener los detalles del carrito');
+            setAlertVisible(true);  // Muestra la alerta cuando hay un error
         }
     };
 
@@ -123,6 +128,14 @@ const Carrito = ({ navigation }) => {
         <View style={styles.container}>
             <TopBar nombre={nombre} />
 
+            {/* Mostrar alerta personalizada */}
+            {isAlertVisible && (
+            <CustomAlert
+                message={alertMessage}
+                imageSource={Error}  // Aquí usas la imagen de error que mencionaste
+                onClose={() => setAlertVisible(false)}  // Función para cerrar la alerta
+            />
+            )}
 
             <ModalEditarCantidad
                 setModalVisible={setModalVisible}
@@ -160,10 +173,6 @@ const Carrito = ({ navigation }) => {
                         accionBoton={finalizarPedido}
                     />
                 )}
-                <Buttons
-                    textoBoton='Regresar a productos'
-                    accionBoton={backProducts}
-                />
             </View>
         </View>
 
