@@ -1,8 +1,10 @@
 // components/CustomAlert.js
 import React from 'react';
 import { Modal, View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import Buttons from '../Buttons/Button';
+import Error from '../../imagenes/Error.png';
 
-const CustomAlert = ({ visible, onClose, message, imageSource }) => {
+const CustomAlertError = ({ visible, onClose, message, imageSource }) => {
   return (
     <Modal
       transparent={true}
@@ -11,11 +13,13 @@ const CustomAlert = ({ visible, onClose, message, imageSource }) => {
     >
       <View style={styles.overlay}>
         <View style={styles.container}>
-          <Image source={imageSource} style={styles.image} />
+          <Image source={Error} style={styles.image} />
           <Text style={styles.message}>{message}</Text>
-          <TouchableOpacity onPress={onClose} style={styles.button}>
-            <Text style={styles.buttonText}>Cerrar</Text>
-          </TouchableOpacity>
+          
+          <Buttons
+          textoBoton={"Cerrar"}
+          accionBoton={onClose}
+          />
         </View>
       </View>
     </Modal>
@@ -52,18 +56,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: '#333',
   },
-  button: {
-    backgroundColor: '#007bff',
-    padding: 10,
-    borderRadius: 5,
-    width: '80%',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
 });
 
-export default CustomAlert;
+export default CustomAlertError;
