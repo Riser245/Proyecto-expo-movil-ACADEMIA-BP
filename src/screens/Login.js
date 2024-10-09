@@ -3,12 +3,17 @@ import { StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground } from
 import Input from '../components/Inputs/Inputs';
 import Buttons from '../components/Buttons/Button';
 import * as Constantes from '../utils/constantes';
+import CustomAlertExito from '../components/CustomAlert/CustomAlertSuccess';
+import CustomAlertError from '../components/CustomAlert/CustomAlertError';
 
 export default function Login({ navigation }) {
     const ip = Constantes.IP;
     const [isContra, setIsContra] = useState(true);
     const [usuario, setUsuario] = useState('');
     const [contrasenia, setContrasenia] = useState('');
+    const [errorVisible, setErrorVisible] = useState(false);
+    const [successVisible, setSuccessVisible] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
 
     //Método que se ejecuta al iniciar la aplicación,
     //Cerrando la sesión del usuario si no está activa
@@ -21,9 +26,9 @@ export default function Login({ navigation }) {
             const data = await response.json();
             if (data.status === 1) {
                 cerrarSesion();
-                console.log("Se eliminó la sesión");
+                
             } else {
-                console.log("No hay sesión activa");
+                
                 return;
             }
         } catch (error) {
@@ -40,18 +45,24 @@ export default function Login({ navigation }) {
             });
             const data = await response.json();
             if (data.status) {
-                console.log("Sesión Finalizada");
+                setAlertMessage('Sesión cerrada con éxito');
+                setSuccessVisible(true);  // Muestra la alerta de éxito
             } else {
-                console.log('No se pudo eliminar la sesión');
+                setAlertMessage('No se pudo cerrar la sesión');
+                setErrorVisible(true);  // Muestra la alerta de error
             }
         } catch (error) {
-            console.error(error, "Error desde Catch");
-            Alert.alert('Error', 'Ocurrió un error al cerrar sesión');
+            
+            setAlertMessage('No se pudo cerrar la sesión. Error.');
+            setErrorVisible(true);  // Muestra la alerta de error
         }
     };
 
     //Método para validar el usuario y la contraseña ingresada
     const handlerLogin = async () => {
+
+        setSuccessVisible(false);
+            setErrorVisible(false);
         try {
             const formData = new FormData();
             formData.append('correoCliente', usuario);
@@ -66,9 +77,16 @@ export default function Login({ navigation }) {
             if (data.status) {
                 setContrasenia('');
                 setUsuario('');
-                navigation.navigate('Home');
+                setAlertMessage('¡Inicio de sesión exitoso!');
+                setSuccessVisible(true);  // Muestra la alerta de éxito
+
+                setTimeout(() => {
+                    navigation.navigate('Home');
+                }, 1000);
+                
             } else {
-                Alert.alert('Error sesión', data.error);
+                setAlertMessage('Error al iniciar sesión');
+                setErrorVisible(true);  // Muestra la alerta de error
             }
         } catch (error) {
             console.error(error, "Error desde Catch");
@@ -91,6 +109,18 @@ export default function Login({ navigation }) {
     return (
         <ImageBackground source={require('../imagenes/inicio.png')} style={styles.background}>
             <View style={styles.overlay}>
+
+            <CustomAlertError
+                visible={errorVisible}
+                onClose={() => setErrorVisible(false)}
+                message={alertMessage}
+            />
+            <CustomAlertExito
+                visible={successVisible}
+                onClose={() => setSuccessVisible(false)}
+                message={alertMessage}
+            />
+
                 <Text style={styles.texto}>Iniciar Sesión</Text>
                 <Input
                     placeHolder='Correo'

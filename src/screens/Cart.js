@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, FlatList, Alert, Image, TouchableOpacity, Modal } from 'react-native';
+import { Text, View, StyleSheet, FlatList, Alert } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import Constants from 'expo-constants';
 import * as Constantes from '../utils/constantes';
 import Buttons from '../components/Buttons/Button';
 import CarritoCard from '../components/CartCard/CartCard';
@@ -10,11 +9,10 @@ import TopBar from '../components/TopBar/TopBar';
 import useAuth from '../components/TopBar/Auth';
 import CustomAlertError from '../components/CustomAlert/CustomAlertError';
 import CustomAlertExito from '../components/CustomAlert/CustomAlertSuccess';
+import ModalMetodoPago from '../components/MetodosPago/MetodosPago'; // El modal para seleccionar método de pago
 
 const Carrito = ({ navigation }) => {
-
-    const { isModalVisible, handleLogout, toggleModal } = useAuth();
-    const [nombre, setNombre] = useState(null);
+    const { nombre, isModalVisible, handleLogout, toggleModal } = useAuth();
     const [dataDetalleCarrito, setDataDetalleCarrito] = useState([]);
     const [idDetalle, setIdDetalle] = useState(null);
     const [cantidadProductoCarrito, setCantidadProductoCarrito] = useState(0);
@@ -23,98 +21,96 @@ const Carrito = ({ navigation }) => {
     const [errorVisible, setErrorVisible] = useState(false);
     const [successVisible, setSuccessVisible] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
-    const [modalVisible2, setModalVisible2] = useState(false);
-
-
-
+    const [metodoPago, setMetodoPago] = useState(null); // Cambia a un objeto
+    const [modalMetodoPagoVisible, setModalMetodoPagoVisible] = useState(false);
 
     useFocusEffect(
         React.useCallback(() => {
             getDetalleCarrito();
-            getUser();
         }, [])
     );
 
-
-    const getUser = async () => {
-        try {
-            const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/cliente.php?action=getUser`, {
-                method: 'GET'
-            });
-            const data = await response.json();
-            if (data.status) {
-                setNombre(data.username);
-            } else {
-                setAlertMessage(data.error);
-                setErrorVisible(true);  // Mostrar alerta de error
-            }
-        } catch (error) {
-            setAlertMessage('Ocurrió un error al obtener el usuario');
-            setErrorVisible(true);  // Mostrar alerta de error
-        }
-    };
-
-    //Obtenemos los datos del carrito
     const getDetalleCarrito = async () => {
         try {
-            // Reinicia el estado de las alertas antes de hacer la petición
             setSuccessVisible(false);
             setErrorVisible(false);
-    
+
             const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/compras.php?action=readDetail`, {
                 method: 'GET',
             });
             const data = await response.json();
-    
+
             if (data.status) {
                 setDataDetalleCarrito(data.dataset);
                 setAlertMessage('¡Ya tienes productos dentro del carrito!');
-                setSuccessVisible(true);  // Muestra la alerta de éxito
+                setSuccessVisible(true);
             } else {
                 setAlertMessage('Aún no has agregado productos al carrito');
-                setErrorVisible(true);  // Muestra la alerta de error
+                setErrorVisible(true);
             }
         } catch (error) {
             setAlertMessage('Ocurrió un error al listar los detalles.');
-            setErrorVisible(true);  // Muestra la alerta de error
+            setErrorVisible(true);
         }
     };
-    
 
-    //Método para finalizar la compra del cliente
     const finalizarPedido = async () => {
         try {
-            // Reinicia el estado de la alerta antes de hacer la petición
             setSuccessVisible(false);
+    
+            // Accede a las propiedades correctas
+            const idMetodoPago = metodoPago.id_metodo_pago; // Cambia a id_metodo_pago
+            const datosPago = metodoPago.datosPago; // Asegúrate de que datosPago esté definido en tu objeto
+    
+            // Comprueba si el idMetodoPago es válido
+            if (!idMetodoPago) {
+                Alert.alert('Error', 'Por favor, selecciona un método de pago válido.');
+                return; // Salir de la función si no hay datos válidos
+            }
+    
+            const bodyData = new URLSearchParams(); // Crear un objeto URLSearchParams
+            bodyData.append('idMetodoPago', idMetodoPago); // Agregar el id del método de pago
+            bodyData.append('datosPago', datosPago); // Agregar datos de pago, aunque esté indefinido
+    
+            console.log('Datos que se enviarán:', bodyData.toString()); // Muestra el cuerpo de la solicitud
+    
             const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/compras.php?action=finishOrder`, {
-                method: 'GET',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded', // Cambiar el tipo de contenido
+                },
+                body: bodyData.toString(), // Envía los datos como un string
             });
+    
             const data = await response.json();
             if (data.status) {
                 setAlertMessage('Compra finalizada correctamente');
-                setDataDetalleCarrito([]); // Vaciar el carrito
-                setSuccessVisible(true); // Mostrar la alerta de éxito
-                // Navega a la pantalla de Productos después de 2 segundos
+                setDataDetalleCarrito([]);
+                setSuccessVisible(true);
                 setTimeout(() => {
                     navigation.navigate('Productos', { screen: 'Productos' });
-                }, 2000); // Espera 2 segundos antes de navegar
+                }, 2000);
             } else {
                 Alert.alert('Error', data.error);
             }
         } catch (error) {
+            console.error('Error al finalizar la compra:', error);
             setAlertMessage('Ocurrió un error al finalizar la compra');
-            setErrorVisible(true);  // Muestra la alerta de error
+            setErrorVisible(true);
         }
     };
+    
+    
 
-
-
-
-    //Función para mostrar la modal para editar cantidad de productos
     const handleEditarDetalle = (idDetalle, cantidadDetalle) => {
         setModalVisible(true);
         setIdDetalle(idDetalle);
         setCantidadProductoCarrito(cantidadDetalle);
+    };
+
+    const handleSeleccionarMetodoPago = (metodo) => {
+        setMetodoPago(metodo); // Ahora esto almacena un objeto
+        setModalMetodoPagoVisible(false);
     };
 
     const renderItem = ({ item }) => (
@@ -129,11 +125,10 @@ const Carrito = ({ navigation }) => {
             setIdDetalle={setIdDetalle}
             accionBotonDetalle={handleEditarDetalle}
             getDetalleCarrito={getDetalleCarrito}
-            updateDataDetalleCarrito={setDataDetalleCarrito} // Nueva prop para actualizar la lista
+            updateDataDetalleCarrito={setDataDetalleCarrito}
         />
     );
 
-    //Función para calcular el total de la compra
     const calcularTotalConDescuento = () => {
         return dataDetalleCarrito.reduce((total, item) => {
             const subtotalConDescuento = (
@@ -147,7 +142,6 @@ const Carrito = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <TopBar nombre={nombre} />
-
 
             <CustomAlertError
                 visible={errorVisible}
@@ -170,6 +164,12 @@ const Carrito = ({ navigation }) => {
                 getDetalleCarrito={getDetalleCarrito}
             />
 
+            <ModalMetodoPago
+                modalVisible={modalMetodoPagoVisible}
+                setMetodoPago={handleSeleccionarMetodoPago}
+                cerrarModal={setModalMetodoPagoVisible}
+            />
+
             <Text style={styles.title}>Carrito de Compras</Text>
 
             {dataDetalleCarrito.length > 0 ? (
@@ -186,19 +186,25 @@ const Carrito = ({ navigation }) => {
             {dataDetalleCarrito.length > 0 && (
                 <View style={styles.totalContainer}>
                     <Text style={styles.totalText}>Total de la compra: ${calcularTotalConDescuento()}</Text>
+                    <Text style={styles.totalText}>Método de Pago: {metodoPago ? metodoPago.nombre_metodo : 'Ninguno seleccionado'}</Text>
                 </View>
             )}
 
             <View style={styles.containerButtons}>
                 {dataDetalleCarrito.length > 0 && (
-                    <Buttons
-                        textoBoton='Finalizar Pedido'
-                        accionBoton={finalizarPedido}
-                    />
+                    <>
+                        <Buttons
+                            textoBoton='Seleccionar Método de Pago'
+                            accionBoton={() => setModalMetodoPagoVisible(true)}
+                        />
+                        <Buttons
+                            textoBoton='Finalizar Pedido'
+                            accionBoton={finalizarPedido}
+                        />
+                    </>
                 )}
             </View>
         </View>
-
     );
 };
 
@@ -208,20 +214,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#FFF',
-    },
-    topBar: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 20,
-        backgroundColor: '#E9E8E8',
-        height: 60 + Constants.statusBarHeight,
-        width: '100%',
-    },
-    image: {
-        width: 90,
-        height: 35,
-        marginTop: 20,
     },
     title: {
         fontSize: 24,
@@ -238,25 +230,20 @@ const styles = StyleSheet.create({
         marginVertical: 16,
         color: '#5C3D2E',
     },
-    containerButtons: {
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
     totalContainer: {
         padding: 16,
-        backgroundColor: '#fff',
-        borderRadius: 8,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 2,
-        marginBottom: 17,
+        backgroundColor: '#F0F0F0',
+        borderRadius: 10,
+        marginVertical: 10,
+        marginHorizontal: 16,
     },
     totalText: {
-        fontSize: 19,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        color: '#333',
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#000',
+    },
+    containerButtons: {
+        paddingHorizontal: 16,
+        marginBottom: 16,
     },
 });
