@@ -58,28 +58,31 @@ const Carrito = ({ navigation }) => {
         try {
             setSuccessVisible(false);
     
-            // Accede a las propiedades correctas
-            const idMetodoPago = metodoPago.id_metodo_pago; // Cambia a id_metodo_pago
-            const datosPago = metodoPago.datosPago; // Asegúrate de que datosPago esté definido en tu objeto
+            const idMetodoPago = metodoPago?.id_metodo_pago || null; // Asegúrate de obtener el id_metodo_pago
+            const datosPago = metodoPago?.datosPago || {}; // Obtenemos datosPago, asegurándonos de que sea un objeto
     
-            // Comprueba si el idMetodoPago es válido
+            // Validar que idMetodoPago no sea nulo
             if (!idMetodoPago) {
-                Alert.alert('Error', 'Por favor, selecciona un método de pago válido.');
-                return; // Salir de la función si no hay datos válidos
+                Alert.alert('Advertencia', 'No se seleccionó un método de pago. Continuar puede no ser ideal.');
+                return; // Salimos si no hay método de pago
             }
     
-            const bodyData = new URLSearchParams(); // Crear un objeto URLSearchParams
-            bodyData.append('idMetodoPago', idMetodoPago); // Agregar el id del método de pago
-            bodyData.append('datosPago', datosPago); // Agregar datos de pago, aunque esté indefinido
+            // Construir datosPago como una cadena concatenada sin el signo igual
+            const datosPagoString = Object.entries(datosPago)
+                .map(([key, value]) => `${key}${value}`) // Cambiado para omitir el '='
+                .join(','); // Unir usando coma
     
-            console.log('Datos que se enviarán:', bodyData.toString()); // Muestra el cuerpo de la solicitud
+            // Construir el cuerpo de la solicitud
+            const bodyData = `idMetodoPago=${idMetodoPago}&datosPago=${datosPagoString}`; // No se usa encodeURIComponent
+    
+            console.log('Datos que se enviarán:', bodyData); // Mostrar el cuerpo de la solicitud
     
             const response = await fetch(`${ip}/AcademiaBP_EXPO/api/services/public/compras.php?action=finishOrder`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded', // Cambiar el tipo de contenido
                 },
-                body: bodyData.toString(), // Envía los datos como un string
+                body: bodyData, // Envía los datos como un string
             });
     
             const data = await response.json();
@@ -101,6 +104,7 @@ const Carrito = ({ navigation }) => {
     };
     
     
+
 
     const handleEditarDetalle = (idDetalle, cantidadDetalle) => {
         setModalVisible(true);

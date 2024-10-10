@@ -1,15 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, View, Text, TouchableOpacity, FlatList, StyleSheet, Image } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { Modal, View, Text, TouchableOpacity, FlatList, StyleSheet, Image, TextInput, Alert } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native'; // Importar useFocusEffect
 import * as Constantes from '../../utils/constantes';
 import Buttons from '../Buttons/Button';
 
 const ModalMetodoPago = ({ modalVisible, cerrarModal, setMetodoPago }) => {
     const [metodosPago, setMetodosPago] = useState([]);
+    const [metodoSeleccionado, setMetodoSeleccionado] = useState(null);
+    const [datosPago, setDatosPago] = useState({});
     const ip = Constantes.IP;
 
-    useEffect(() => {
-        fetchMetodosPago();
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            fetchMetodosPago();
+        }, [])
+    );
 
     const fetchMetodosPago = async () => {
         try {
@@ -29,16 +34,82 @@ const ModalMetodoPago = ({ modalVisible, cerrarModal, setMetodoPago }) => {
     };
 
     const handleSelectMetodoPago = (item) => {
-        try {
-            const metodoPagoSeleccionado = {
-                id_metodo_pago: item.id_metodo_pago,
-                nombre_metodo: item.nombre_metodo,
-            };
-            console.log('Método de pago seleccionado:', metodoPagoSeleccionado); // Para depurar
-            setMetodoPago(metodoPagoSeleccionado); // Envía el objeto con id y nombre del método de pago seleccionado
-            cerrarModal(false); // Cerrar modal al seleccionar un método de pago
-        } catch (error) {
-            console.error('Error al seleccionar el método de pago:', error);
+        setMetodoSeleccionado(item);
+        setMetodoPago({
+            id_metodo_pago: item.id_metodo_pago,
+            nombre_metodo: item.nombre_metodo,
+        });
+        setDatosPago({}); // Reiniciar datos de pago al seleccionar un nuevo método
+    };
+
+    // Manejar cambios en los inputs
+    const handleInputChange = (field, value) => {
+        setDatosPago((prevState) => ({
+            ...prevState,
+            [field]: value,
+        }));
+    };
+
+    // Mostrar inputs condicionales dependiendo del método de pago
+    const renderInputsPorMetodo = () => {
+        if (!metodoSeleccionado) return null;
+
+        switch (metodoSeleccionado.nombre_metodo) {
+            case 'Tarjeta de crédito':
+            case 'Tarjeta de débito':
+                return (
+                    <>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Número de la tarjeta"
+                            keyboardType="numeric"
+                            onChangeText={(value) => handleInputChange('numeroTarjeta', value)}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Nombre en la tarjeta"
+                            onChangeText={(value) => handleInputChange('nombreTarjeta', value)}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Fecha de vencimiento (MM/AA)"
+                            onChangeText={(value) => handleInputChange('fechaVencimiento', value)}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Código CVV"
+                            keyboardType="numeric"
+                            onChangeText={(value) => handleInputChange('cvv', value)}
+                        />
+                    </>
+                );
+            case 'PayPal':
+                return (
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Correo electrónico de PayPal"
+                        keyboardType="email-address"
+                        onChangeText={(value) => handleInputChange('emailPayPal', value)}
+                    />
+                );
+            case 'Transferencia Bancaria':
+                return (
+                    <>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Número de cuenta"
+                            keyboardType="numeric"
+                            onChangeText={(value) => handleInputChange('numeroCuenta', value)}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Código SWIFT/IBAN"
+                            onChangeText={(value) => handleInputChange('codigoSWIFT', value)}
+                        />
+                    </>
+                );
+            default:
+                return <Text>No se requieren datos adicionales para este método de pago.</Text>;
         }
     };
 
@@ -52,6 +123,31 @@ const ModalMetodoPago = ({ modalVisible, cerrarModal, setMetodoPago }) => {
             <Text style={styles.metodoPagoText}>{item.nombre_metodo}</Text>
         </TouchableOpacity>
     );
+
+    const handleFinalizar = () => {
+        if (!metodoSeleccionado) {
+            Alert.alert('Error', 'Por favor, selecciona un método de pago.');
+            return;
+        }
+
+        // Aquí podrías hacer validaciones adicionales para los campos de datos de pago
+        if (metodoSeleccionado.nombre_metodo === 'Tarjeta de Crédito' || metodoSeleccionado.nombre_metodo === 'Tarjeta de Débito') {
+            if (!datosPago.numeroTarjeta || !datosPago.nombreTarjeta || !datosPago.fechaVencimiento || !datosPago.cvv) {
+                Alert.alert('Error', 'Por favor, completa todos los campos de la tarjeta.');
+                return;
+            }
+        } else if (metodoSeleccionado.nombre_metodo === 'PayPal' && !datosPago.emailPayPal) {
+            Alert.alert('Error', 'Por favor, ingresa el correo electrónico de PayPal.');
+            return;
+        }
+
+        // Enviar los datos seleccionados y cerrarlos
+        setMetodoPago({
+            ...metodoSeleccionado,
+            datosPago,
+        });
+        cerrarModal(false);
+    };
 
     return (
         <Modal visible={modalVisible} transparent={true} animationType="slide">
@@ -67,6 +163,10 @@ const ModalMetodoPago = ({ modalVisible, cerrarModal, setMetodoPago }) => {
                     ) : (
                         <Text style={styles.emptyText}>No hay métodos de pago disponibles.</Text>
                     )}
+
+                    {renderInputsPorMetodo()}
+
+                    <Buttons textoBoton="Finalizar" accionBoton={handleFinalizar} />
                     <Buttons textoBoton="Cancelar" accionBoton={() => cerrarModal(false)} />
                 </View>
             </View>
@@ -115,5 +215,13 @@ const styles = StyleSheet.create({
     emptyText: {
         fontSize: 16,
         color: '#999',
+    },
+    input: {
+        width: '100%',
+        padding: 10,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        marginVertical: 10,
     },
 });
