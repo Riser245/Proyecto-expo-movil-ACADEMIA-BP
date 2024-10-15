@@ -12,6 +12,9 @@ export default function Verificar({ navigation }) {
     const ip = Constantes.IP;
     const [codigoIngresado, setCodigoIngresado] = useState('');
     const [correo, setCorreo] = useState('');
+    const [errorVisible, setErrorVisible] = useState(false);
+    const [successVisible, setSuccessVisible] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
 
     useEffect(() => {
         const obtenerDatos = async () => {
