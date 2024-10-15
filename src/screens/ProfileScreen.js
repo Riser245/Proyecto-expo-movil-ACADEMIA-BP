@@ -12,6 +12,8 @@ import Buttons from '../components/Inputs/InputsPerfil/Buttons/Button';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import { useFocusEffect } from '@react-navigation/native';
+import CustomAlertError from '../components/CustomAlert/CustomAlertError';
+import CustomAlertExito from '../components/CustomAlert/CustomAlertSuccess';
 
 const ProfileScreen = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -29,6 +31,9 @@ const ProfileScreen = () => {
     const [modalType, setModalType] = useState('');
     const [profileData, setProfileData] = useState(null);
     const ip = Constantes.IP;
+    const [errorVisible, setErrorVisible] = useState(false);
+    const [successVisible, setSuccessVisible] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
 
     //Obtenemos los datos del cliente que ha iniciado sesión
     const getProfileData = async () => {
@@ -73,7 +78,7 @@ const ProfileScreen = () => {
             if (imageWidth <= 1800 && imageHeight <= 1800) {
                 setFotoCliente(result.assets[0].uri);
             } else {
-                alert('La imagen es de dimension ' +imageWidth + 'x' + imageHeight + '.La imagen seleccionada debe tener dimensiones de 1800x1800 píxeles o menores.');
+                alert('La imagen es de dimension ' + imageWidth + 'x' + imageHeight + '.La imagen seleccionada debe tener dimensiones de 1800x1800 píxeles o menores.');
             }
         }
     };
@@ -122,14 +127,16 @@ const ProfileScreen = () => {
             const data = JSON.parse(responseText);
 
             if (data.status) {
-                Alert.alert('Éxito', data.message);
+                setAlertMessage('¡Éxito al actualizar!');
+                setSuccessVisible(true);
                 setIsModalVisible(false);
             } else {
                 Alert.alert('Error', data.error);
             }
         } catch (error) {
-            console.error('Error al editar el usuario:', error);
-            Alert.alert('Error', `Ocurrió un error al editar el usuario: ${error.message}`);
+
+            setAlertMessage(error);
+            setErrorVisible(true);
         }
     };
 
@@ -148,14 +155,19 @@ const ProfileScreen = () => {
 
             const data = await response.json();
             if (data.status) {
-                Alert.alert('Éxito', data.message);
+                setAlertMessage('¡Contraseña actualizada!');
+                setSuccessVisible(true);
                 setIsModalVisible(false);
+                setClave('');
+                setConfirmar('');
             } else {
-                Alert.alert('Error', data.error);
+                setAlertMessage(data.error);
+                setErrorVisible(true);
             }
         } catch (error) {
-            console.error('Error al cambiar la contraseña:', error);
-            Alert.alert('Error', `Ocurrió un error al cambiar la contraseña: ${error.message}`);
+
+            setAlertMessage('Error al cambiar la contraseña');
+            setErrorVisible(true);
         }
     };
 
@@ -205,6 +217,17 @@ const ProfileScreen = () => {
                         <Text style={styles.editButtonText}>Editar</Text>
                     </TouchableOpacity>
                 </View>
+
+                <CustomAlertError
+                    visible={errorVisible}
+                    onClose={() => setErrorVisible(false)}
+                    message={alertMessage}
+                />
+                <CustomAlertExito
+                    visible={successVisible}
+                    onClose={() => setSuccessVisible(false)}
+                    message={alertMessage}
+                />
 
                 <Text style={styles.texto2}>Información del usuario</Text>
             </View>

@@ -1,19 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Modal, StyleSheet, TextInput, Alert } from 'react-native';
 import Buttons from '../Buttons/Button';
 import * as Constantes from '../../utils/constantes';
+import CustomAlertError from '../CustomAlert/CustomAlertError';
+import CustomAlertExito from '../CustomAlert/CustomAlertSuccess';
 
 const ModalEditarCantidad = ({ setModalVisible, modalVisible, idDetalle, setCantidadProductoCarrito, cantidadProductoCarrito, getDetalleCarrito }) => {
 
     const ip = Constantes.IP;
+    const [errorVisible, setErrorVisible] = useState(false);
+    const [successVisible, setSuccessVisible] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
 
     //Manejo de la edición de cantidad de producto del carrito
     const handleUpdateDetalleCarrito = async () => {
         try {
             //En caso de que la cantidad que se ingrese sea menor a cero, se muestra un mensaje de error
             if (cantidadProductoCarrito <= 0) {
-                Alert.alert("La cantidad no puede ser igual o menor a 0");
-                return; 
+                setAlertMessage("La cantidad no puede ser igual o menor a 0");
+                setErrorVisible(true);
+                return;
             }
 
             const formData = new FormData();
@@ -26,17 +32,20 @@ const ModalEditarCantidad = ({ setModalVisible, modalVisible, idDetalle, setCant
             });
 
             const data = await response.json();
-            console.log(idDetalle);
 
             if (data.status) {
-                Alert.alert('Se actualizo el detalle del producto');
+                setAlertMessage('Se actualizo el detalle del producto');
+                setSuccessVisible(true);
                 getDetalleCarrito();
             } else {
-                Alert.alert('Error al editar detalle carrito', data.error);
+                setAlertMessage('Error al editar detalle del carrito', data.error);
+                setErrorVisible(true);
             }
             setModalVisible(false);
         } catch (error) {
-            Alert.alert("Error en editar carrito", error);
+
+            setAlertMessage(error);
+            setErrorVisible(true);
             setModalVisible(false);
         }
     };
@@ -74,6 +83,17 @@ const ModalEditarCantidad = ({ setModalVisible, modalVisible, idDetalle, setCant
                         accionBoton={handleCancelEditarCarrito}
                     />
                 </View>
+
+                <CustomAlertError
+                    visible={errorVisible}
+                    onClose={() => setErrorVisible(false)}
+                    message={alertMessage}
+                />
+                <CustomAlertExito
+                    visible={successVisible}
+                    onClose={() => setSuccessVisible(false)}
+                    message={alertMessage}
+                />
             </View>
         </Modal>
     );

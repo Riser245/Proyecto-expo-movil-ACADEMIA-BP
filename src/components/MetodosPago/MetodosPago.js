@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Modal, View, Text, TouchableOpacity, FlatList, StyleSheet, Image, TextInput, Alert } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native'; // Importar useFocusEffect
+import { useFocusEffect } from '@react-navigation/native';
 import * as Constantes from '../../utils/constantes';
 import Buttons from '../Buttons/Button';
 
@@ -39,10 +39,9 @@ const ModalMetodoPago = ({ modalVisible, cerrarModal, setMetodoPago }) => {
             id_metodo_pago: item.id_metodo_pago,
             nombre_metodo: item.nombre_metodo,
         });
-        setDatosPago({}); // Reiniciar datos de pago al seleccionar un nuevo método
+        setDatosPago({});
     };
 
-    // Manejar cambios en los inputs
     const handleInputChange = (field, value) => {
         setDatosPago((prevState) => ({
             ...prevState,
@@ -50,7 +49,76 @@ const ModalMetodoPago = ({ modalVisible, cerrarModal, setMetodoPago }) => {
         }));
     };
 
-    // Mostrar inputs condicionales dependiendo del método de pago
+    const handleNumeroTarjeta = (value) => {
+        let formattedValue = value.replace(/\D/g, '');
+        if (formattedValue.length > 16) {
+            formattedValue = formattedValue.slice(0, 16);
+        }
+        formattedValue = formattedValue.replace(/(.{4})/g, '$1-').slice(0, 19);
+        handleInputChange('numeroTarjeta', formattedValue);
+    };
+
+    const handleNombreTarjeta = (value) => {
+        const formattedValue = value.replace(/[^a-zA-Z\s]/g, '');
+        handleInputChange('nombreTarjeta', formattedValue);
+    };
+
+    const handleMesVencimiento = (value) => {
+        const numericValue = parseInt(value, 10);
+        if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= 12) {
+            handleInputChange('mesVencimiento', value);
+        }
+    };
+
+
+    const handleAnioVencimiento = (value) => {
+        // Permitir ingresar hasta 4 dígitos
+        let formattedValue = value.replace(/\D/g, '').slice(0, 4);
+
+        // Actualiza el valor en el estado
+        handleInputChange('anioVencimiento', formattedValue);
+
+        // Realiza la validación cuando el usuario haya ingresado los 4 dígitos completos
+        if (formattedValue.length === 4) {
+            const currentYear = new Date().getFullYear();
+            const numericValue = parseInt(formattedValue, 10);
+
+            if (numericValue < currentYear) {
+                Alert.alert('Error', `El año de vencimiento no puede ser menor que ${currentYear}.`);
+                handleInputChange('anioVencimiento', ''); // Borra el valor si no es válido
+            }
+        }
+    };
+
+    const validarFechaVencimiento = () => {
+        const currentDate = new Date();
+        const vencimiento = new Date(datosPago.anioVencimiento, datosPago.mesVencimiento - 1);
+        return vencimiento >= currentDate;
+    };
+
+
+    const handleCvv = (value) => {
+        const formattedValue = value.replace(/\D/g, '').slice(0, 3);
+        handleInputChange('cvv', formattedValue);
+    };
+
+    const handleEmailPayPal = (value) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (emailRegex.test(value)) {
+            handleInputChange('emailPayPal', value);
+        }
+    };
+
+    const handleNumeroCuenta = (value) => {
+        const formattedValue = value.replace(/\D/g, '');
+        handleInputChange('numeroCuenta', formattedValue);
+    };
+
+    const handleCodigoSWIFT = (value) => {
+        const formattedValue = value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 11);
+        handleInputChange('codigoSWIFT', formattedValue);
+    };
+
     const renderInputsPorMetodo = () => {
         if (!metodoSeleccionado) return null;
 
@@ -63,23 +131,36 @@ const ModalMetodoPago = ({ modalVisible, cerrarModal, setMetodoPago }) => {
                             style={styles.input}
                             placeholder="Número de la tarjeta"
                             keyboardType="numeric"
-                            onChangeText={(value) => handleInputChange('numeroTarjeta', value)}
+                            value={datosPago.numeroTarjeta || ''}
+                            onChangeText={handleNumeroTarjeta}
                         />
                         <TextInput
                             style={styles.input}
                             placeholder="Nombre en la tarjeta"
-                            onChangeText={(value) => handleInputChange('nombreTarjeta', value)}
+                            value={datosPago.nombreTarjeta || ''}
+                            onChangeText={handleNombreTarjeta}
                         />
                         <TextInput
                             style={styles.input}
-                            placeholder="Fecha de vencimiento (MM/AA)"
-                            onChangeText={(value) => handleInputChange('fechaVencimiento', value)}
+                            placeholder="Mes de vencimiento de la tarjeta (MM)"
+                            keyboardType="numeric"
+                            value={datosPago.mesVencimiento || ''}
+                            onChangeText={handleMesVencimiento}
                         />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Año de vencimiento de la tarjeta (AAAA)"
+                            keyboardType="numeric"
+                            value={datosPago.anioVencimiento || ''}
+                            onChangeText={handleAnioVencimiento}
+                        />
+
                         <TextInput
                             style={styles.input}
                             placeholder="Código CVV"
                             keyboardType="numeric"
-                            onChangeText={(value) => handleInputChange('cvv', value)}
+                            value={datosPago.cvv || ''}
+                            onChangeText={handleCvv}
                         />
                     </>
                 );
@@ -89,7 +170,8 @@ const ModalMetodoPago = ({ modalVisible, cerrarModal, setMetodoPago }) => {
                         style={styles.input}
                         placeholder="Correo electrónico de PayPal"
                         keyboardType="email-address"
-                        onChangeText={(value) => handleInputChange('emailPayPal', value)}
+                        value={datosPago.emailPayPal || ''}
+                        onChangeText={handleEmailPayPal}
                     />
                 );
             case 'Transferencia Bancaria':
@@ -99,12 +181,14 @@ const ModalMetodoPago = ({ modalVisible, cerrarModal, setMetodoPago }) => {
                             style={styles.input}
                             placeholder="Número de cuenta"
                             keyboardType="numeric"
-                            onChangeText={(value) => handleInputChange('numeroCuenta', value)}
+                            value={datosPago.numeroCuenta || ''}
+                            onChangeText={handleNumeroCuenta}
                         />
                         <TextInput
                             style={styles.input}
                             placeholder="Código SWIFT/IBAN"
-                            onChangeText={(value) => handleInputChange('codigoSWIFT', value)}
+                            value={datosPago.codigoSWIFT || ''}
+                            onChangeText={handleCodigoSWIFT}
                         />
                     </>
                 );
@@ -112,6 +196,48 @@ const ModalMetodoPago = ({ modalVisible, cerrarModal, setMetodoPago }) => {
                 return <Text>No se requieren datos adicionales para este método de pago.</Text>;
         }
     };
+
+    const handleFinalizar = () => {
+        if (!metodoSeleccionado) {
+            Alert.alert('Error', 'Por favor, selecciona un método de pago.');
+            return;
+        }
+
+        if (!validarFechaVencimiento()) {
+            Alert.alert('Error', 'La fecha de vencimiento no puede ser menor que la fecha actual.');
+            return;
+        }
+
+        if (metodoSeleccionado.nombre_metodo === 'Tarjeta de crédito' || metodoSeleccionado.nombre_metodo === 'Tarjeta de débito') {
+            if (!datosPago.numeroTarjeta || !datosPago.nombreTarjeta || !datosPago.mesVencimiento || !datosPago.anioVencimiento || !datosPago.cvv) {
+                Alert.alert('Error', 'Por favor, completa todos los campos de la tarjeta.');
+                return;
+            }
+
+            const datosFormateados = `${datosPago.numeroTarjeta},${datosPago.nombreTarjeta},${datosPago.mesVencimiento},${datosPago.anioVencimiento},${datosPago.cvv}`;
+            console.log("Datos que se enviarán:", datosFormateados);
+            // Aquí puedes enviar los datos a la API según corresponda
+        } else if (metodoSeleccionado.nombre_metodo === 'PayPal' && !datosPago.emailPayPal) {
+            Alert.alert('Error', 'Por favor, ingresa el correo electrónico de PayPal.');
+            return;
+        }
+
+        // Envía los datos de método de pago
+        setMetodoPago({
+            ...metodoSeleccionado,
+            datosPago,
+        });
+
+        // Reinicia los estados
+        resetStates();
+    };
+
+    const resetStates = () => {
+        setMetodoSeleccionado(null);
+        setDatosPago({});
+        cerrarModal(false);
+    };
+    
 
     const renderItem = ({ item }) => (
         <TouchableOpacity style={styles.metodoPagoItem} onPress={() => handleSelectMetodoPago(item)}>
@@ -123,31 +249,6 @@ const ModalMetodoPago = ({ modalVisible, cerrarModal, setMetodoPago }) => {
             <Text style={styles.metodoPagoText}>{item.nombre_metodo}</Text>
         </TouchableOpacity>
     );
-
-    const handleFinalizar = () => {
-        if (!metodoSeleccionado) {
-            Alert.alert('Error', 'Por favor, selecciona un método de pago.');
-            return;
-        }
-
-        // Aquí podrías hacer validaciones adicionales para los campos de datos de pago
-        if (metodoSeleccionado.nombre_metodo === 'Tarjeta de Crédito' || metodoSeleccionado.nombre_metodo === 'Tarjeta de Débito') {
-            if (!datosPago.numeroTarjeta || !datosPago.nombreTarjeta || !datosPago.fechaVencimiento || !datosPago.cvv) {
-                Alert.alert('Error', 'Por favor, completa todos los campos de la tarjeta.');
-                return;
-            }
-        } else if (metodoSeleccionado.nombre_metodo === 'PayPal' && !datosPago.emailPayPal) {
-            Alert.alert('Error', 'Por favor, ingresa el correo electrónico de PayPal.');
-            return;
-        }
-
-        // Enviar los datos seleccionados y cerrarlos
-        setMetodoPago({
-            ...metodoSeleccionado,
-            datosPago,
-        });
-        cerrarModal(false);
-    };
 
     return (
         <Modal visible={modalVisible} transparent={true} animationType="slide">
@@ -188,18 +289,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         padding: 20,
         borderRadius: 10,
-        alignItems: 'center',
     },
     modalTitle: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
-        marginBottom: 20,
-        color: '#333',
+        marginBottom: 10,
     },
     metodoPagoItem: {
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 15,
+        padding: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
     },
@@ -209,19 +308,19 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     metodoPagoText: {
-        fontSize: 18,
-        color: '#333',
-    },
-    emptyText: {
         fontSize: 16,
-        color: '#999',
     },
     input: {
-        width: '100%',
-        padding: 10,
         borderWidth: 1,
         borderColor: '#ccc',
         borderRadius: 5,
-        marginVertical: 10,
+        padding: 10,
+        marginBottom: 10,
+    },
+    emptyText: {
+        textAlign: 'center',
+        fontSize: 16,
+        color: '#888',
+        marginTop: 20,
     },
 });

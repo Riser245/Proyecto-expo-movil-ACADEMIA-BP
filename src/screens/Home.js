@@ -6,12 +6,17 @@ import Modal from 'react-native-modal';
 import TopBar from '../components/TopBar/TopBar';
 import { useFocusEffect } from '@react-navigation/native';
 import useAuth from '../components/TopBar/Auth';
+import CustomAlertError from '../components/CustomAlert/CustomAlertError';
+import CustomAlertExito from '../components/CustomAlert/CustomAlertSuccess';
 
 export default function Home({ navigation }) {
     const [nombre, setNombre] = useState(null);
     const [dataEntrenamientos, setDataEntrenamientos] = useState([]);
     const { isModalVisible, handleLogout, toggleModal } = useAuth();
     const ip = Constantes.IP;
+    const [errorVisible, setErrorVisible] = useState(false);
+    const [successVisible, setSuccessVisible] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
 
     const getUser = async () => {
         try {
@@ -22,10 +27,12 @@ export default function Home({ navigation }) {
             if (data.status) {
                 setNombre(data.username);
             } else {
-                Alert.alert('Error', data.error);
+                setAlertMessage(data.error);
+                setErrorVisible(true);
             }
         } catch (error) {
-            Alert.alert('Error', 'Ocurrió un error al obtener el usuario');
+            setAlertMessage(error);
+            setErrorVisible(true);
         }
     };
 
@@ -39,11 +46,13 @@ export default function Home({ navigation }) {
             if (data.status) {
                 setDataEntrenamientos(data.dataset);
             } else {
-                Alert.alert('Error al cargar los entrenamientos', data.error);
+                setAlertMessage('Error al cargar los entrenamientos', data.error);
+                setErrorVisible(true);
             }
 
         } catch (error) {
-            Alert.alert('Error', 'Ocurrió un error al cargar los entrenamientos');
+            setAlertMessage(error);
+            setErrorVisible(true);
         }
     };
 
@@ -57,6 +66,17 @@ export default function Home({ navigation }) {
     return (
         <View style={styles.container}>
             <TopBar nombre={nombre} />
+
+            <CustomAlertError
+                visible={errorVisible}
+                onClose={() => setErrorVisible(false)}
+                message={alertMessage}
+            />
+            <CustomAlertExito
+                visible={successVisible}
+                onClose={() => setSuccessVisible(false)}
+                message={alertMessage}
+            />
 
             <SafeAreaView style={styles.containerFlat}>
                 <Text style={styles.title}>

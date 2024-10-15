@@ -4,12 +4,17 @@ import Input from '../components/Inputs/Inputs';
 import Buttons from '../components/Buttons/Button';
 import * as Constantes from '../utils/constantes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CustomAlertError from '../components/CustomAlert/CustomAlertError';
+import CustomAlertExito from '../components/CustomAlert/CustomAlertSuccess';
 
 export default function Actualizar({ navigation }) {
     const ip = Constantes.IP;
     const [claveNueva, setClaveNueva] = useState('');
     const [confirmarClave, setConfirmarClave] = useState('');
     const [correo, setCorreo] = useState('');
+    const [errorVisible, setErrorVisible] = useState(false);
+    const [successVisible, setSuccessVisible] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
 
     useEffect(() => {
         const obtenerDatos = async () => {
@@ -37,14 +42,16 @@ export default function Actualizar({ navigation }) {
             console.log('Response Text:', responseText);
             const DATA = JSON.parse(responseText);
             if (DATA.status) {
-                Alert.alert('Éxito', 'Se ha actualizado la contraseña');
+                setAlertMessage('Se ha actualizado la contraseña');
+                setSuccessVisible(true);
                 navigation.navigate('Login');
             } else {
-                Alert.alert('Error', `${DATA.error}`);
+                setAlertMessage(`${DATA.error}`);
+                setErrorVisible(true);
             }
         } catch (error) {
-            console.error('Error desde Catch', error);
-            Alert.alert('Error', `Ocurrió un error: ${error.message}`);
+            setAlertMessage(`Ocurrió un error: ${error.message}`);
+            setErrorVisible(true);
         }
     };
 
@@ -57,6 +64,16 @@ export default function Actualizar({ navigation }) {
     return (
         <ImageBackground source={require('../imagenes/inicio.png')} style={styles.background}>
             <View style={styles.overlay}>
+                <CustomAlertError
+                    visible={errorVisible}
+                    onClose={() => setErrorVisible(false)}
+                    message={alertMessage}
+                />
+                <CustomAlertExito
+                    visible={successVisible}
+                    onClose={() => setSuccessVisible(false)}
+                    message={alertMessage}
+                />
                 <Text style={styles.texto}>Cambiar contraseña</Text>
                 <Input
                     placeHolder='Contraseña'

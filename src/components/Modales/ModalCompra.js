@@ -1,18 +1,24 @@
 import React from 'react';
 import { View, Text, Modal, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
 import Buttons from '../Buttons/Button';
-import * as Constantes from '../../utils/constantes'
+import * as Constantes from '../../utils/constantes';
+import CustomAlertError from '../CustomAlert/CustomAlertError';
+import CustomAlertExito from '../CustomAlert/CustomAlertSuccess';
 
 const ModalCompra = ({ visible, cerrarModal, nombreProductoModal, idDetalleModal, cantidad, setCantidad }) => {
 
     const ip = Constantes.IP;
+    const [errorVisible, setErrorVisible] = useState(false);
+    const [successVisible, setSuccessVisible] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
 
     //Manejo de agregar los productos al carrito de compras
     const handleCreateDetail = async () => {
 
         try {
             if ((cantidad < 0)) {
-                Alert.alert("Debes llenar todos los campos")
+                setAlertMessage("Debes llenar todos los campos");
+                setErrorVisible(true);
                 return
             }
             else {
@@ -27,24 +33,25 @@ const ModalCompra = ({ visible, cerrarModal, nombreProductoModal, idDetalleModal
 
                 const data = await response.json();
                 if (data.status) {
-                    Alert.alert('Datos Guardados correctamente');
+                    setAlertMessage('Producto agregado al carrito de compras');
+                    setSuccessVisible(true);
                     setCantidad(0)
                     cerrarModal(false);
                 } else {
-                    Alert.alert('Error', data.error);
+                    setAlertMessage(data.error);
+                    setErrorVisible(true);
                 }
             }
 
         } catch (error) {
-            Alert.alert('Ocurrió un error al crear detalle');
+            setAlertMessage(error);
+            setErrorVisible(true);
         }
     };
 
     const handleCancelCarrito = () => {
-        // Lógica para agregar al carrito con la cantidad ingresada
         cerrarModal(false)
     };
-    //logica para la compra del producto - agregar el producto al carrito
 
 
     return (
@@ -74,6 +81,16 @@ const ModalCompra = ({ visible, cerrarModal, nombreProductoModal, idDetalleModal
                         textoBoton='Cancelar'
                         accionBoton={() => handleCancelCarrito()} />
                 </View>
+                <CustomAlertError
+                    visible={errorVisible}
+                    onClose={() => setErrorVisible(false)}
+                    message={alertMessage}
+                />
+                <CustomAlertExito
+                    visible={successVisible}
+                    onClose={() => setSuccessVisible(false)}
+                    message={alertMessage}
+                />
             </View>
         </Modal>
     );

@@ -7,6 +7,8 @@ import MaskedInputTelefono from '../components/Inputs/MaskedInputTelefono';
 import MaskedInputDui from '../components/Inputs/MaskedInputDui';
 import InputEmail from '../components/Inputs/InputEmail';
 import * as Constantes from '../utils/constantes';
+import CustomAlertError from '../components/CustomAlert/CustomAlertError';
+import CustomAlertExito from '../components/CustomAlert/CustomAlertSuccess';
 
 export default function SignUp({ navigation }) {
     const ip = Constantes.IP;
@@ -19,6 +21,9 @@ export default function SignUp({ navigation }) {
     const [telefono, setTelefono] = useState('');
     const [clave, setClave] = useState('');
     const [confirmarClave, setConfirmarClave] = useState('');
+    const [errorVisible, setErrorVisible] = useState(false);
+    const [successVisible, setSuccessVisible] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
 
     const handleLogout = async () => {
         navigation.navigate('Login');
@@ -55,19 +60,32 @@ export default function SignUp({ navigation }) {
             const data = await response.json();
             console.log(data)
             if (data.status) {
-                Alert.alert('Datos Guardados correctamente');
-                navigation.navigate('Login');
+                setAlertMessage('Datos Guardados correctamente');
+                setSuccessVisible(true);
             } else {
-                Alert.alert('Error', data.error);
+                setAlertMessage(data.error);
+                setErrorVisible(true);
             }
         } catch (error) {
-            Alert.alert('Ocurrió un error al intentar crear el usuario');
+            setAlertMessage(error);
+            setErrorVisible(true);
         }
     };
 
     return (
         <ImageBackground source={require('../imagenes/inicio.png')} style={styles.background}>
             <ScrollView contentContainerStyle={styles.mainContent}>
+
+                <CustomAlertError
+                    visible={errorVisible}
+                    onClose={() => setErrorVisible(false)}
+                    message={alertMessage}
+                />
+                <CustomAlertExito
+                    visible={successVisible}
+                    onClose={() => setSuccessVisible(false)}
+                    message={alertMessage}
+                />
 
                 <ScrollView contentContainerStyle={styles.scrollViewContent} showsVerticalScrollIndicator={true}>
                     <Text style={styles.texto}>Registrar Usuario</Text>

@@ -5,6 +5,8 @@ import Buttons from '../components/Buttons/Button';
 import * as Constantes from '../utils/constantes';
 import enviarEmail from '../utils/Email';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CustomAlertError from '../components/CustomAlert/CustomAlertError';
+import CustomAlertExito from '../components/CustomAlert/CustomAlertSuccess';
 
 export default function Verificar({ navigation }) {
     const ip = Constantes.IP;
@@ -26,15 +28,17 @@ export default function Verificar({ navigation }) {
         try {
             const codigo = await AsyncStorage.getItem('verificationCode');
             if (codigo === codigoIngresado) {
-                Alert.alert('Éxito', 'Código correcto');
+                setAlertMessage('Código correcto');
+                setSuccessVisible(true);
                 navigation.navigate('UpdatePassword');
             } else {
-                Alert.alert('Error', 'Código incorrecto');
+                setAlertMessage('Código incorrecto');
+                setErrorVisible(true);
             }
         }
         catch (error) {
-            console.error('Error desde Catch', error);
-            Alert.alert('Error', `Ocurrió un error: ${error.message}`);
+            setAlertMessage(`Ocurrió un error: ${error.message}`);
+            setErrorVisible(true);
         }
     };
 
@@ -46,9 +50,11 @@ export default function Verificar({ navigation }) {
         const EMAIL_ENVIADO = await enviarEmail(CODIGO, EMAIL);
         if (EMAIL_ENVIADO) {
             await AsyncStorage.setItem('verificationCode', CODIGO); // Guardar el código generado
-            Alert.alert('Éxito', 'Se ha vuelto a enviar un correo con el código de recuperación');
+            setAlertMessage('Se ha vuelto a enviar un correo con el código de recuperación');
+            setSuccessVisible(true);
         } else {
-            Alert.alert('Error', 'Ocurrió un error al enviar el correo');
+            setAlertMessage('Ocurrió un error al enviar el correo');
+            setErrorVisible(true);
         }
     };
 
@@ -71,6 +77,16 @@ export default function Verificar({ navigation }) {
     return (
         <ImageBackground source={require('../imagenes/inicio.png')} style={styles.background}>
             <View style={styles.overlay}>
+                <CustomAlertError
+                    visible={errorVisible}
+                    onClose={() => setErrorVisible(false)}
+                    message={alertMessage}
+                />
+                <CustomAlertExito
+                    visible={successVisible}
+                    onClose={() => setSuccessVisible(false)}
+                    message={alertMessage}
+                />
                 <Text style={styles.texto}>Verificar codigo</Text>
                 <Input
                     placeHolder='xxxxxx'

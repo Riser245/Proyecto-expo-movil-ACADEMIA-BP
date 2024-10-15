@@ -8,6 +8,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import TopBar from '../components/TopBar/TopBar';
 import useAuth from '../components/TopBar/Auth';
 import Ionicons from 'react-native-vector-icons/Ionicons'; // Importamos los íconos
+import CustomAlertError from '../components/CustomAlert/CustomAlertError';
+import CustomAlertExito from '../components/CustomAlert/CustomAlertSuccess';
 
 export default function MisCompras() {
     const ip = Constantes.IP;
@@ -21,6 +23,9 @@ export default function MisCompras() {
     const [calificacion, setCalificacion] = useState(0);
     const [comentario, setComentario] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
+    const [errorVisible, setErrorVisible] = useState(false);
+    const [successVisible, setSuccessVisible] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
 
     const getUser = async () => {
         try {
@@ -31,10 +36,12 @@ export default function MisCompras() {
             if (data.status) {
                 setNombre(data.username);
             } else {
-                Alert.alert('Error', data.error);
+                setAlertMessage(data.error);
+                setErrorVisible(true);
             }
         } catch (error) {
-            Alert.alert('Error', 'Ocurrió un error al obtener el usuario');
+            setAlertMessage(error);
+            setErrorVisible(true);
         }
     };
 
@@ -47,7 +54,7 @@ export default function MisCompras() {
         try {
             let url = `${ip}/AcademiaBP_EXPO/api/services/public/compras.php?action=myOrders`;
             let options = { method: 'GET' };
-    
+
             if (searchTerm.trim() !== '') {
                 url = `${ip}/AcademiaBP_EXPO/api/services/public/compras.php?action=searchOrders`;
                 options = {
@@ -56,16 +63,21 @@ export default function MisCompras() {
                     body: new URLSearchParams({ search: searchTerm }).toString(),
                 };
             }
-    
+
             const response = await fetch(url, options);
             const data = await response.json();
             if (data.status) {
                 setDataCompras(data.dataset);
+                setAlertMessage('¡Aquí están todas tus compras!');
+                setSuccessVisible(true);
+
             } else {
-                Alert.alert('Error al cargar tus compras', data.error || 'No se encontraron datos');
+                setAlertMessage(data.error || 'No se encontraron datos');
+                setErrorVisible(true);
             }
         } catch (error) {
-            Alert.alert('Error', 'Ocurrió un problema al listar las compras: ' + error.message);
+            setAlertMessage(data.error);
+            setErrorVisible(true);
         }
     };
 
@@ -73,12 +85,12 @@ export default function MisCompras() {
         React.useCallback(() => {
             // Llamar a getUser cuando el componente recibe el foco
             getUser();
-    
+
             // Llamar a getCompras cuando cambie el término de búsqueda
             getCompras();
         }, [searchTerm])
     );
-    
+
 
     return (
         <View style={styles.container}>
@@ -87,6 +99,17 @@ export default function MisCompras() {
                 <View style={styles.titleContainer}>
                     <Text style={styles.text1}>Mis Compras</Text>
                 </View>
+
+                <CustomAlertError
+                    visible={errorVisible}
+                    onClose={() => setErrorVisible(false)}
+                    message={alertMessage}
+                />
+                <CustomAlertExito
+                    visible={successVisible}
+                    onClose={() => setSuccessVisible(false)}
+                    message={alertMessage}
+                />
 
                 {/* Barra de búsqueda con ícono */}
                 <View style={styles.searchContainer}>

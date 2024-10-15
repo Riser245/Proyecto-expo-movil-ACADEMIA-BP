@@ -5,10 +5,15 @@ import Buttons from '../components/Buttons/Button';
 import * as Constantes from '../utils/constantes';
 import enviarEmail from '../utils/Email';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CustomAlertError from '../components/CustomAlert/CustomAlertError';
+import CustomAlertExito from '../components/CustomAlert/CustomAlertSuccess';
 
 export default function RecuperarClaveCorreo({ navigation }) {
     const ip = Constantes.IP;
     const [correo, setCorreo] = useState('');
+    const [errorVisible, setErrorVisible] = useState(false);
+    const [successVisible, setSuccessVisible] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
 
     // Función para que envíe el código al correo ingresado
     const enviarCodigo = async () => {
@@ -32,17 +37,20 @@ export default function RecuperarClaveCorreo({ navigation }) {
                 if (EMAIL_ENVIADO) {
                     await AsyncStorage.setItem('verificationCode', CODIGO); // Guardar el código generado
                     await AsyncStorage.setItem('email', EMAIL); // Guardar el correo electrónico
-                    Alert.alert('Éxito', 'Se ha enviado un correo con el código de recuperación');
+                    setAlertMessage('Se ha enviado un correo con el código de recuperación');
+                    setSuccessVisible(true);
                     navigation.navigate('VerifyCode', { correo: EMAIL });
                 } else {
-                    Alert.alert('Error', 'Ocurrió un error al enviar el correo');
+                    setAlertMessage('Ocurrió un error al enviar el correo');
+                    setErrorVisible(true);
                 }
             } else {
-                Alert.alert('Error', `${DATA.error}`);
+                setAlertMessage(`${DATA.error}`);
+                setErrorVisible(true);
             }
         } catch (error) {
-            console.error('Error desde Catch', error);
-            Alert.alert('Error', `Ocurrió un error: ${error.message}`);
+            setAlertMessage(`Ocurrió un error: ${error.message}`);
+            setErrorVisible(true);
         }
     };
 
@@ -65,6 +73,16 @@ export default function RecuperarClaveCorreo({ navigation }) {
     return (
         <ImageBackground source={require('../imagenes/inicio.png')} style={styles.background}>
             <View style={styles.overlay}>
+                <CustomAlertError
+                    visible={errorVisible}
+                    onClose={() => setErrorVisible(false)}
+                    message={alertMessage}
+                />
+                <CustomAlertExito
+                    visible={successVisible}
+                    onClose={() => setSuccessVisible(false)}
+                    message={alertMessage}
+                />
                 <Text style={styles.texto}>Recuperacion contraseña</Text>
                 <InputEmail
                     placeHolder='micorreo@gmail.com'
