@@ -64,11 +64,20 @@ const ModalMetodoPago = ({ modalVisible, cerrarModal, setMetodoPago }) => {
     };
 
     const handleMesVencimiento = (value) => {
+        // Permite que el usuario borre el contenido
+        if (value === '') {
+            handleInputChange('mesVencimiento', '');
+            return;
+        }
+    
         const numericValue = parseInt(value, 10);
+    
+        // Permite solo números válidos entre 1 y 12
         if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= 12) {
             handleInputChange('mesVencimiento', value);
         }
     };
+    
 
 
     const handleAnioVencimiento = (value) => {
@@ -92,9 +101,33 @@ const ModalMetodoPago = ({ modalVisible, cerrarModal, setMetodoPago }) => {
 
     const validarFechaVencimiento = () => {
         const currentDate = new Date();
-        const vencimiento = new Date(datosPago.anioVencimiento, datosPago.mesVencimiento - 1);
-        return vencimiento >= currentDate;
+        const currentYear = currentDate.getFullYear();
+        const currentMonth = currentDate.getMonth() + 1; // Los meses van de 0 a 11, por eso se suma 1.
+    
+        const { mesVencimiento, anioVencimiento } = datosPago;
+    
+        // Asegúrate de que ambos valores estén definidos
+        if (!mesVencimiento || !anioVencimiento) {
+            return false;
+        }
+    
+        const vencimientoMes = parseInt(mesVencimiento, 10);
+        const vencimientoAnio = parseInt(anioVencimiento, 10);
+    
+        // Valida que el año de vencimiento no sea menor que el año actual
+        if (vencimientoAnio < currentYear) {
+            return false;
+        }
+    
+        // Si el año es el mismo, valida que el mes no sea menor que el mes actual
+        if (vencimientoAnio === currentYear && vencimientoMes < currentMonth) {
+            return false;
+        }
+    
+        // Si llega hasta aquí, la fecha de vencimiento es válida
+        return true;
     };
+    
 
 
     const handleCvv = (value) => {
